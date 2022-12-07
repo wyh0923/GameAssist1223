@@ -29,7 +29,7 @@ public abstract class RemoteObjectBase {
     }
     internal RemoteObjectBase() {
         var here = this.GetType().FullName;
-        throw new NotImplementedException();
+        ui.AddToLog(tName + "() err: debug me", MessType.Error);
     }
     virtual protected void Init(string from) { }
     public IntPtr Address { get; protected private set; }

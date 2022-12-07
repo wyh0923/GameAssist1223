@@ -134,7 +134,7 @@ public class Inventory : Element {
                     var item = new Item(invItem.Item);
                     if (!string.IsNullOrEmpty(item.Path)) {
                         if (!Items.TryAdd(invItemPtr, item)) {
-                            throw new Exception("Failed to add item into the Inventory Item Dict.");
+                            ui.AddToLog(tName+ "Failed to add item into the Inventory Item Dict.", MessType.Error);
                         }
                     }
                 }

@@ -27,9 +27,8 @@ namespace Stas.GA {
                     nmi.uv = sh.GetUV(MapIconsIndex.LootFilterLargePurpleCircle);
                     break;
                 default:
-                    ui.AddToLog("SetRarity err: " + nmi.ent.rarity);
+                    ui.AddToLog("SetRarity err: " + nmi.ent.rarity, MessType.Error);
                     break;
-                    //throw new NotImplementedException();
             }
         }
     }

@@ -26,7 +26,7 @@ public class DeployedObject : RemoteObjectBase {
     public Entity Entity { get; private set; } = new Entity();
     public Skill Skill { get; private set; }
     protected override void CleanUpData() {
-        throw new NotImplementedException();
+        ui.AddToLog(tName + ".CleanUpData need implement", MessType.Critical);
     }
 }
 

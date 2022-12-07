@@ -222,7 +222,9 @@ namespace Stas.GA {
                 case Axis.Y:
                     return point.Y;
                 default:
-                    throw new ArgumentException();
+                    ui.AddToLog("EXT.GetCoordinate for:"+ axis, MessType.Critical);
+                    break;
+
             }
         }
         public static byte[] To_UTF8_Byte(this string str) {

@@ -14,7 +14,7 @@ namespace Stas.GA {
         bool b_need_remake = true;
 
         internal void Send(object playSound) {
-            throw new NotImplementedException();
+            ui.AddToLog(tname+ "Send err: debug me", MessType.Error);
         }
 
         public UdpSound() {
@@ -31,7 +31,7 @@ namespace Stas.GA {
                                     break;
                                 default:
                                    ui.AddToLog("UdpSound opc=" + opc, MessType.Error);
-                                    break;
+                                   break;
                             }
                         }
                     } catch (Exception ex) {

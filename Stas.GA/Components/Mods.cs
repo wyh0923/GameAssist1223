@@ -14,7 +14,7 @@ internal class Mods : EntComp {
     }
   
     protected override void CleanUpData() {
-        throw new NotImplementedException();
+        ui.AddToLog(tName + ".CleanUpData need implement", MessType.Critical);
     }
 }
 

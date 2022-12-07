@@ -161,6 +161,6 @@ public partial class Skill : RemoteObjectBase {
     }
 
     protected override void CleanUpData() {
-        throw new NotImplementedException();
+        ui.AddToLog(tName + "CleanUpData err: debug me", MessType.Error);
     }
 }

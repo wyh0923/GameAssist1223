@@ -33,9 +33,11 @@ public class ItemDPB : RemoteObjectBase {
         Address = ptr;
         if (Address == IntPtr.Zero)
             return;
-        throw new NotImplementedException();
+        ui.AddToLog(tName + ".Tick need implement", MessType.Critical);
+
     }
     protected override void CleanUpData() {
-        throw new NotImplementedException();
+        ui.AddToLog(tName + ".CleanUpData need implement", MessType.Critical);
+
     }
 }

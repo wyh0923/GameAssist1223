@@ -16,7 +16,7 @@ namespace Stas.GA {
            
         }
         protected override void CleanUpData() {
-            throw new NotImplementedException();
+           
         }
     }
 }

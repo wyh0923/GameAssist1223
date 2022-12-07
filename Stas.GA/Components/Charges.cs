@@ -18,7 +18,7 @@ public class Charges : EntComp {
         this.Current = data.current;
     }
     protected override void CleanUpData() {
-        throw new Exception("Component Address should never be Zero.");
+        ui.AddToLog("Component Address should never be Zero.", MessType.Warning);
     }
     /// <summary>
     ///     Gets a value indicating number of charges the flask has.

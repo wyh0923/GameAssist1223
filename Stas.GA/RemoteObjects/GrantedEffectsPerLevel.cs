@@ -43,6 +43,6 @@ public class GrantedEffectsPerLevel : RemoteObjectBase {
     }
 
     protected override void CleanUpData() {
-        throw new NotImplementedException();
+        ui.AddToLog(tName + "CleanUpData err: debug me", MessType.Error);
     }
 }

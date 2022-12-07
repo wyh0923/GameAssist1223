@@ -77,7 +77,7 @@ namespace Stas.GA {
         }
         
         protected override void CleanUpData() {
-            throw new NotImplementedException();
+            ui.AddToLog(tName + ".CleanUpData need implement", MessType.Critical);
         }
 
     }

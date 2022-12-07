@@ -333,7 +333,7 @@ public class JSON {
                     result.Item3 = JsonSerializer.Deserialize<T3>(ref reader, options);
                 }
                 else {
-                    throw new JsonException();
+                    ui.AddToLog("ValueTupleConverter err: debug me", MessType.Error);
                 }
                 reader.Read();
             }
@@ -430,8 +430,8 @@ public class ZIP {
                 if(ex.Message.Contains("The magic number in GZip header is not correct.")) {
                     return bytes;
                 }
-                else
-                    throw new NotImplementedException(ex.Message);
+                else { ui.AddToLog("UnZip err: "+ex.Message, MessType.Error); }
+                return default;
             }
         }
     }

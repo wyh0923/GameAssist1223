@@ -42,10 +42,10 @@ public class Life : RemoteObjectBase {
 
     /// <inheritdoc />
     protected override void CleanUpData() {
-        throw new Exception("Component Address should never be Zero.");
+        ui.AddToLog(tName + ".CleanUpData need implement", MessType.Critical);
     }
 
-   
+
 
     private void VitalToImGui(VitalStruct data) {
         ImGuiExt.IntPtrToImGui("PtrToSelf", data.PtrToLifeComponent);

@@ -9,6 +9,7 @@ namespace Stas.GA;
 /// Provides the functionality to move the cursor in a human realistic manner
 /// </summary>
 public static class CursorMover {
+    static string tName => "CursorMover";
     [DllImport("user32.dll", SetLastError = true)]
     static extern bool GetCursorPos(out Point point);
 
@@ -22,17 +23,18 @@ public static class CursorMover {
     public static void MoveCursor(Point point, TimeSpan timeSpan) {
         
         if (point.X < 0 || point.Y < 0) {
-            throw new ArgumentException("The provided point was invalid");
+            ui.AddToLog(tName+" The provided point was invalid", MessType.Error);
         }
 
         if (timeSpan.TotalMilliseconds <= 0) {
-            throw new ArgumentException("The provided timespan was invalid");
+            ui.AddToLog(tName + " The provided timespan was invalid", MessType.Error);
         }
 
         // Generate a randomised set of movements between the current cursor position and the point
 
         if (!GetCursorPos(out var currentCursorPosition)) {
-            throw new Win32Exception();
+            ui.AddToLog(tName + " !GetCursorPos", MessType.Error);
+        
         }
 
         var cursorMovements = GenerateMovements(currentCursorPosition, point, (int)timeSpan.TotalMilliseconds);
@@ -43,7 +45,7 @@ public static class CursorMover {
 
         foreach (var (delay, points) in cursorMovements) {
             if (points.Any(movementPoint => !SetCursorPos(movementPoint.X, movementPoint.Y))) {
-                throw new Win32Exception();
+                ui.AddToLog(tName + " movementPoint bad", MessType.Error);
             }
 
             while (stopwatch.ElapsedMilliseconds < delay.Milliseconds) {

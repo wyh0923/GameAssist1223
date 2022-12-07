@@ -46,7 +46,7 @@ public class DamageTotem : aTotem {
         int cast_time = 450, int max_count=3)
          : base(_key, gdist, cost, cast_time, max_count) {
         SetSkill("generic_totem");
-        throw new NotImplementedException();
+        ui.AddToLog(tName + "same  err: debug me", MessType.Error);
     }
     //here no name for serching totems
     public override int curr_count => base.curr_count;

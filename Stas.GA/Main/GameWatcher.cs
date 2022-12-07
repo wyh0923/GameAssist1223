@@ -40,8 +40,9 @@ public partial class ui {
                 else if (_pa.Length == 2) {
                     //TODO trader integration here
                 }
-                else
-                    throw new NotImplementedException("we have 2+ POE process");
+                else {
+                    ui.AddToLog("we have 2+ POE process", MessType.Critical);
+                }
                 #region CPU & Memory usage
                 var memStatus = new MEMORYSTATUSEX();
                 if (GlobalMemoryStatusEx(memStatus)) {

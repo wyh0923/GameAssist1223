@@ -15,7 +15,7 @@ namespace Stas.GA {
         }
 
         protected override void CleanUpData() {
-            throw new NotImplementedException();
+            ui.AddToLog(tName + "CleanUpData err: debug me", MessType.Error);
         }
         public string Name { get; private set; }
         public ActiveSkillWrapper ActiveSkill { get; private set; } = new ActiveSkillWrapper(IntPtr.Zero);

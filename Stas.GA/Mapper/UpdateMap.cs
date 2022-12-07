@@ -15,7 +15,7 @@ public partial class AreaInstance {
     /// after map creating only
     /// </summary>
     public bool b_ready { get; private set; }
-    
+
     public void UpdateMap() {
         ClearOldData();
         ui.curr_map.UpdateMapDate();
@@ -26,7 +26,7 @@ public partial class AreaInstance {
             Thread.Sleep(30);
         }
         Debug.Assert(state_ok && inst_ok);
-      
+
         sw.Restart();
         var gridHeightData = GridHeightData;
         var terrainBytes = GridWalkableData;
@@ -103,7 +103,7 @@ public partial class AreaInstance {
         ui.nav.debug_res = null;//same oldes debug must be deleted
         ui.test?.spa?.Clear(); //debug data need only actuale
     }
-    internal static  Color GetColor(int i) {
+    internal static Color GetColor(int i) {
         Color res;
         switch (i) {
             case 0:
@@ -124,8 +124,11 @@ public partial class AreaInstance {
             case 5:
                 res = Color.FromArgb(15, 255, 255, 255);
                 break;
-            default:
-                throw new Exception(i.ToString());
+            default: {
+                    res = Color.FromArgb(0, 0, 0, 0);
+                    ui.AddToLog("UpdateMap.GetColor err" + i, MessType.Error);
+                    break;
+                }
         }
         return res;
     }

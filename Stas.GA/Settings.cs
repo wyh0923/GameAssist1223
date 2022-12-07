@@ -61,7 +61,7 @@ public partial class Settings : iSett {
     /// current POE window index(if running two of POE on one system)
     /// </summary>
     public int last_pp_index { get; set; } = 0;
-    [JsonInclude] //[JsonPropertyName("role")]
+    [JsonInclude] 
     public Role role = Role.None;
 
     [JsonInclude]

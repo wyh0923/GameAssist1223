@@ -39,6 +39,6 @@ public class TriggerableBlockage : EntComp {
 
     /// <inheritdoc />
     protected override void CleanUpData() {
-        throw new Exception("Component Address should never be Zero.");
+        ui.AddToLog(tName + ".CleanUpData need implement", MessType.Critical);
     }
 }
