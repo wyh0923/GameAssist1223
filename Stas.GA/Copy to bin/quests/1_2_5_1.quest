@@ -1,0 +1,13 @@
+{
+  "Loot_names": [],
+  "Tasks": [],
+  "npcs": [],
+  "tiles": [
+    "church_exit_down_v01_01.tdt"
+  ],
+  "Way_points": [],
+  "Trials": null,
+  "tname": "Quest",
+  "tname_full": "Stas.POE.Core.Quest",
+  "created_date": "2022-09-16T07:40:36.0884931+03:00"
+}

@@ -1,0 +1,11 @@
+{
+  "Loot_names": [],
+  "Tasks": [],
+  "npcs": [],
+  "tiles": [],
+  "Way_points": [],
+  "Trials": null,
+  "tname": "Quest",
+  "tname_full": "Stas.POE.Core.Quest",
+  "created_date": "2022-02-13T23:58:42.1303799+03:00"
+}

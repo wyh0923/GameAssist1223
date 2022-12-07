@@ -1,0 +1,16 @@
+{
+  "Loot_names": [
+    "Sekhema Feather"
+  ],
+  "Tasks": [],
+  "npcs": [],
+  "tiles": [
+    "slum_thinwall_arena_entrance.tdt",
+    "warehouse_entrance_v01_01.tdt"
+  ],
+  "Way_points": [],
+  "Trials": null,
+  "tname": "Quest",
+  "tname_full": "Stas.POE.Core.Quest",
+  "created_date": "2022-09-17T11:00:01.8374646+03:00"
+}

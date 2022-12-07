@@ -1,0 +1,16 @@
+{
+  "Loot_names": [
+    "Baleful Gem"
+  ],
+  "Tasks": [],
+  "npcs": [],
+  "tiles": [
+    "templeruinforest_exit_down_v01_01.tdt",
+    "templeruinforest_exit_up_v01_01.tdt"
+  ],
+  "Way_points": [],
+  "Trials": null,
+  "tname": "Quest",
+  "tname_full": "Stas.POE.Core.Quest",
+  "created_date": "2022-09-16T07:34:10.989738+03:00"
+}

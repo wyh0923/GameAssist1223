@@ -1,0 +1,13 @@
+{
+  "Loot_names": [],
+  "Tasks": [],
+  "npcs": [],
+  "tiles": [
+    "ledge_prisonback.tdt"
+  ],
+  "Way_points": [],
+  "Trials": null,
+  "tname": "Quest",
+  "tname_full": "Stas.POE.Core.Quest",
+  "created_date": "2022-09-16T20:10:05.9510223+03:00"
+}

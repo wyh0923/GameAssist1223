@@ -1,0 +1,13 @@
+{
+  "Loot_names": [],
+  "Tasks": [],
+  "npcs": [],
+  "tiles": [
+    "beach_island_transition_brine_king.tdt"
+  ],
+  "Way_points": [],
+  "Trials": null,
+  "tname": "Quest",
+  "tname_full": "Stas.POE.Core.Quest",
+  "created_date": "2022-09-16T20:28:20.0424451+03:00"
+}

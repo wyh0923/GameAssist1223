@@ -1,0 +1,13 @@
+{
+  "Loot_names": [
+    "Allflame"
+  ],
+  "Tasks": [],
+  "npcs": [],
+  "tiles": [],
+  "Way_points": [],
+  "Trials": null,
+  "tname": "Quest",
+  "tname_full": "Stas.POE.Core.Quest",
+  "created_date": "2022-09-16T06:55:20.7219138+03:00"
+}

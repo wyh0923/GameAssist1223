@@ -68,7 +68,7 @@ public partial class AreaInstance {
         bmp.Dispose();
         b_ready = true;
         ui.AddToLog("Map create time=[" + sw.ElapsedTostring() + "]", MessType.Warning); //853
-        //ui.nav.MakeGridSells();
+        ui.nav.MakeGridSells();
     }
     public List<Entity> need_check = new();
 

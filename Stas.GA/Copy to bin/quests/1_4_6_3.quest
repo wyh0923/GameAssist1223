@@ -1,0 +1,14 @@
+{
+  "Loot_names": [
+    "Malachai\u0027s Heart",
+    "Malachai\u0027s Lungs"
+  ],
+  "Tasks": [],
+  "npcs": [],
+  "tiles": [],
+  "Way_points": [],
+  "Trials": null,
+  "tname": "Quest",
+  "tname_full": "Stas.POE.Core.Quest",
+  "created_date": "2022-09-16T13:59:18.51164+03:00"
+}

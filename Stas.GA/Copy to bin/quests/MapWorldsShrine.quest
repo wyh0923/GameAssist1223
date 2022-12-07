@@ -1,0 +1,10 @@
+{
+  "Loot_names": [],
+  "Tasks": [],
+  "npcs": [],
+  "tiles": [],
+  "Way_points": [],
+  "Trials": null,
+  "ttype": "GameHelper.Quest",
+  "created_date": "2022-02-10T03:16:15.1931196+03:00"
+}

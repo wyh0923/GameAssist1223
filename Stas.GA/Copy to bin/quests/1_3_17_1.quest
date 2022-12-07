@@ -1,0 +1,12 @@
+{
+  "Loot_names": [],
+  "Tasks": [],
+  "npcs": [],
+  "tiles": [
+    "library_entrance_v02_01.tdt"
+  ],
+  "Way_points": [],
+  "Trials": null,
+  "ttype": "GameHelper.Quest",
+  "created_date": "2022-02-06T21:28:57.8772549+03:00"
+}

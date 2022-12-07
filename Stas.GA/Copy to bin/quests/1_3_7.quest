@@ -1,0 +1,16 @@
+{
+  "Loot_names": [],
+  "Tasks": [],
+  "npcs": [],
+  "tiles": [
+    "citywaypoint_v01_01.tdt",
+    "market_to_battlefront_v01_02.tdt",
+    "battlefield_arch_v01_03.tdt",
+    "act3_temple_entrance_v01_01.tdt"
+  ],
+  "Way_points": [],
+  "Trials": null,
+  "tname": "Quest",
+  "tname_full": "Stas.POE.Core.Quest",
+  "created_date": "2022-09-16T11:06:03.5880436+03:00"
+}

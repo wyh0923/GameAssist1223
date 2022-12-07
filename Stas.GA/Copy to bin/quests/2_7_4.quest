@@ -1,0 +1,16 @@
+{
+  "Loot_names": [],
+  "Tasks": [],
+  "npcs": [],
+  "tiles": [
+    "church_waypoint_v01_01.tdt",
+    "church_sarcophagus_entrance_01.tdt",
+    "library_entrance_v03_01.tdt",
+    "library_entrance_v02_02.tdt"
+  ],
+  "Way_points": [],
+  "Trials": null,
+  "tname": "Quest",
+  "tname_full": "Stas.POE.Core.Quest",
+  "created_date": "2022-09-16T20:38:33.1892664+03:00"
+}

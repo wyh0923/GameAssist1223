@@ -1,0 +1,14 @@
+{
+  "fname": "C:\\GAP\\bin\\Quests\\1_SideArea5_5.quest",
+  "Loot_names": [
+    "The Staff of Purity"
+  ],
+  "Tasks": [],
+  "npcs": [],
+  "tiles": [],
+  "Way_points": [],
+  "Trials": null,
+  "tname": "Quest",
+  "tname_full": "Stas.GA.Quest",
+  "created_date": "2022-12-07T08:06:32.3538561+03:00"
+}

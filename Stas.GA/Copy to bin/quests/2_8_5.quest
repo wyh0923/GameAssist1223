@@ -1,0 +1,16 @@
+{
+  "Loot_names": [
+    "Wings of Vastiri"
+  ],
+  "Tasks": [],
+  "npcs": [],
+  "tiles": [
+    "bathhouse_transition_v01_01.tdt",
+    "eleganthouse_thickwall_doorclear_v01_01.tdt"
+  ],
+  "Way_points": [],
+  "Trials": null,
+  "tname": "Quest",
+  "tname_full": "Stas.POE.Core.Quest",
+  "created_date": "2022-09-17T13:39:13.7685875+03:00"
+}

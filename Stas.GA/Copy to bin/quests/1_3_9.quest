@@ -1,0 +1,15 @@
+{
+  "Loot_names": [],
+  "Tasks": [],
+  "npcs": [],
+  "tiles": [
+    "templeruinforest_questcart.tdt",
+    "citywaypoint_v01_01.tdt",
+    "docks_wall_arch_v01_01.tdt"
+  ],
+  "Way_points": [],
+  "Trials": null,
+  "tname": "Quest",
+  "tname_full": "Stas.POE.Core.Quest",
+  "created_date": "2022-09-16T10:25:05.4418658+03:00"
+}

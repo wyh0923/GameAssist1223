@@ -1,0 +1,17 @@
+{
+  "Loot_names": [
+    "Maligaro\u0027s Spike"
+  ],
+  "Tasks": [],
+  "npcs": [],
+  "tiles": [
+    "spidergrove_entrance_v01_01.tdt",
+    "spidergrove_exit_v01_01.tdt",
+    "spidergrove_exit_lit_v01_01.tdt"
+  ],
+  "Way_points": [],
+  "Trials": null,
+  "tname": "Quest",
+  "tname_full": "Stas.POE.Core.Quest",
+  "created_date": "2022-09-16T07:54:53.1038993+03:00"
+}

@@ -1,0 +1,14 @@
+{
+  "Loot_names": [],
+  "Tasks": [],
+  "npcs": [],
+  "tiles": [
+    "slum_sewer_entrance_v02_01.tdt",
+    "act3_prison_entrance_01_01.tdt"
+  ],
+  "Way_points": [],
+  "Trials": null,
+  "tname": "Quest",
+  "tname_full": "Stas.POE.Core.Quest",
+  "created_date": "2022-09-16T10:20:18.9680001+03:00"
+}

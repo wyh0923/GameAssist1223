@@ -1,0 +1,15 @@
+{
+  "Loot_names": [
+    "Kraityn\u0027s Amulet"
+  ],
+  "Tasks": [],
+  "npcs": [],
+  "tiles": [
+    "forest_waypoint_v01_01.tdt"
+  ],
+  "Way_points": [],
+  "Trials": null,
+  "tname": "Quest",
+  "tname_full": "Stas.POE.Core.Quest",
+  "created_date": "2022-09-16T07:48:22.664454+03:00"
+}

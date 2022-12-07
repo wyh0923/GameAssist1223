@@ -1,0 +1,12 @@
+{
+  "fname": "C:\\log\\Quests\\MapWorldsVaalTemple.quest",
+  "Loot_names": [],
+  "Tasks": [],
+  "npcs": [],
+  "tiles": [],
+  "Way_points": [],
+  "Trials": null,
+  "tname": "Quest",
+  "tname_full": "Stas.POE.Core.Quest",
+  "created_date": "2022-10-06T11:38:54.659622+03:00"
+}

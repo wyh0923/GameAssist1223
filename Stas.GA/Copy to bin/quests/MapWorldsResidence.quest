@@ -1,0 +1,17 @@
+{
+  "fname": "C:\\log\\Quests\\MapWorldsResidence.quest",
+  "Loot_names": [
+    "The Teardrop"
+  ],
+  "Tasks": [],
+  "npcs": [],
+  "tiles": [
+    "Reliquary_forced_blank_v01_01.tdt",
+    "laboratory_entrance_v01_01.tdt"
+  ],
+  "Way_points": [],
+  "Trials": null,
+  "tname": "Quest",
+  "tname_full": "Stas.POE.Core.Quest",
+  "created_date": "2022-10-07T04:56:08.972463+03:00"
+}

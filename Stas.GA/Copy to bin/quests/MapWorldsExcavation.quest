@@ -1,0 +1,14 @@
+{
+  "Loot_names": [],
+  "Tasks": [],
+  "npcs": [],
+  "tiles": [
+    "mine_areatransition_v02_02.tdt",
+    "mine_areatransition_v03_01.tdt"
+  ],
+  "Way_points": [],
+  "Trials": null,
+  "tname": "Quest",
+  "tname_full": "Stas.POE.Core.Quest",
+  "created_date": "2022-08-24T09:24:08.6974713+03:00"
+}

@@ -1,0 +1,12 @@
+{
+  "fname": "C:\\log\\Quests\\Labyrinth_Airlock.quest",
+  "Loot_names": [],
+  "Tasks": [],
+  "npcs": [],
+  "tiles": [],
+  "Way_points": [],
+  "Trials": null,
+  "tname": "Quest",
+  "tname_full": "Stas.POE.Core.Quest",
+  "created_date": "2022-09-27T14:59:36.2435461+03:00"
+}
