@@ -112,6 +112,7 @@ namespace Stas.GA {
                         ui.AddToLog(tname + " Err: " + ex.Message);
                         Thread.Sleep(5000);
                     }
+                    Thread.Sleep(1);//spu free
                 }
             });
             thread_reading.IsBackground = true;

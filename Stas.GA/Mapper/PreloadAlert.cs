@@ -59,7 +59,6 @@ public class PreloadAlert {
         }
     }
     public void ReloadConfig() {
-
         if (File.Exists(fname)) {
             all_alerts = FILE.LoadJson<Dictionary<string, PreloadInfo>>(fname);
         }

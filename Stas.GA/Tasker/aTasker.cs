@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Diagnostics;
 using V2 = System.Numerics.Vector2;
 namespace Stas.GA;
 
@@ -17,6 +18,8 @@ public abstract partial class aTasker {
     public Dictionary<V2, Entity> checked_npc = new Dictionary<V2, Entity>();
     public Thread tasker_thread;
     protected abstract void MakeRoleTask();
+    Stopwatch sw = new Stopwatch();
+    List<double> elapsed = new();
     public aTasker() {
         tasker_thread = new Thread(() => {
             while (ui.b_running) {
@@ -26,6 +29,20 @@ public abstract partial class aTasker {
                     Thread.Sleep(200);
                 }
                 need_stop_cast ??= new List<aSkill>() { ui.worker.main, ui.worker.totem };
+                #region tick timer & w8ting for relax CPU
+                var d_elaps = sw.Elapsed.TotalMilliseconds;
+                elapsed.Add(d_elaps);
+                if (elapsed.Count > 60)
+                    elapsed.RemoveAt(0);
+                var frame_time = elapsed.Sum() / elapsed.Count;
+                if (frame_time < ui.w8) {
+                    Thread.Sleep(ui.w8 - (int)frame_time);
+                }
+                else {
+                    Thread.Sleep(1);
+                    ui.AddToLog("Tasker: Big Tick Time", MessType.Error);
+                }
+                #endregion
             }
         });
 

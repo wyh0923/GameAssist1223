@@ -31,6 +31,7 @@ namespace Stas.GA {
                 start_gpos = ui.my_last_gpos = ui.me.gpos;
                 ui.curr_map.GetTileTgtName();
                 ui.LoadQuest();
+
             });
             loader.IsBackground= true;
             loader.Start();

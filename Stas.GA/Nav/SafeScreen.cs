@@ -5,7 +5,7 @@ using V2 = System.Numerics.Vector2;
 using V3 = System.Numerics.Vector3;
 
 namespace Stas.GA;
-public class SafeScreen : iSett {
+public class SafeScreen : iSett ,IDisposable{
 
     [JsonInclude]
     public int Width { get; protected private set; }
@@ -52,7 +52,7 @@ public class SafeScreen : iSett {
     [JsonInclude]
     public Cell skills { get; protected private set; } //3E0
     protected V2 my_sp;
-    Thread worker;
+    Thread worker, center_updater;
     List<string> need_elem_nams = new() { "gui.ui_ppa", "gui.chat_box_elem?.up_arrow", "gui.ui_flask_root" };
     List<Element> need_init_well;
     public SafeScreen() {
@@ -141,8 +141,8 @@ public class SafeScreen : iSett {
             RoutPounts.Add(("b" + i, new V2(x, y), new V2(x + 1f, y + 1f)));
         }
 
-        var center_updater = new Thread(() => {
-            while (true) {
+        center_updater = new Thread(() => {
+            while (ui.b_running) {
                 if (ui.gui == null) {
                     Thread.Sleep(1000);
                     continue;
@@ -163,7 +163,7 @@ public class SafeScreen : iSett {
         center_updater.Start();
         
         worker = new Thread(() => {
-            while (!closed) {
+            while (ui.b_running) {
                 if (ui.gui == null) {
                     Thread.Sleep(1000);
                     continue;
@@ -196,13 +196,7 @@ public class SafeScreen : iSett {
     V2 old_buffs;
     int last_party_count = 0;
     bool b_last_league_state;
-    public bool closed = false;
-    public void Close() {
-        closed = true;
-#pragma warning disable SYSLIB0006
-        worker.Abort();
-        worker = null;
-    }
+   
     protected void UpdateFrames() {
         var grc = ui.game_window_rect.Center();
         var top_elem = ui.gui.MyBuffPanel.get_client_rectangle;
@@ -327,6 +321,8 @@ public class SafeScreen : iSett {
         //ui.sound_player.PlaySound(@"I hit a wall, my God.mp3"); //@"C:\Sounds\Help me.mp3"
         return false;
     }
-
-
+    public void Dispose() {
+        worker.Abort();
+        center_updater.Abort();
+    }
 }

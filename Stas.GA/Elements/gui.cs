@@ -110,7 +110,6 @@ public partial class GameUiElements : Element {
     internal Element ui_xp_bar { get; } = new Element("ui_xp_bar") ;
     internal Element MyBuffPanel { get; } = new Element("MyBuffPanel") ;
     public void Dispose() {
-        safe_screen.Close();
         worker.Abort();
     }
 }
