@@ -153,7 +153,7 @@ public partial class InputChecker : aMouseChecker , IDisposable{
             foreach (var s in ui.worker.my_skills) {
                 if (Keyboard.IsKeyDown(s.key)) {
                     if (!s.b_ready) {
-                        ui.AddToLog("try reg manual using of a skill err [" + s.tname + "] not ready");
+                        ui.AddToLog("try reg manual using of a skill err [" + s.tName + "] not ready");
                     }
                     s.WasUsedManual();
                 }

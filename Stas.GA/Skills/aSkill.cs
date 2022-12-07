@@ -4,7 +4,7 @@ using V3 = System.Numerics.Vector3;
 namespace Stas.GA; 
 
 public abstract class aSkill {
-    public string tname => GetType().Name;
+    public string tName => GetType().Name;
     public aTask parent_task { get; set; }
     public bool b_can_pull { get; protected private set; } = false;
     public bool b_can_hit { get;  protected private set; } = true; //for distroy a barall etc
@@ -54,7 +54,7 @@ public abstract class aSkill {
     public void SetOnTgp(V2 tgp, bool stop_moving=true, bool debug = false) {
         var sp = ui.TgpToSP(tgp);
         sp = ui.SpToSp_safe(sp);
-        Mouse.SetCursor(sp, tname, 3, stop_moving); 
+        Mouse.SetCursor(sp, tName, 3, stop_moving); 
     }
     public void SetOnTP(V3 tp, bool stop_moving=true, bool debug=false) {
         if (!ui.b_game_top) {
@@ -63,7 +63,7 @@ public abstract class aSkill {
         }
         var sp = ui.WorldTPToSP(tp);
         sp = ui.SpToSp_safe(sp);
-        Mouse.SetCursor(sp, tname, 3, stop_moving, true, 600);
+        Mouse.SetCursor(sp, tName, 3, stop_moving, true, 600);
     }
 
     public virtual void Reset() {
@@ -100,7 +100,7 @@ public abstract class aSkill {
         }
     }
     public override string ToString() {
-        return tname + " ready=" + b_ready + " oncd=" + b_on_cooldown;
+        return tName + " ready=" + b_ready + " oncd=" + b_on_cooldown;
     }
     
     public void WasUsedManual() {
@@ -128,10 +128,10 @@ public abstract class aSkill {
                 if (elaps < warning_fast_reuse) {
                     started.Add(elaps);
                     //Debug.Assert(stopped.Count < 30);
-                    ui.AddToLog(parent_task + "=>" + tname + ".. last started=[" + elaps + "]", MessType.Warning);
+                    ui.AddToLog(parent_task + "=>" + tName + ".. last started=[" + elaps + "]", MessType.Warning);
                 }
             }
-            Keyboard.KeyDown(key, parent_task + "=>" + tname + " KeyDown");
+            Keyboard.KeyDown(key, parent_task + "=>" + tName + " KeyDown");
             last_started = DateTime.Now; //TODO for debug only(winter orb bug)
             last_use = DateTime.Now;
         } else {//wtop and debug here  from called - it's bad
@@ -147,14 +147,14 @@ public abstract class aSkill {
                 //var stage = (this as WinterOrb)?.stage;
                 if (elaps < warning_fast_reuse) {
                     stopped.Add(elaps);
-                    ui.AddToLog(parent_task + "=>"+tname + ".. last stopped=[" + elaps + "]", MessType.Warning);
+                    ui.AddToLog(parent_task + "=>"+tName + ".. last stopped=[" + elaps + "]", MessType.Warning);
                     //Debug.Assert(stopped.Count < 50);
                     if (stopped.Count > 50)
                         stopped.Clear();
                 }
             }
             last_stopped = DateTime.Now;//first time init here
-            Keyboard.KeyUp(key, parent_task + "=>" + tname + " KeyUp");
+            Keyboard.KeyUp(key, parent_task + "=>" + tName + " KeyUp");
         }
     }
 
@@ -168,7 +168,7 @@ public abstract class aSkill {
         if (ui.b_alt || MustBeStop()) {
             StopCast();
             if (ui.b_alt) {
-                ui.AddToLog(tname + " LikeChannelling stopped by ALT", MessType.Warning);
+                ui.AddToLog(tName + " LikeChannelling stopped by ALT", MessType.Warning);
             }//debug here mb? when alt is pressed this should not be called
             do_after?.Invoke();
             return;

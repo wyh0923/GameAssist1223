@@ -59,7 +59,7 @@ namespace Stas.GA {
                 return;
             skill = act.actor_skills.FirstOrDefault(s => s.Name == name);
             if (skill == null) {
-                ui.AddToLog(tname + "not found in " + key + " slot -> check in game", MessType.Warning);
+                ui.AddToLog(tName + "not found in " + key + " slot -> check in game", MessType.Warning);
             }
         }
         public override bool b_on_cooldown => skill == null ? true : skill.IsOnCooldown;

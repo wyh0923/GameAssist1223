@@ -20,7 +20,7 @@ namespace Stas.GA {
                 return;
             skill = act.actor_skills.FirstOrDefault(s => s.Name == "QuickDodge");
             if (skill == null) {
-                ui.AddToLog(tname + "not found JumpSkill in " + key + " slot -> check in game", MessType.Warning);
+                ui.AddToLog(tName + "not found JumpSkill in " + key + " slot -> check in game", MessType.Warning);
             } else {
                 //askill.TryFindGrantedEffectsPerLevel();
                 //askill.TryFindActiveSkillWrapper();

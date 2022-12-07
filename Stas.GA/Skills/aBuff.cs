@@ -43,7 +43,7 @@ namespace Stas.GA {
         public void how_to_detect() { //used for debug only
             if(started  && b_already_have) {
                 var need = sw.Elapsed.TotalMilliseconds.ToRoundStr(0);
-                ui.AddToLog(tname+ " ms_to_be_detected="+ need);
+                ui.AddToLog(tName+ " ms_to_be_detected="+ need);
                 started = false;
             }
 
@@ -55,7 +55,7 @@ namespace Stas.GA {
             }
         }
         public override string ToString() {
-            return tname + " ready=" + b_ready + " have="+b_already_have+" oncd=" + b_on_cooldown;
+            return tName + " ready=" + b_ready + " have="+b_already_have+" oncd=" + b_on_cooldown;
         }
     }
    
