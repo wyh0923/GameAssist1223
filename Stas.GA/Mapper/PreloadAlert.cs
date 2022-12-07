@@ -2,6 +2,7 @@
 using Color = System.Drawing.Color;
 using System.IO;
 using System.Diagnostics;
+using System.Reflection;
 
 namespace Stas.GA;
 public abstract class ConfigLineBase {
@@ -49,9 +50,16 @@ public class PreloadAlert {
             return;
         Parse();
     }
+     string fname {
+        get {
+            var strExeFilePath = Assembly.GetExecutingAssembly().Location;
+            var dir = Path.GetDirectoryName(strExeFilePath);
+            var n = Path.Combine(dir, ui.sett.preload_fname);
+            return n;
+        }
+    }
     public void ReloadConfig() {
 
-        var fname = ui.sett.preload_fname;
         if (File.Exists(fname)) {
             all_alerts = FILE.LoadJson<Dictionary<string, PreloadInfo>>(fname);
         }
