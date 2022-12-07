@@ -1,0 +1,10 @@
+﻿ <TargetFramework>net7.0-windows</TargetFramework>
+ <TargetFramework>net7.0</TargetFramework>
+https://stackoverflow.com/questions/28301058/how-to-change-the-output-name-of-an-executable-built-by-visual-studio
+<TargetName>Notepad</TargetName>
+
+<RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+<Target Name="Rename" AfterTargets="AfterBuild">
+		<Move SourceFiles="$(OUTDIR)\Stas.GA.exe" DestinationFiles="$(OUTDIR)\Notepad.exe" />
+		<Message Text="Renamed executable file." Importance="high" />
+	</Target>
