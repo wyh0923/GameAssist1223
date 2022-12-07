@@ -123,6 +123,7 @@ namespace Stas.GA {
                     ui.SetRole(); 
                 });
                 ui.warning = "last SetDebugPossible time=[" + ui.w8_top + "]"; //for debug only
+                ui.sett.Save();
             }
 
             ImGui.SameLine();

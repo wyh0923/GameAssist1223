@@ -2,10 +2,9 @@
 namespace Stas.GA;
 
 public partial class Settings : iSett {
-    /// <summary>
-    /// change to: PathOfExile_KG PathOfExileSteam PathOfExile_x64 if we support it
-    /// </summary>
-    public string pp_name = "PathOfExile";
+   [JsonInclude] 
+    public Role role = Role.None;
+    public string pp_name = "PathOfExile"; //PathOfExile_KG PathOfExileSteam PathOfExile_x64 if we support it
     public string poe_w_name = "Path of Exile";
     public string icons_fname { get; set; } = @"Icons.png";
     public string title_name { get; set; } = "Master_3.19.txt";
@@ -16,7 +15,9 @@ public partial class Settings : iSett {
     public string log_fname { get; set; } = @"bot.log";
     public string master_IP { get; set; } = "192.168.1.2";
     public int master_port { get; set; } = 8888;
-   [JsonInclude]
+    [JsonInclude]
+    public int visited_persent = 10;
+    [JsonInclude]
     public bool b_gui_debug_on_top = false;
     [JsonInclude]
     public bool b_draw_map_fps = true;
@@ -61,8 +62,7 @@ public partial class Settings : iSett {
     /// current POE window index(if running two of POE on one system)
     /// </summary>
     public int last_pp_index { get; set; } = 0;
-    [JsonInclude] 
-    public Role role = Role.None;
+   
 
     [JsonInclude]
     public bool b_can_play_sound = false;

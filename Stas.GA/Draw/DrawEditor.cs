@@ -21,12 +21,17 @@ namespace Stas.GA {
                 ui.curr_map.AddImportantTile(ui.me.gpos);
             }
             ImGuiExt.ToolTip("adds the tile we are standing on to the list of important tiles for the current map");
-            ImGui.SameLine();
+            
 
             if (ImGui.SliderFloat("icon size", ref ui.sett.icon_size, 8, 20)) {
                 ui.sett.Save();
             }
             ImGuiExt.ToolTip("Change base icon size. it also depends on the degree of magnification of the map");
+
+            if (ImGui.SliderInt("Visited", ref ui.sett.visited_persent, 5, 30)) {
+                ui.sett.Save();
+            }  
+            ImGuiExt.ToolTip("the transparency regulator for the seeded areas - I will make the color later");
 
         }
     }

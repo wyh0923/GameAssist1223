@@ -1,7 +1,6 @@
 ﻿using Vector2 = System.Numerics.Vector2;
 using Color = System.Drawing.Color;
 using System.IO;
-using static System.Net.Mime.MediaTypeNames;
 using System.Diagnostics;
 
 namespace Stas.GA;
@@ -51,6 +50,7 @@ public class PreloadAlert {
         Parse();
     }
     public void ReloadConfig() {
+
         var fname = ui.sett.preload_fname;
         if (File.Exists(fname)) {
             all_alerts = FILE.LoadJson<Dictionary<string, PreloadInfo>>(fname);

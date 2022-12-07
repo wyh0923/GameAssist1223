@@ -10,7 +10,7 @@ public abstract partial class aTasker {
             CleareDebug(tdone);
         //Debug.Assert(task != null && task.id == tdone.id, "Check tasks making order");
         if (tdone.b_need_auto_stop)
-            ui.worker.StopMoving(tdone.id_name + "=>b_need_auto_stop");
+            ui.worker?.StopMoving(tdone.id_name + "=>b_need_auto_stop");
         StopCastAll();
         task = null;
         if (tdone.b_debug || _mt != MessType.Ok)

@@ -12,12 +12,14 @@ using V2 = System.Numerics.Vector2;
 
 namespace Stas.GA {
     partial class DrawMain {
+        SW sw_vis = new SW("vizit");
         public void DrawNavVisited() {
-            if (!ui.nav.b_ready || ui.b_contrl)  //&& ui.b_draw_debug) || ui.b_alt
+            if (!ui.nav.b_ready || ui.b_contrl || ui.b_alt)  //&& ui.b_draw_debug) || ui.b_alt
                 return;
+            sw_vis.Restart();
             var rm = ui.MTransform();
-            var v_volor = Color.FromArgb(25, Color.GreenYellow).ToImgui();
-            var nv_color = Color.FromArgb(40, Color.Gold).ToImgui(); //test color
+            var v_volor = Color.FromArgb(ui.sett.visited_persent, Color.GreenYellow).ToImgui();
+            var nv_color = Color.FromArgb(10, Color.Gold).ToImgui(); //test color
             var cc = v_volor;
             var vrc = 0;// visited  routs count
             var rc = 0;
@@ -47,7 +49,7 @@ namespace Stas.GA {
                     vrc += 1;
                 }
             }
-            //ui.AddToLog("gs=["+ ui.nav.grid_cells.Count+] rout=["+ rc + "] visited=["+ vrc + "]");//3803 613| 1521 836 110
+            sw_vis.Print("["+ ui.nav.grid_cells.Count+"] rout=[" + rc + "] visited=[" + vrc + "]");
         }
     }
 }

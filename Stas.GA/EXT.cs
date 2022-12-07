@@ -222,7 +222,6 @@ namespace Stas.GA {
                 case Axis.Y:
                     return point.Y;
                 default:
-
                     ui.AddToLog("EXT.GetCoordinate for:"+ axis, MessType.Critical);
                     return default;
 
