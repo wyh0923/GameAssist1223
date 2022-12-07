@@ -15,6 +15,10 @@ public partial class Settings : iSett {
     public string log_fname { get; set; } = @"bot.log";
     public string master_IP { get; set; } = "192.168.1.2";
     public int master_port { get; set; } = 8888;
+    public Keys zoom_in { get; set; } = Keys.F7;
+    public Keys zoom_out { get; set; } = Keys.F8;
+    [JsonInclude]
+    public bool b_use_keybord_for_zoom =false;
     [JsonInclude]
     public int visited_persent = 10;
     [JsonInclude]

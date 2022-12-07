@@ -25,8 +25,6 @@ public partial class Looter:IDisposable {
     List<string> item_i_need = new();
     List<string> chaos_set = new();
     Dictionary<string, bool> currency = new();
-
-  
     int qms = 18; //question mark icon size
     (string, int) GetCurrencyIcon(Loot loot) {
         if(ui.ninja.prices.Count == 0) {

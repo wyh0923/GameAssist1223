@@ -37,6 +37,7 @@
 		<Compile Remove="aWorker.cs" />
 		<Compile Remove="Draw\DrawCorutine.cs" />
 		<Compile Remove="Draw\DrawExpedSett.cs" />
+		<Compile Remove="Input\CursorMover.cs" />
 		<Compile Remove="Inventory\InventSlotItem.cs" />
 		<Compile Remove="Inventory\ServerInventory.cs" />
 		<Compile Remove="Loot\NinjaUnique.cs" />

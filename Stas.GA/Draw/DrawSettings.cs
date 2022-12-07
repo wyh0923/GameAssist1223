@@ -45,7 +45,13 @@ namespace Stas.GA {
             }
             ImGuiExt.ToolTip("play sounds on this PC, otherwise on master server");
 
-           
+            ImGui.SameLine();
+            if (ImGui.Checkbox("MouseZoom", ref ui.sett.b_use_keybord_for_zoom)) {
+                ui.sett.Save();
+            }
+            ImGuiExt.ToolTip("Use the side mouse buttons to zoom in on the map. \nOtherwise will be used buttons on the keyboard - set them in the configuration file");
+
+
             //================>new line
             if (ui.curr_role == Role.Master) {
                 ImGui.Checkbox("bots", ref ui.b_draw_bots);
@@ -87,6 +93,7 @@ namespace Stas.GA {
                 ui.sett.Save();
             }
             ImGuiExt.ToolTip("show PA/Log tab as default");
+
             //================>new line
             if (ui.worker != null) {
                 if (ImGui.Checkbox("Pull", ref ui.sett.b_can_pull_alone)) {

@@ -255,10 +255,10 @@ public class UdpBot : IDisposable {//version=1
                 Thread.Sleep(1);
             }
         });
-        thred.CurrentCulture = new System.Globalization.CultureInfo("ru-RU");
-        //thred.CurrentUICulture = new System.Globalization.CultureInfo("en-US");
+        //thred.CurrentCulture = new System.Globalization.CultureInfo("ru-RU");
+        thred.CurrentUICulture = new System.Globalization.CultureInfo("en-US");
         thred.IsBackground = true;
-        thred.Start();
+        //thred.Start();
 
         Keys GetKey() {
             var res = (Keys)BitConverter.ToInt32(data, 1);

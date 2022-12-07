@@ -96,7 +96,7 @@ public static class Keyboard {
         }
         return false;
     }
-    public static bool IsKeyDown(Keys key) {
+    public static bool IsKeyDown(Keys key, string from=null) {
         return GetKeyState((int)key) < 0;
     }
 

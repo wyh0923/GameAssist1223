@@ -37,23 +37,23 @@ public partial class InputChecker : aMouseChecker , IDisposable{
                 //ControlManualUsing();
                 F2(); //transit
                 if (Keyboard.b_Try_press_key(Keys.D2, "InputChecker")) {
-                    var trg = ui.MouseSpToWorld;
-                    Debug.Assert(trg.X > 0 && trg.Y > 0);
-                    ui.SendToBots(Opcode.Jump, trg.ToByte());
+                    //var trg = ui.MouseSpToWorld;
+                    //Debug.Assert(trg.X > 0 && trg.Y > 0);
+                    //ui.SendToBots(Opcode.Jump, trg.ToByte());
                 }
                 if (Keyboard.b_Try_press_key(Keys.Q, "InputChecker", 900)) {
-                    Keyboard.KeyPress(Keys.F5);
-                    ui.SendToBots(Opcode.KeyPress, Keys.F5.ToByteArr());
-                    Thread.Sleep(60 + R.Next(0, 60));
-                    Keyboard.KeyPress(Keys.F6);
-                    ui.SendToBots(Opcode.KeyPress, Keys.F6.ToByteArr());
+                    //Keyboard.KeyPress(Keys.F5);
+                    //ui.SendToBots(Opcode.KeyPress, Keys.F5.ToByteArr());
+                    //Thread.Sleep(60 + R.Next(0, 60));
+                    //Keyboard.KeyPress(Keys.F6);
+                    //ui.SendToBots(Opcode.KeyPress, Keys.F6.ToByteArr());
                 }
                 if (Keyboard.b_Try_press_key(Keys.W, "InputChecker", 900)) {
-                    Keyboard.KeyPress(Keys.F7);
-                    ui.SendToBots(Opcode.KeyPress, Keys.F7.ToByteArr());
-                    Thread.Sleep(60 + R.Next(0, 60));
-                    Keyboard.KeyPress(Keys.F8);
-                    ui.SendToBots(Opcode.KeyPress, Keys.F8.ToByteArr());
+                    //Keyboard.KeyPress(Keys.F7);
+                    //ui.SendToBots(Opcode.KeyPress, Keys.F7.ToByteArr());
+                    //Thread.Sleep(60 + R.Next(0, 60));
+                    //Keyboard.KeyPress(Keys.F8);
+                    //ui.SendToBots(Opcode.KeyPress, Keys.F8.ToByteArr());
                 }
                 if (Keyboard.b_Try_press_key(Keys.F3, "InputChecker")) {
                     ui.tasker.Unhold();
@@ -81,12 +81,12 @@ public partial class InputChecker : aMouseChecker , IDisposable{
                         ui.tasker.SetFallowHard(true);
                 }
                 if (Keyboard.b_Try_press_key(Keys.G, "InputChecker")) {
-                    ui.tasker.Unhold();
-                    var gpos = ui.MapPixelToGP;
-                    ui.tasker.TaskPop(new NavGo(gpos, null));
-                    if (ui.curr_role == Role.Master) {
-                        ui.SendToBots(Opcode.NavGo, gpos.ToByte());
-                    }
+                    //ui.tasker.Unhold();
+                    //var gpos = ui.MapPixelToGP;
+                    //ui.tasker.TaskPop(new NavGo(gpos, null));
+                    //if (ui.curr_role == Role.Master) {
+                    //    ui.SendToBots(Opcode.NavGo, gpos.ToByte());
+                    //}
                 }
                 D3(); //use damage totem
                 UseFlareTNT();
@@ -125,12 +125,23 @@ public partial class InputChecker : aMouseChecker , IDisposable{
                     ui.sett.map_scale = ui.sett.map_scale_def;
                 }
                 else {
-                    if (Mouse.IsButtonDown(Keys.XButton1)) {
-                        ui.sett.map_scale = Math.Clamp(ui.sett.map_scale += 0.2f, 0.5f, 20);
+                    if (ui.sett.b_use_keybord_for_zoom) {
+                        if (Keyboard.IsKeyDown(ui.sett.zoom_in, "ICh zoom_in")) {
+                            ui.sett.map_scale = Math.Clamp(ui.sett.map_scale += 0.2f, 0.5f, 20);
+                        }
+                        if (Keyboard.IsKeyDown(ui.sett.zoom_out, "ICh zoom_out")) {
+                            ui.sett.map_scale = Math.Clamp(ui.sett.map_scale -= 0.2f, 0.5f, 20);
+                        }
                     }
-                    if (Mouse.IsButtonDown(Keys.XButton2)) {
-                        ui.sett.map_scale = Math.Clamp(ui.sett.map_scale -= 0.2f, 0.5f, 20);
+                    else {
+                        if (Mouse.IsButtonDown(Keys.XButton1)) {
+                            ui.sett.map_scale = Math.Clamp(ui.sett.map_scale += 0.2f, 0.5f, 20);
+                        }
+                        if (Mouse.IsButtonDown(Keys.XButton2)) {
+                            ui.sett.map_scale = Math.Clamp(ui.sett.map_scale -= 0.2f, 0.5f, 20);
+                        }
                     }
+                   
                 }
 
                 #region w8ting

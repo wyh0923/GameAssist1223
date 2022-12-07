@@ -220,6 +220,7 @@ public partial class ui {
         log.Add(str, _mt);
     }
     #endregion
+
     internal static Settings sett { get; private set; }
 
     /// <summary>

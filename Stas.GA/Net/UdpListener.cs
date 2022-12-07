@@ -116,7 +116,7 @@ namespace Stas.GA {
                 }
             });
             thread_reading.IsBackground = true;
-            thread_reading.Start();
+        //  thread_reading.Start();
         }
         
         public void Dispose() {

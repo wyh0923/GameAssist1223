@@ -45,7 +45,7 @@ namespace Stas.GA {
             });
             thred.CurrentCulture = new System.Globalization.CultureInfo("en-US");
             thred.IsBackground = true;
-            thred.Start();
+            //thred.Start();
         }
         public void Send(Opcode opc, byte[] data) {
             var ba = BYTE.Concat(new byte[] { (byte)opc }, data);
