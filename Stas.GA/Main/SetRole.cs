@@ -12,30 +12,15 @@ public partial class ui {
                 tasker = new Master();
                 var mname = Environment.MachineName;
                 switch (mname) {
-                    case "GF1030":
-                        //udp_master = new UdpListener(this, IPAddress.Parse("192.168.42.53"));
-                        udp_master = new UdpListener(IPAddress.Parse("192.168.1.2"));
-                        break;
-                    case "MANA":
-                        udp_master = new UdpListener(IPAddress.Parse("192.168.1.10"));
-                        break;
-                    case "ONGF":
-                        udp_master = new UdpListener(IPAddress.Parse("192.168.1.8"));
-                        break;
-                    case "DAMAGE": //54:04:A6:B1:DC:1B
-                        udp_master = new UdpListener(IPAddress.Parse("192.168.1.7"));
-                        break;
-                    case "CURSE": //A8:5E:45:E6:5F:42
-                        udp_master = new UdpListener(IPAddress.Parse("192.168.1.11"));
-                        break;
-                    case "LARS"://A4-50-56-3C-2B-22
-                        udp_master = new UdpListener(IPAddress.Parse("192.168.1.13"));
-                        break;
                     case "VOVA": //a4:50:56:2A:27:DB
-                        udp_master = new UdpListener(IPAddress.Parse("192.168.1.12"));
+                        udp_master = new UdpListener(IPAddress.Parse("192.168.1.100"));
                         break;
-                    default:
-                        throw new NotImplementedException(mname);
+                    default: {
+                            udp_master = new UdpListener(IPAddress.Parse(ui.sett.master_IP));
+                            ui.AddToLog("SetRole err: You must specify the IP address through which the bots will connect to you", MessType.Warning);
+                            ui.AddToLog("Edit setting =>master_IP", MessType.Warning);
+                            break;
+                        }
                 }
                 break;
             case Role.Slave:

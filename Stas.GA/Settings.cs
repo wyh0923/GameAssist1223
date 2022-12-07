@@ -62,7 +62,7 @@ public partial class Settings : iSett {
     /// </summary>
     public int last_pp_index { get; set; } = 0;
     [JsonInclude] //[JsonPropertyName("role")]
-    public Role role = Role.Master;
+    public Role role = Role.None;
 
     [JsonInclude]
     public bool b_can_play_sound = false;
