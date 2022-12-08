@@ -45,7 +45,8 @@ public abstract partial class aTasker {
                 #endregion
             }
         });
-
+        tasker_thread.IsBackground= true;
+        //tasker_thread.Start();
     }
     public void Add_iTask(iTask it) {
         i_tasks.Add(it);

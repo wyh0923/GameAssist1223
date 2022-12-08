@@ -105,8 +105,9 @@ public partial class ui {
             tasker.Dispose();
             nav.Dispose();
             looter.Dispose();
-            worker = null;
             gui.Dispose();
+            worker = null;
+          
         }
         catch (Exception ex) {
         }

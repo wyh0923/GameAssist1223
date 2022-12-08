@@ -105,7 +105,7 @@ namespace Stas.GA {
 
             });
             nav_thread.IsBackground = true;
-            nav_thread.Start();
+           // nav_thread.Start();
         }
         public Cell GetFirstRount(V2 gp) {
             return null;

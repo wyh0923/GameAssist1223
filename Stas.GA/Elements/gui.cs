@@ -28,7 +28,7 @@ public partial class GameUiElements : Element {
             }
         });
         worker.IsBackground= true;
-        worker.Start(); 
+        //worker.Start(); 
     }
     override protected void Init(string from) {
         base.Init(from);
