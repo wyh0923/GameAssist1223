@@ -29,8 +29,8 @@ public class SunglePlaer : aWorker {
         //BuffFromHit = new SmiteBuff(Keys.RButton);
     }
 }
-public class Curse_Kola : aWorker {
-    public Curse_Kola() {
+public class CurseBot : aWorker {
+    public CurseBot() {
         b_use_low_life = true;
         max_danger = 10; //must stop and cleare if use fater navigation algoritm
         //main = new Frenzy(Keys.D1, 80, 15, 480);

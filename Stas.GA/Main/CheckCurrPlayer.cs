@@ -20,6 +20,7 @@ public partial class ui {
             if (worker == null || curr_player == null ||
                 (_cp != null && _cp.Name != curr_player.Name)) {
                 if (_cp != null && !string.IsNullOrEmpty(_cp.Name)) {
+                  
                     worker = GetWorkerByName(_cp.Name);
                     curr_player = _cp;
                 }

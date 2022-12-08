@@ -14,6 +14,8 @@ public partial class Settings : iSett {
     public string sounds_dir { get; set; } = @"Sounds\";
     public string log_fname { get; set; } = @"bot.log";
     public string master_IP { get; set; } = "192.168.1.2";
+    public string me_name { get; set; } = "CurseBot;
+
     public int master_port { get; set; } = 8888;
     public Keys zoom_in { get; set; } = Keys.F7;
     public Keys zoom_out { get; set; } = Keys.F8;
