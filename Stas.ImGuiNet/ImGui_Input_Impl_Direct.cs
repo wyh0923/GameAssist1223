@@ -41,7 +41,7 @@ namespace Stas.ImGuiNet {
                 io.NativePtr->BackendPlatformName = (byte*)_platformNamePtr.ToPointer();
             }
 
-            io.ImeWindowHandle = _hWnd;
+            io = _hWnd;
 
             io.KeyMap[(int)ImGuiKey.Tab] = (int)VirtualKey.Tab;
             io.KeyMap[(int)ImGuiKey.LeftArrow] = (int)VirtualKey.Left;
@@ -58,7 +58,6 @@ namespace Stas.ImGuiNet {
             io.KeyMap[(int)ImGuiKey.Space] = (int)VirtualKey.Space;
             io.KeyMap[(int)ImGuiKey.Enter] = (int)VirtualKey.Return;
             io.KeyMap[(int)ImGuiKey.Escape] = (int)VirtualKey.Escape;
-            io.KeyMap[(int)ImGuiKey.KeyPadEnter] = (int)VirtualKey.Return; // same keycode, lparam is different.  Not sure if this will cause dupe events or not
             io.KeyMap[(int)ImGuiKey.A] = (int)VirtualKey.A;
             io.KeyMap[(int)ImGuiKey.C] = (int)VirtualKey.C;
             io.KeyMap[(int)ImGuiKey.V] = (int)VirtualKey.V;

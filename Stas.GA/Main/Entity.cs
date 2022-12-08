@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Collections.Concurrent;
 using System.Text;
-
 using ImGuiNET;
 using V2 = System.Numerics.Vector2;
 using V3 = System.Numerics.Vector3;
-
 namespace Stas.GA;
 public partial class Entity : RemoteObjectBase {
     /// <summary>
@@ -72,7 +65,9 @@ public partial class Entity : RemoteObjectBase {
         this.componentCache.Clear();
         var entityComponent = ui.m.ReadStdVector<IntPtr>(idata.ComponentListPtr);
         var entityDetails = ui.m.Read<EntityDetails>(idata.EntityDetailsPtr);
-        this.Path = ui.m.ReadStdWString(entityDetails.name);
+        if (!ui.std_wstrings.ContainsKey(entityDetails.name))
+           ui.std_wstrings[entityDetails.name] = ui.m.ReadStdWString(entityDetails.name);
+        Path = ui.std_wstrings[entityDetails.name];
         var lookupPtr = ui.m.Read<ComponentLookUpStruct>(entityDetails.ComponentLookUpPtr);
 
         var namesAndIndexes = ui.m.ReadStdBucket<ComponentNameAndIndexStruct>(

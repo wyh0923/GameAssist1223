@@ -474,9 +474,9 @@ namespace Stas.ImGuiNet {
             byte[] shaderData;
             var assembly = Assembly.GetExecutingAssembly();
             var _path = Path.GetDirectoryName(assembly.Location);
-            var aname = assembly.GetManifestResourceNames();
-            using (var stream = File.OpenRead(Path.Combine(_path, "shader/imgui-vertex.hlsl.bytes"))) {
-                Debug.WriteLine(stream != null);
+            using (var stream = File.OpenRead(Path.Combine(_path, "shader\\imgui-vertex.hlsl.bytes"))) {
+            //using (var stream = assembly.GetManifestResourceStream("imgui-vertex.hlsl.bytes")) {
+                Debug.Assert(stream != null);
                 shaderData = new byte[stream.Length];
                 stream.Read(shaderData, 0, shaderData.Length);
             }
@@ -502,8 +502,9 @@ namespace Stas.ImGuiNet {
 
             // Create the pixel shader
             //TODO net 6.0 resource bug
-            //assembly.GetManifestResourceStream("imgui-frag.hlsl.bytes")
-            using (var stream = File.OpenRead(Path.Combine(_path, "shader/imgui-frag.hlsl.bytes"))) {
+            using (var stream = File.OpenRead(Path.Combine(_path, "shader\\imgui-frag.hlsl.bytes"))) {
+                //using (var stream = assembly.GetManifestResourceStream("imgui-frag.hlsl.bytes")) {
+                Debug.Assert(stream != null);
                 shaderData = new byte[stream.Length];
                 stream.Read(shaderData, 0, shaderData.Length);
             }

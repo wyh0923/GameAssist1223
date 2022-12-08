@@ -10,7 +10,7 @@ public partial class ui {
     public static ConcurrentDictionary<IntPtr, Element> elements = new();
     public static ConcurrentDictionary<IntPtr, string> texts = new();
     public static ConcurrentDictionary<IntPtr, DateTime> w8ting_click_until = new();
-
+    public static ConcurrentDictionary<StdWString, string> std_wstrings = new();
     public static MapIconsIndex IconIndexByName(string name) {
         name = name.Replace(" ", "").Replace("'", "");
         Icons.TryGetValue(name, out var result);

@@ -9,10 +9,14 @@ using System.Drawing;
 
 namespace Stas.GA {
     public partial class ui {
+        static object locker = new object();
         public static V2 map_offset;
         public static Rectangle game_window_rect => EXT.GetWindowRectangle(game_ptr);
+        static V2[] pa;
         static V2 GetInterpPos() {
-            var pa = curr_map.me_pos.ToArray();//this thread safe copy of
+            lock (locker) {
+                pa = curr_map.me_pos.ToArray();//this thread safe copy of
+            }
             if (pa.Length < 4)
                 return new V2(me.gpos.X, -me.gpos.Y);
             float t = 0.4f;
