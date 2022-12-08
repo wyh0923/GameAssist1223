@@ -1,6 +1,6 @@
 ﻿namespace Stas.GA;
-public class SunglePlaer : aWorker {
-    public SunglePlaer() {
+public class Default : aWorker {
+    public Default() {
         //b_use_low_life = true;
         //max_danger = 10; //must stop and cleare if use faster navigation algoritm
         //main = new Frenzy(Keys.D1, 80, 15, 480);

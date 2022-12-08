@@ -2,8 +2,22 @@
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace Stas.GA; 
+namespace Stas.GA;
+using System.Text.Json.Serialization;
 
+
+public partial class Settings : iSett {
+    /// <summary>
+    /// Manually match the hero to the preset ones
+    /// </summary>
+    public Dictionary<string, string> my_worker_names { get; set; } = new();
+    public Settings() {
+        my_worker_names.Add("MyCurseBot", "CurseBot");
+        my_worker_names.Add("MyManaGuard", "ManaGuard");
+        my_worker_names.Add("MyAuraBot", "AuraBot");
+        my_worker_names.Add("MyDamageDealer", "Balista");
+    }
+}
 public partial class ui {
     static Player curr_player;
     static void CheckWorker() {
@@ -11,22 +25,37 @@ public partial class ui {
             //its possible if relogin fast - debug here here
             return;
         }
-       // me.GetComp<Actor>(out var actor);
-       
-        me.GetComp<Player>(out var _cp);//current me.player 
         if (b_worker_err) {
+            return;
         }
         else {
+            me.GetComp<Player>(out var _cp);//current me.player 
+
             if (worker == null || curr_player == null ||
                 (_cp != null && _cp.Name != curr_player.Name)) {
                 if (_cp != null && !string.IsNullOrEmpty(_cp.Name)) {
-                  
-                    worker = GetWorkerByName(_cp.Name);
-                    curr_player = _cp;
+                    if (!b_worker_from_settings_err) {
+                        if (ui.sett.my_worker_names.ContainsKey(_cp.Name)) {
+                            ui.AddToLog("CheckWorker A suitable build has been found for:[" + _cp.Name + "] ");
+                            var class_name = ui.sett.my_worker_names[_cp.Name];
+                            worker = GetWorkerByName(class_name);
+                            if (b_worker_err) {
+                                ui.AddToLog("CheckWorker for:[" + _cp.Name + "] a class that does not exist\n in the code is selected ["+ class_name + "]");
+                                b_worker_from_settings_err = true;
+                                b_worker_err = false; //for check auto next frame
+                            }
+                        }
+                    }
+                    else {
+                        worker = GetWorkerByName(_cp.Name);
+                    }
+                    if(!b_worker_err)
+                        curr_player = _cp;
                 }
             }
         }
     }
+    static bool b_worker_from_settings_err = false;
     static bool b_worker_err = false;
     static aWorker GetWorkerByName(string _name) {
         if (!b_worker_err) {
