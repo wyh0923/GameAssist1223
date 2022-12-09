@@ -20,6 +20,10 @@ public partial class GameUiElements : Element {
         MakeNeedCheckVisList();
         worker = new Thread(() => {
             while (ui.b_running) {
+                if (ui.curr_state != GameStateTypes.InGameState) {
+                    Thread.Sleep(ui.w8*10);
+                    continue;
+                }
                 Init(tName+"worker");
                 base.Tick(Address, tName + "worker");
                 Thread.Sleep(100);
@@ -38,7 +42,7 @@ public partial class GameUiElements : Element {
     }
     override protected void Init(string from) {
         base.Init(from);
-      
+        Debug.Assert(Address != default);
         var data = ui.m.Read<guiOffset>(Address);
         ui_flask_root.Tick(data.ui_flask_root, tName);
         KiracMission.Tick(data.KiracMission, tName);

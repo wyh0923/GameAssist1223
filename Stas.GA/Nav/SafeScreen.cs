@@ -147,7 +147,10 @@ public class SafeScreen : iSett ,IDisposable{
                     Thread.Sleep(1000);
                     continue;
                 }
-
+                if (ui.curr_state != GameStateTypes.InGameState) { 
+                    Thread.Sleep(ui.w8*10);
+                    continue;
+                }
                 foreach (var p in CentrPoints) {
                     Centr[p.Item1] = new Cell(ui.me.gpos.Increase(p.Item2),
                         ui.me.gpos.Increase(p.Item3)) { b_block = true };
@@ -166,6 +169,10 @@ public class SafeScreen : iSett ,IDisposable{
             while (ui.b_running) {
                 if (ui.gui == null) {
                     Thread.Sleep(1000);
+                    continue;
+                }
+                if (ui.curr_state != GameStateTypes.InGameState) {
+                    Thread.Sleep(ui.w8 * 10);
                     continue;
                 }
                 UpdateFrames();

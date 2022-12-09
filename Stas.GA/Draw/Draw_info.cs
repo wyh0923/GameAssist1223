@@ -1,5 +1,4 @@
-﻿
-using ImGuiNET;
+﻿using ImGuiNET;
 using Color = System.Drawing.Color;
 using V2 = System.Numerics.Vector2;
 namespace Stas.GA {
@@ -11,6 +10,7 @@ namespace Stas.GA {
                 ImGui.PushStyleColor(ImGuiCol.WindowBg, Color.FromArgb(255, 1, 1, 1).ToImgui());
                 b_pushed = true;
             }
+          
             if (ui.b_minimize) { 
                 ImGui.SetNextWindowSize(new V2(50, 30));
             }
@@ -20,6 +20,8 @@ namespace Stas.GA {
                 ui.b_minimize = !ui.b_minimize;
             }
             ImGuiExt.ToolTip("Minimize/Maximize [F11]");
+
+            ImGui.SetWindowFontScale(ui.sett.info_font_size);
             ImGui.SameLine();
             var warn = ui.warning;
             if (!string.IsNullOrEmpty(warn)) {
@@ -88,10 +90,11 @@ namespace Stas.GA {
                     ImGui.Button(res.Item1);
             }
             DrawTabs();
-
+            ImGui.SetWindowFontScale(1f);
             ImGui.End();
             if (b_pushed)
                 ImGui.PopStyleColor();
+            
         }
 
 /*

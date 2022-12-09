@@ -24,7 +24,7 @@ public partial class InputChecker : aMouseChecker , IDisposable{
                 }
                 var b_game_top = ui.b_game_top || ui.b_imgui_top;
 
-                if (ui.gui==null || !b_game_top || !ui.b_ingame || ui.b_busy) { //|| !ui.b_trade_top
+                if (!b_game_top || !ui.b_ingame || ui.b_busy) { //|| !ui.b_trade_top
                     Thread.Sleep(100);
                     continue;
                 }
@@ -37,19 +37,19 @@ public partial class InputChecker : aMouseChecker , IDisposable{
                 ManualSkillUsing();
                 //ControlManualUsing();
                 F2(); //transit
-                if (Keyboard.b_Try_press_key(Keys.D2, "InputChecker")) {
+                if (Keyboard.b_Try_press_key(Keys.D2, "jump")) {
                     //var trg = ui.MouseSpToWorld;
                     //Debug.Assert(trg.X > 0 && trg.Y > 0);
                     //ui.SendToBots(Opcode.Jump, trg.ToByte());
                 }
-                if (Keyboard.b_Try_press_key(Keys.Q, "InputChecker", 900)) {
+                if (Keyboard.b_Try_press_key(Keys.Q, "Left flask", 900)) {
                     //Keyboard.KeyPress(Keys.F5);
                     //ui.SendToBots(Opcode.KeyPress, Keys.F5.ToByteArr());
                     //Thread.Sleep(60 + R.Next(0, 60));
                     //Keyboard.KeyPress(Keys.F6);
                     //ui.SendToBots(Opcode.KeyPress, Keys.F6.ToByteArr());
                 }
-                if (Keyboard.b_Try_press_key(Keys.W, "InputChecker", 900)) {
+                if (Keyboard.b_Try_press_key(Keys.W, "Right flask", 900)) {
                     //Keyboard.KeyPress(Keys.F7);
                     //ui.SendToBots(Opcode.KeyPress, Keys.F7.ToByteArr());
                     //Thread.Sleep(60 + R.Next(0, 60));
@@ -57,19 +57,19 @@ public partial class InputChecker : aMouseChecker , IDisposable{
                     //ui.SendToBots(Opcode.KeyPress, Keys.F8.ToByteArr());
                 }
                 if (Keyboard.b_Try_press_key(Keys.F3, "InputChecker")) {
-                    ui.tasker.Unhold();
+                    ui.tasker?.Unhold();
                     if (ui.curr_role == Role.Master) {
                         ui.SendToBots(Opcode.UnHold);
                     }
                 }
                 if (Keyboard.b_Try_press_key(Keys.F4, "InputChecker")) {
-                    ui.tasker.Hold();
+                    ui.tasker?.Hold();
                     if (ui.curr_role == Role.Master) {
                         ui.SendToBots(Opcode.Hold);
                     }
                 }
                 if (Keyboard.b_Try_press_key(Keys.F, "InputChecker")) {
-                    ui.tasker.Unhold();//if this run directly on a bot PC, for example for testing purposes
+                    ui.tasker?.Unhold();//if this run directly on a bot PC, for example for testing purposes
                     if (ui.curr_role == Role.Master) {
                         if (ui.b_home) {
                             ui.SendToBots(Opcode.NavGo, ui.me.gpos.ToByte());
@@ -79,7 +79,7 @@ public partial class InputChecker : aMouseChecker , IDisposable{
                         }
                     }
                     else
-                        ui.tasker.SetFallowHard(true);
+                        ui.tasker?.SetFallowHard(true);
                 }
                 if (Keyboard.b_Try_press_key(Keys.G, "InputChecker")) {
                     //ui.tasker.Unhold();
@@ -172,12 +172,8 @@ public partial class InputChecker : aMouseChecker , IDisposable{
                                 ui.sett.map_scale = Math.Clamp(ui.sett.map_scale -= 0.2f, 0.5f, 20);
                             }
                         }
-
                     }
                 }
-
-               
-
                 #region w8ting
                 var t_elaps = (int)sw.Elapsed.TotalMilliseconds; //totale elaps
                 if (t_elaps < w8) {
@@ -188,7 +184,6 @@ public partial class InputChecker : aMouseChecker , IDisposable{
                 #endregion
                 Thread.Sleep(1000 / 120);
             }
-
         });
         inp_thread.IsBackground = true;
         inp_thread.Start();

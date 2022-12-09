@@ -82,7 +82,9 @@ partial class DrawMain {
         foreach (var mi in mia) {
             DrawMapItem(mi);
         }
-     
+
+        if (!ui.sett.b_show_iTask)
+            return;
         foreach (var it in ui.curr_map.frame_i_tasks) {
             var to = V2.Transform(it.to, ui.MTransform());
             var his = 12;

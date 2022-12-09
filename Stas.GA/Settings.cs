@@ -15,6 +15,8 @@ public partial class Settings : iSett {
     public string log_fname { get; set; } = @"bot.log";
     public string master_IP { get; set; } = "192.168.1.2";
     [JsonInclude]
+    public float info_font_size = 1f;
+    [JsonInclude]
     public bool b_use_ingame_map = true;
     [JsonInclude]
     public bool b_use_Edge_only = false;
@@ -50,7 +52,8 @@ public partial class Settings : iSett {
     public bool b_show_unknow = true;
     [JsonInclude]
     public bool b_show_frendly_mobs = true;
-    public int max_player_debug_pos { get; set; } = 256;
+    [JsonInclude]
+    public int max_player_debug_pos = 256;
     public float def_aura_range = 50;
     public string last_leader_name { get; set; }
     public float max_entyty_valid_gdistance = 235; //150
@@ -76,7 +79,8 @@ public partial class Settings : iSett {
     /// </summary>
     public int last_pp_index { get; set; } = 0;
    
-
+    [JsonInclude]
+    public bool b_show_iTask = false;
     [JsonInclude]
     public bool b_can_play_sound = false;
     [JsonInclude]

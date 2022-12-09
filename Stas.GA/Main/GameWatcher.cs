@@ -64,15 +64,22 @@ public partial class ui {
         });
         choise_thread.IsBackground = true;
         choise_thread.Start();
-       
+
         watcher_thread = new Thread(() => {
             while (b_running) {
                 // Have to check MainWindowHandle because sometime HasExited returns false even when game isn't running..
-                if (game_process != null && (game_process.HasExited || closeForcefully
-                    || game_process.MainWindowHandle.ToInt64() <= 0x00)) {
+                try {
+                    if (game_process != null && (game_process.HasExited || closeForcefully
+                                || game_process.MainWindowHandle.ToInt64() <= 0x00)) {
+                        closeForcefully = false;
+                        CloseGame();
+                    }
+                }
+                catch (Exception) {
                     closeForcefully = false;
                     CloseGame();
                 }
+                   
                 curr_top_ptr = EXT.GetForegroundWindow();
                 Thread.Sleep(100); //200ms
             }
@@ -96,7 +103,7 @@ public partial class ui {
     static List<float> cpus = new List<float>();
     public static Process game_process { get; private set; }
     public static IntPtr curr_top_ptr { get; private set; }
-  
+
 
     public static long memory_using => game_process.PrivateMemorySize64 / (1024 * 1024);
     public static void SetCurrentGame(int pid) {
@@ -138,7 +145,17 @@ public partial class ui {
     [return: MarshalAs(UnmanagedType.Bool)]
     [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
     extern static bool GlobalMemoryStatusEx([In, Out] MEMORYSTATUSEX lpBuffer);
-    static bool b_bad_process => game_process == null || game_process.HasExited ||  game_process.MainWindowHandle.ToInt64() <= 0x00;
+    static bool b_bad_process {
+        get {
+            try {
+                return game_process == null || game_process.HasExited || game_process.MainWindowHandle.ToInt64() <= 0x00;
+            }
+            catch (Exception ex) {
+                ui.AddToLog("b_bad_process err: game closed?", MessType.Critical);
+                return true;
+            }
+        }
+    }
     /// <summary>
     ///     Opens the handle for the game process.
     /// </summary>

@@ -89,7 +89,7 @@ public partial class AreaInstance {
             }
         });
         map_ptr = ui.GetPtrFromImageData(bmp);
-        bmp.Save(@"c:\log\debug_map.bmp", ImageFormat.Bmp);
+        //bmp.Save(@"c:\log\debug_map.bmp", ImageFormat.Bmp);
         bmp.Dispose();
         b_ready = true;
         ui.AddToLog("Map create time=[" + sw.ElapsedTostring() + "]", MessType.Warning); //853

@@ -100,7 +100,7 @@ public class Element : RemoteObjectBase {
         if (Address == default || DateTime.Now < next_upd)
             return;
         if (from == null) {
-        }
+        }//debug here
         if (!b_init)
             Init(from);
         GetChildren(from);

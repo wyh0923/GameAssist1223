@@ -48,11 +48,11 @@ partial class DrawMain {
             //}
             //ImGuiHelper.ToolTip("Show/hide exped settings");
 
-            if (ImGui.BeginTabItem("Editor")) {
-                DrawEditor();
+            if (ImGui.BeginTabItem("Visual")) {
+                DrawVisual();
                 ImGui.EndTabItem();
             }
-            ImGuiExt.ToolTip("Show/hide map editor content");
+            ImGuiExt.ToolTip("Show/hide Shows the visual effects settings");
 
             if (ImGui.BeginTabItem("Debug")) {
                 DrawDebugSett();
@@ -62,6 +62,20 @@ partial class DrawMain {
 
            
             if (ImGui.BeginTabItem("same test")) {
+                ImGui.PushItemWidth(40);
+                if (ImGui.InputText("id", ref input, 5, ImGuiInputTextFlags.EnterReturnsTrue)) {
+                    int res = -1;
+                    int.TryParse(input, out res);
+                    if (res > 0)
+                        ui.curr_map.debug_id = res;
+                }
+                ImGuiExt.ToolTip("Entity.ID for debug with Mapper...");
+                ImGui.SameLine();
+
+                if (ImGui.Button("+Tile")) {
+                    ui.curr_map.AddImportantTile(ui.me.gpos);
+                }
+                ImGuiExt.ToolTip("adds the tile we are standing on to the list of important tiles for the current map");
                 //DrawTests();
                 //TODO still crash in launching after only one call!!!
                 var busy = ui.b_busy;

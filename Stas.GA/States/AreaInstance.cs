@@ -36,7 +36,9 @@ public partial class AreaInstance : RemoteObjectBase {
         Debug.Assert(player.GetComp<Render>(out var rend) && rend != null);
         if (player.gpos != V2.Zero) {
             lock (me_pos) {
-                me_pos.Add(player.gpos);
+                if (ui.sett.max_player_debug_pos > 0) {
+                    me_pos.Add(player.gpos);
+                }
                 if (me_pos.Count > ui.sett.max_player_debug_pos) {
                     me_pos.RemoveAt(0);
                 }
