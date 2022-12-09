@@ -51,7 +51,7 @@ namespace Stas.GA {
             if (ui.sett.b_map_interpolate)
                 cp = GetInterpPos(); 
             if (map_offset != V2.Zero)
-                cp = map_offset;
+                cp = cp + map_offset;
             var dir = scp - cp;
             var ra = -sett.map_angle * Math.PI / 180; // Convert to radians
             var mirrm = new Matrix3x2() { M11 = 1f, M22 = -1f };

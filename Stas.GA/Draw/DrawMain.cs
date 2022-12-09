@@ -29,6 +29,7 @@ public partial class DrawMain {
     SW sw = new SW("asd");
     int fi = 0;
     public void Draw() {
+        ui.AddToLog("offs=[" + ui.map_offset.ToString() + "]");
         //ui.AddToLog("ui.b_busy=[" + ui.b_busy + "]");
         //ui.AddToLog("me.pos=["+ui.me.Pos.ToIntString()+"]");
         //ui.AddToLog("local=[" + ui.gui.chat_box_elem.GetTextElem_by_Str("Local") + "]");

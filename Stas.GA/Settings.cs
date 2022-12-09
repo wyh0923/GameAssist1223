@@ -14,11 +14,18 @@ public partial class Settings : iSett {
     public string sounds_dir { get; set; } = @"Sounds\";
     public string log_fname { get; set; } = @"bot.log";
     public string master_IP { get; set; } = "192.168.1.2";
-   
+    [JsonInclude]
+    public bool b_use_ingame_map = true;
+    [JsonInclude]
+    public bool b_use_Edge_only = false;
 
     public int master_port { get; set; } = 8888;
+
+    public Keys rotate_map_clockwise { get; set; } = Keys.F5;
+    public Keys rotate_map_counterclockwise { get; set; } = Keys.F6;
     public Keys zoom_in { get; set; } = Keys.F7;
     public Keys zoom_out { get; set; } = Keys.F8;
+ 
     [JsonInclude]
     public bool b_use_keybord_for_zoom =false;
     [JsonInclude]

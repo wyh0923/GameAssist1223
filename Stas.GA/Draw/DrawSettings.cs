@@ -44,13 +44,7 @@ namespace Stas.GA {
                 ui.sett.Save();
             }
             ImGuiExt.ToolTip("play sounds on this PC, otherwise on master server");
-
-            ImGui.SameLine();
-            if (ImGui.Checkbox("MouseZoom", ref ui.sett.b_use_keybord_for_zoom)) {
-                ui.sett.Save();
-            }
-            ImGuiExt.ToolTip("Use the side mouse buttons to zoom in on the map. \nOtherwise will be used buttons on the keyboard - set them in the configuration file");
-
+                      
 
             //================>new line
             if (ui.curr_role == Role.Master) {
@@ -87,6 +81,19 @@ namespace Stas.GA {
                 ui.sett.Save();
             }
             ImGuiExt.ToolTip("smooth out map panning");
+
+            //================>new line
+            if (ImGui.Checkbox("MouseZoom", ref ui.sett.b_use_keybord_for_zoom)) {
+                ui.sett.Save();
+            }
+            ImGuiExt.ToolTip("Use the side mouse buttons to zoom in on the map. \nOtherwise will be used buttons on the keyboard - set them in the configuration file");
+           
+            ImGui.SameLine();
+            if (ImGui.Checkbox("IngameMep", ref ui.sett.b_use_ingame_map)) {
+                ui.gui.MakeNeedCheckVisList();
+                ui.sett.Save();
+            }
+            ImGuiExt.ToolTip("Display enemies on the in-game map(old style)");
 
             ImGui.SameLine();
             if (ImGui.Checkbox("Log first", ref ui.sett.b_draw_log_first)) {

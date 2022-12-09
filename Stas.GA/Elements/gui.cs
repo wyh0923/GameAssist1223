@@ -17,9 +17,7 @@ public partial class GameUiElements : Element {
     static extern IntPtr GetPassiveTreePtr();
     internal GameUiElements(IntPtr ptr) 
         : base(ptr, "gui") {
-        need_check_vis = new List<Element>() { KiracMission, open_left_panel, open_right_panel,
-                        passives_tree, NpcDialog, LeagueNpcDialog, BetrayalWindow, large_map,
-                        AtlasPanel, AtlasSkillPanel,DelveWindow,TempleOfAtzoatl };
+        MakeNeedCheckVisList();
         worker = new Thread(() => {
             while (ui.b_running) {
                 Init(tName+"worker");
@@ -28,7 +26,15 @@ public partial class GameUiElements : Element {
             }
         });
         worker.IsBackground= true;
-        //worker.Start(); 
+        worker.Start(); 
+    }
+    internal void MakeNeedCheckVisList() {
+        need_check_vis = new List<Element>() { KiracMission, open_left_panel, open_right_panel,
+            passives_tree, NpcDialog, LeagueNpcDialog, BetrayalWindow, 
+            AtlasPanel, AtlasSkillPanel,DelveWindow,TempleOfAtzoatl };
+        if (!ui.sett.b_use_ingame_map)
+            need_check_vis.Add(large_map);
+
     }
     override protected void Init(string from) {
         base.Init(from);

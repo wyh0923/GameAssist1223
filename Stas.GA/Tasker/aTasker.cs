@@ -3,7 +3,7 @@ using System.Diagnostics;
 using V2 = System.Numerics.Vector2;
 namespace Stas.GA;
 
-public abstract partial class aTasker {
+public abstract partial class aTasker:IDisposable {
     #region bool flags
     /// <summary>
     ///dont do quest/looting/etc if no danger, but fight and protect the Leader
@@ -46,7 +46,7 @@ public abstract partial class aTasker {
             }
         });
         tasker_thread.IsBackground= true;
-        //tasker_thread.Start();
+        tasker_thread.Start();
     }
     public void Add_iTask(iTask it) {
         i_tasks.Add(it);

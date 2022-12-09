@@ -61,29 +61,10 @@ namespace Stas.GA {
                     
                     my_curr_cell = mgc;
 
-                 
-                    var oround = grouts.Where(v => !v.b_visited && v.center.GetDistance(ui.me.gpos) < visited_dist);
-                    foreach (var gc in oround) {
-                        if (!b_ready)
-                            return; //This can happen if we change the map while this function is running.
-                        var sr = 0f; //total(summ) area of all routs
-                        var sv = 0f; //total(summ) area of visited routs
-                        foreach (var cl in gc.routs) {
-                            sr += cl.area;
-                            if (cl.center.GetDistance(ui.me.gpos) < visited_dist) {
-                                cl.b_visited = true;
-                                sv += cl.area;
-                            }
-                        }
-                        if (sr > 0) {
-                            gc.visited_persent = sv / sr;
-                            if (gc.visited_persent == 1)
-                                gc.b_visited = true;
-                        }
-
+                    if (!ui.sett.b_use_ingame_map) {
+                        CalcVisited();
                     }
-                    var explored = (float)_routs_gc.Where(gc => gc.visited_persent > 0.9f).ToList().Count;
-                    explored_percent = explored / _routs_gc.Count;
+                 
                     if (elaps.Count > 60)
                         elaps.RemoveAt(0);
                     elaps.Add(sw.Elapsed.TotalMilliseconds);
@@ -102,10 +83,33 @@ namespace Stas.GA {
                     }
                     #endregion
                 }
-
             });
             nav_thread.IsBackground = true;
-           // nav_thread.Start();
+            nav_thread.Start();
+        }
+
+        void CalcVisited() {
+            var oround = grouts.Where(v => !v.b_visited && v.center.GetDistance(ui.me.gpos) < visited_dist);
+            foreach (var gc in oround) {
+                if (!b_ready)
+                    return; //This can happen if we change the map while this function is running.
+                var sr = 0f; //total(summ) area of all routs
+                var sv = 0f; //total(summ) area of visited routs
+                foreach (var cl in gc.routs) {
+                    sr += cl.area;
+                    if (cl.center.GetDistance(ui.me.gpos) < visited_dist) {
+                        cl.b_visited = true;
+                        sv += cl.area;
+                    }
+                }
+                if (sr > 0) {
+                    gc.visited_persent = sv / sr;
+                    if (gc.visited_persent == 1)
+                        gc.b_visited = true;
+                }
+            }
+            var explored = (float)_routs_gc.Where(gc => gc.visited_persent > 0.9f).ToList().Count;
+            explored_percent = explored / _routs_gc.Count;
         }
         public Cell GetFirstRount(V2 gp) {
             return null;

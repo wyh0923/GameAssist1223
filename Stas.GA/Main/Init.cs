@@ -68,6 +68,7 @@ public partial class ui {
                     CheckWorker();
                     if (worker == null) {
                         ui.AddToLog("Frame err: worker need be setup", MessType.Critical);
+                        Thread.Sleep(w8);
                         continue;
                     }
                     CheckFlasks(false);
@@ -107,7 +108,6 @@ public partial class ui {
             looter.Dispose();
             gui.Dispose();
             worker = null;
-          
         }
         catch (Exception ex) {
         }

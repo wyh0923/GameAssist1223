@@ -64,6 +64,7 @@ public partial class ui {
         });
         choise_thread.IsBackground = true;
         choise_thread.Start();
+       
         watcher_thread = new Thread(() => {
             while (b_running) {
                 // Have to check MainWindowHandle because sometime HasExited returns false even when game isn't running..

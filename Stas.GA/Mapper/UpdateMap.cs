@@ -1,5 +1,8 @@
 ﻿using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+
 namespace Stas.GA;
 public partial class AreaInstance {
     Stopwatch sw = new Stopwatch();
@@ -29,7 +32,7 @@ public partial class AreaInstance {
 
         sw.Restart();
         var gridHeightData = GridHeightData;
-        var terrainBytes = GridWalkableData;
+        var walkable_data = GridWalkableData;
         var td = TerrainMetadata;
         cols = (int)td.TotalTiles.X * 23;
         rows = (int)td.TotalTiles.Y * 23;
@@ -46,32 +49,55 @@ public partial class AreaInstance {
             ui.AddToLog("UpdateMap... w8 TileDetailsPtr...", MessType.Warning);
         }
         tileData = ui.m.ReadStdVector<TileStructure>(td.TileDetailsPtr);
+        var mapEdgeDetector = new MapEdgeDetector(walkable_data, bytesPerRow);
+
         bit_data = new int[cols, rows];
-        var bmp = new Bitmap(bytesPerRow * 2, terrainBytes.Length / bytesPerRow);
+        var bmp = new Bitmap(bytesPerRow * 2, walkable_data.Length / bytesPerRow);
+        //for (int y = 0; y < gridHeightData.Length; y++) {
+          
+        //}
         Parallel.For(0, gridHeightData.Length, y => {
             for (var x = 1; x < gridHeightData[y].Length - 1; x++) {
                 var index = (y * bytesPerRow) + (x / 2); // (x / 2) => since there are 2 data points in 1 byte.
                 var shift = x % 2 == 0 ? 0 : 4;
-                var both = terrainBytes[index];
+                var both = walkable_data[index];
                 var bit = both >> shift & 0xF;
-                bit_data[x, y] = bit;
-                if (bit == 0)
+
+                if (bit == 0 || (ui.sett.b_use_ingame_map
+                                && ui.sett.b_use_Edge_only
+                                && !mapEdgeDetector.IsBorder(x, y)))
                     continue;
+
                 //TODO temporary - mb need filling array[color, color] or mb array[byte[4], byte[4]]
                 //https://swharden.com/csdv/system.drawing/array-to-image/
-                lock (bmp) { //we need it coz using Parallel
-                    bmp.SetPixel(x, y, GetColor(bit));
+                if (ui.sett.b_use_ingame_map) {
+                    var h = (int)(gridHeightData[y][x] / 21.91f);
+                    var nx = x - h;
+                    var ny = y - h;
+                    if (mapEdgeDetector.IsInsideMapBoundary(nx, ny))
+                        bit_data[nx, ny] = bit;
+                    lock (bmp) { //we need it coz using Parallel
+                        bmp.SetPixel(nx, ny, GetColor(bit));
+                    }
+                }
+                else {
+                    bit_data[x, y] = bit;
+                    lock (bmp) { //we need it coz using Parallel
+                        bmp.SetPixel(x, y, GetColor(bit));
+                    }
                 }
             }
         });
         map_ptr = ui.GetPtrFromImageData(bmp);
+        bmp.Save(@"c:\log\debug_map.bmp", ImageFormat.Bmp);
         bmp.Dispose();
         b_ready = true;
         ui.AddToLog("Map create time=[" + sw.ElapsedTostring() + "]", MessType.Warning); //853
         ui.nav.MakeGridSells();
     }
-    public List<Entity> need_check = new();
+   
 
+    public List<Entity> need_check = new();
     void ClearOldData() {
         //todo: debag this list befor map change
         need_check.Clear();
