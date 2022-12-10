@@ -10,6 +10,7 @@ public partial class Entity : RemoteObjectBase {
         switch (this.eType) {
             // There is no use case (yet) to re-evaluate the following entity types
             case eTypes.SelfPlayer:
+                return;
             case eTypes.OtherPlayer:
             case eTypes.Blockage:
             case eTypes.Shrine:
@@ -21,19 +22,29 @@ public partial class Entity : RemoteObjectBase {
         }
         else if (Path.StartsWith("Metadata/MiscellaneousObjects/Expedition/", StringComparison.Ordinal)
                     || Path.Contains("Leagues/Expedition")) {
-            eType = eTypes.Exped; }
+            eType = eTypes.Exped;
+        }
         else if (Path.StartsWith("Metadata/MiscellaneousObjects/Expedition/", StringComparison.Ordinal)
                     || Path.Contains("Leagues/Expedition")) {
             eType = eTypes.Exped;
         }
         else if (GetComp<AreaTransition>(out var are_trns) || Path.EndsWith("Portal")) {
-            eType = eTypes.Portal; }
+            eType = eTypes.Portal;
+        }
         else if ((GetComp<Targetable>(out var target) && GetComp<TriggerableBlockage>(out var _trigger))
-                                     || Path.Contains("LabyrinthIzaroDoor")) { 
-            eType = eTypes.Door;}
+                                     || Path.Contains("LabyrinthIzaroDoor")) {
+            eType = eTypes.Door;
+        }
+        else if (Path.Contains("Quest") && !Path.Contains("MaligaroOrrery")
+            & IsTargetable) {
+            eType = eTypes.Quest;
+        }
         else if (GetComp<Chest>(out var chestComp)) {
             if (chestComp.IsOpened) {
                 this.eType = eTypes.Useless;
+                var old = ui.curr_map.static_items.FirstOrDefault(mi => mi.Value.ent.id == id);
+                if(old.Key >0)
+                    ui.curr_map.static_items.TryRemove(old.Value.key, out _);
             }
             else if (this.eType == eTypes.Unidentified) { // so it only happen once.
                 if (this.GetComp<MinimapIcon>(out var _)) {
@@ -79,7 +90,7 @@ public partial class Entity : RemoteObjectBase {
             }
         }
         else if (GetComp<Player>(out var _)) {
-            if (this.id == ui.states.ingame_state.curr_area_instance.player.id) {
+            if (this.id == ui.states.ingame_state.area_instance.player.id) {
                 this.eType = eTypes.SelfPlayer;
             }
             else {
@@ -109,8 +120,11 @@ public partial class Entity : RemoteObjectBase {
                 this.eType = eTypes.Useless;
                 return;
             }
-
-            if (!this.GetComp<ObjectMagicProperties>(out var OMP)) {
+            if (GetComp<PetAi>(out var pet)) {
+                this.eType = eTypes.Pet;
+                return;
+            }
+            if (!this.GetComp<ObjectMagicProperties>(out var OMP)) { //like pet
                 this.eType = eTypes.Useless;
                 return;
             }
@@ -120,8 +134,7 @@ public partial class Entity : RemoteObjectBase {
                 return;
             }
 
-            if (this.eType == eTypes.Unidentified &&
-                   this.GetComp<DiesAfterTime>(out var _) &&
+            if (this.eType == eTypes.Unidentified && this.GetComp<DiesAfterTime>(out var _) &&
                    diesAfterTimeIgnore.Any(ignorePath => this.Path.StartsWith(ignorePath))) {
                 this.eType = eTypes.Useless;
                 return;
@@ -232,13 +245,16 @@ public partial class Entity : RemoteObjectBase {
             eType = eTypes.Door;
         }
         else if (GetComp<WorldItem>(out var worl_item)) {
-            eType = eTypes.WorldItem;
+            if (!GetComp<Targetable>(out var trg)) {
+            }
+            else
+                this.eType = eTypes.WorldItem;
         }
         else if (GetComp<Projectile>(out var Projectile) || Path.Contains("Projectiles")) {
             eType = eTypes.Projectile;
         }
-        else if (GetComp<LimitedLifespan>(out var effect)) {
-            eType = eTypes.WorldItem;
+        else if (GetComp<LimitedLifespan>(out var effect)) {//explosion with time
+            this.eType = eTypes.Effects;
         }
         else if (Path.Contains("Effects")) {
             eType = eTypes.Effects;

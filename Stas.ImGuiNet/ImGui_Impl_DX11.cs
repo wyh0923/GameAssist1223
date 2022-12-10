@@ -25,6 +25,7 @@ namespace Stas.ImGuiNet {
     /// Would be nice to organize it better, but it seems to work
     /// </summary>
     public class ImGui_Impl_DX11 {
+        string tname => this.GetType().Name;
         private IntPtr _renderNamePtr;
         private Device _device;
         private DeviceContext _deviceContext;
@@ -480,9 +481,12 @@ namespace Stas.ImGuiNet {
                 shaderData = new byte[stream.Length];
                 stream.Read(shaderData, 0, shaderData.Length);
             }
-
-            _vertexShader = new VertexShader(_device, shaderData);
-
+            try {
+                _vertexShader = new VertexShader(_device, shaderData);
+            }
+            catch (Exception ex) {
+                Console.WriteLine(tname+ "CreateDeviceObjects err:"+ex.Message);
+            }
             // Create the input layout
             _inputLayout = new InputLayout(_device, shaderData, new[]
             {

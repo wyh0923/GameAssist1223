@@ -22,8 +22,9 @@ public partial class InputChecker : aMouseChecker , IDisposable{
                 if (ui.b_contrl && Keyboard.b_Try_press_key(Keys.F12, "ICh F12")) {
                     ui.b_show_info_over = !ui.b_show_info_over;
                 }
-                var b_game_top = ui.b_game_top || ui.b_imgui_top;
+                Zooming();
 
+                var b_game_top = ui.b_game_top || ui.b_imgui_top;
                 if (!b_game_top || !ui.b_ingame || ui.b_busy) { //|| !ui.b_trade_top
                     Thread.Sleep(100);
                     continue;
@@ -122,58 +123,7 @@ public partial class InputChecker : aMouseChecker , IDisposable{
                     //ui.mapper.AddNPC();
                 }
 
-                if (ui.sett.b_use_ingame_map) {
-                    //if (Keyboard.IsKeyDown(Keys.NumPad5, "ICh")) {
-                    //    ui.map_offset = V2.Zero;
-                    //}
-                    if (Keyboard.IsKeyDown(Keys.NumPad8, "ICh")) {
-                        ui.map_offset.Y += 0.1f;
-                    }
-                    if (Keyboard.IsKeyDown(Keys.NumPad2, "ICh")) {
-                        ui.map_offset.Y -= 0.1f;
-                    }
-                    if (Keyboard.IsKeyDown(Keys.NumPad4, "ICh")) {
-                        ui.map_offset.X += 0.1f;
-                    }
-                    if (Keyboard.IsKeyDown(Keys.NumPad6, "ICh")) {
-                        ui.map_offset.X -= 0.1f;
-                    }
-                    if (Keyboard.IsKeyDown(Keys.NumPad7, "ICh")) {
-                        ui.sett.map_angle = ui.sett.map_angle += 0.05f;
-                    }
-                    if (Keyboard.IsKeyDown(Keys.NumPad9, "ICh")) {
-                        ui.sett.map_angle = ui.sett.map_angle -= 0.05f;
-                    }
-                    if (Keyboard.IsKeyDown(Keys.NumPad1, "ICh zoom_in")) {
-                        ui.sett.map_scale = Math.Clamp(ui.sett.map_scale += 0.01f, 0.5f, 20);
-                    }
-                    if (Keyboard.IsKeyDown(Keys.NumPad3, "ICh zoom_out")) {
-                        ui.sett.map_scale = Math.Clamp(ui.sett.map_scale -= 0.01f, 0.5f, 20);
-                    }
-                }
-                else {
-                    if (ui.curr_map.danger > 0) {
-                        ui.sett.map_scale = ui.sett.map_scale_def;
-                    }
-                    else {
-                        if (ui.sett.b_use_keybord_for_zoom) {
-                            if (Keyboard.IsKeyDown(ui.sett.zoom_in, "ICh zoom_in")) {
-                                ui.sett.map_scale = Math.Clamp(ui.sett.map_scale += 0.01f, 0.5f, 20);
-                            }
-                            if (Keyboard.IsKeyDown(ui.sett.zoom_out, "ICh zoom_out")) {
-                                ui.sett.map_scale = Math.Clamp(ui.sett.map_scale -= 0.01f, 0.5f, 20);
-                            }
-                        }
-                        else {
-                            if (Mouse.IsButtonDown(Keys.XButton1)) {
-                                ui.sett.map_scale = Math.Clamp(ui.sett.map_scale += 0.2f, 0.5f, 20);
-                            }
-                            if (Mouse.IsButtonDown(Keys.XButton2)) {
-                                ui.sett.map_scale = Math.Clamp(ui.sett.map_scale -= 0.2f, 0.5f, 20);
-                            }
-                        }
-                    }
-                }
+              
                 #region w8ting
                 var t_elaps = (int)sw.Elapsed.TotalMilliseconds; //totale elaps
                 if (t_elaps < w8) {

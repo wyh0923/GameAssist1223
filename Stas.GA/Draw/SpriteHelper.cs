@@ -114,8 +114,8 @@ namespace Stas.GA {
         opened_chest_smal = 78,
         opened_chest_midle = 79,
         opened_chest_big = 80,
-        z81 = 81,
-        z82 = 82,
+        Skull = 81,
+        Effect = 82,
         z83 = 83,
         z84 = 84,
 
@@ -271,7 +271,7 @@ namespace Stas.GA {
 
         Heist_Jewels = 225,//starting last row-1 //ring
         Heist_Armour = 226,
-        Heist_Weapons  = 227,
+        Heist_Weapons = 227,
         Heist_228 = 228,
         Heist_QualityCurrency = 229,
         Heist_Essences = 230,
@@ -290,9 +290,9 @@ namespace Stas.GA {
         Heist_242 = 242,
         Heist_243 = 243,
         Heist_244 = 244,
-        Heist_245= 245, 
+        Heist_245 = 245,
         Heist_246 = 246,
-        Heist_Currency = 247, 
+        Heist_Currency = 247,
         Heist_248 = 248,
         Heist_Gems = 249,
         Heist_Maps = 250,

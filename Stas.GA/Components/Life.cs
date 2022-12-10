@@ -1,16 +1,21 @@
 ﻿using ImGuiNET;
+using System.Runtime.InteropServices;
+
 namespace Stas.GA;
-/// <summary>
-///     The <see cref="Life" /> component in the entity.
-/// </summary>
+
+
 public class Life : RemoteObjectBase {
+    [DllImport("Stas.GA.Native.dll", SetLastError = true, EntryPoint = "GetLifeOffsets")]
+    static extern IntPtr GetLifeOffsets(IntPtr ptr, ref LifeOffset offs);
     public Life(IntPtr address)  : base(address) {
     }
     internal override void Tick(IntPtr ptr, string from=null) {
         Address = ptr;
         if (Address == IntPtr.Zero)
-            return;
-        var data = ui.m.Read<LifeOffset>(this.Address);
+            return;        
+        var data = new LifeOffset();
+        GetLifeOffsets(Address, ref data);
+      
         owner_addr = data.Header.EntityPtr;
         this.Health = data.Health;
         this.EnergyShield = data.EnergyShield;

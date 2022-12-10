@@ -156,6 +156,7 @@ namespace Stas.GA {
         Stash,
         NeedCheck,
         Exped,
-        Portal
+        Portal,
+        Pet, Quest, AreaTransition
     }
 }

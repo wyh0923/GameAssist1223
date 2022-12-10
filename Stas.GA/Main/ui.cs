@@ -123,8 +123,8 @@ public partial class ui {
     } 
     #endregion
    
-    public static AreaInstance curr_map => states.ingame_state.curr_area_instance;
-    public static WorldData curr_world => states.ingame_state.curr_world_data;
+    public static AreaInstance curr_map => states.ingame_state.area_instance;
+    public static WorldData curr_world => states.ingame_state.world_data;
     public static string curr_map_id {
         get {
             if (curr_world == null) {

@@ -2,16 +2,20 @@
 using V2 = System.Numerics.Vector2;
 using V3 = System.Numerics.Vector3;
 using sh = Stas.GA.SpriteHelper;
+using System.IO;
+
 namespace Stas.GA;
 public partial class AreaInstance {
-    ConcurrentBag<Cell> frame_trigger = new ();
-    ConcurrentBag<MapItem> frame_items = new ();
+    ConcurrentBag<Cell> frame_trigger = new();
+    ConcurrentBag<MapItem> frame_items = new();
     public ConcurrentBag<iTask> frame_i_tasks = new ConcurrentBag<iTask>();
+    HashSet<string> quest_ent = new HashSet<string>();
+    string quest_ent_fname = @"C:\Log\quest_ent.txt";
 
     MapItem AddMapItem(Entity e) {
         if (e.pos == V3.Zero) {
-            if (!bad_etypes.ContainsKey(e.eType)) {  
-                bad_etypes.TryAdd(e.eType, new ConcurrentDictionary<uint, Entity>() );
+            if (!bad_etypes.ContainsKey(e.eType)) {
+                bad_etypes.TryAdd(e.eType, new ConcurrentDictionary<uint, Entity>());
             }
             bad_etypes[e.eType][e.id] = e;
             return null;
@@ -26,7 +30,7 @@ public partial class AreaInstance {
             info = pa_info(e);
         }
         if (e.id == debug_id) {//debug_id
-          //  System.Diagnostics.Debugger.Break();
+                               //  System.Diagnostics.Debugger.Break();
         }
         var mi = new MapItem(e, info);
         SetRarity(mi);
@@ -37,6 +41,16 @@ public partial class AreaInstance {
                 return GetPortal(e);
             case eTypes.Door:
                 return GetDoor(e);
+            case eTypes.Quest: {
+                    if (!quest_ent.Contains(e.Path)) {
+                        quest_ent.Add(e.Path);
+                        File.AppendAllLines(quest_ent_fname, new string[] { e.Path });
+                    }
+                    if (e.GetComp<MinimapIcon>(out _))
+                        return asStaticMapItem(e, miType.Quest, MapIconsIndex.QuestItem);
+                    else
+                        return asStaticMapItem(e, miType.Quest, MapIconsIndex.QuestObject);
+                }
             case eTypes.NPC:
                 return GetNPC(e);
             case eTypes.OtherPlayer:
@@ -47,7 +61,7 @@ public partial class AreaInstance {
                 break;
             case eTypes.Chest://same chest types need update
             case eTypes.DelveChest:
-            case eTypes.HeistChest: 
+            case eTypes.HeistChest:
             case eTypes.ImportantStrongboxChest:
             case eTypes.StrongboxChest:
             case eTypes.BreachChest:
@@ -73,6 +87,7 @@ public partial class AreaInstance {
             case eTypes.Stage0FIT:
             case eTypes.Stage1FIT:
             case eTypes.Friendly:
+            case eTypes.Pet:
             case eTypes.Monster:
                 return GetMonster(e, mi);
             case eTypes.Stage0RewardFIT:
@@ -90,12 +105,23 @@ public partial class AreaInstance {
             case eTypes.DeliriumSpawner:
                 mi.uv = sh.GetUV(MapIconsIndex.GreenFlag);
                 return mi;
-            default:
-                if (ui.b_contrl) {
-                    mi.uv = sh.GetUV(MapIconsIndex.BlightPathInactive);
+            case eTypes.WorldItem: {
+                    var ce = e.tName + " type=" + e.eType;
+                    mi.uv = sh.GetUV(MapIconsIndex.Amulet);
                     return mi;
                 }
-                return null;
+            case eTypes.Effects: {
+                    mi.uv = sh.GetUV(MapIconsIndex.Effect);
+                    return mi;
+                }
+            default: {
+                    if (ui.b_contrl) {
+                        mi.uv = sh.GetUV(MapIconsIndex.BlightPathInactive);
+                        return mi;
+                    }
+                    var ce = e.tName + " type=" + e.eType;
+                    return null;
+                }
         }
         return null;
     }
@@ -116,7 +142,7 @@ public partial class AreaInstance {
         }
         return asStaticMapItem(e, miType.NPC, mii);
     }
-    ConcurrentBag<Entity> frame_party = new ();
+    ConcurrentBag<Entity> frame_party = new();
     string pa_info(Entity e) {
         if (!id_ifos.ContainsKey(e.id)) {
             lock (id_ifos) {

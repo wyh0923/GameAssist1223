@@ -62,6 +62,13 @@ partial class DrawMain {
 
            
             if (ImGui.BeginTabItem("same test")) {
+                ui.me.GetComp<Life>(out var life);
+                if (life != null) {
+                    ImGui.Text("life=[" + life.Health.Current + "\\" + life.Health.Total + "]");
+                    ImGui.Text("Es=[" + life.EnergyShield.Current + "\\" + life.EnergyShield.Total + "]");
+                    ImGui.Text("Mana=[" + life.Mana.Current + "\\" + life.Mana.Total + "]");
+                }
+
                 ImGui.PushItemWidth(40);
                 if (ImGui.InputText("id", ref input, 5, ImGuiInputTextFlags.EnterReturnsTrue)) {
                     int res = -1;

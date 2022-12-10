@@ -40,10 +40,13 @@ public partial class GameUiElements : Element {
             need_check_vis.Add(large_map);
 
     }
+    [DllImport("Stas.GA.Native.dll", SetLastError = true, EntryPoint = "GetGuiOffsets")]
+    public static extern int GetGuiOffsets(IntPtr gui_ptr, ref guiOffset offs);
     override protected void Init(string from) {
         base.Init(from);
         Debug.Assert(Address != default);
-        var data = ui.m.Read<guiOffset>(Address);
+        var data = new guiOffset();
+        GetGuiOffsets(Address, ref data);
         ui_flask_root.Tick(data.ui_flask_root, tName);
         KiracMission.Tick(data.KiracMission, tName);
         open_right_panel.Tick(data.open_right_panel, tName);
@@ -54,7 +57,7 @@ public partial class GameUiElements : Element {
         else {
             ui.AddToLog(tName + ".GetPassiveTree err=bad ptr", MessType.Error);
         }
-        NpcDialog.Tick(data.NpcDialog, tName);
+        //NpcDialog.Tick(data.NpcDialog, tName);
         LeagueNpcDialog.Tick(data.LeagueNpcDialog, tName);
         BetrayalWindow.Tick(data.BetrayalWindow, tName);
         maps_root.Tick(data.maps_root_ptr, tName);
@@ -84,9 +87,10 @@ public partial class GameUiElements : Element {
         ui_xp_bar.Tick(data.ui_xp_bar, tName);
         MyBuffPanel.Tick(data.ui_buff_panel, tName);
         party_panel.Tick(data.party_panel, tName);
-
-        var start = ui.base_offsets[PattNams.PlayerInventory];
-        player_inventory.Tick(ui.m.Read<IntPtr>(start, 0x1E8, 0x8, 0x18));//offsetts getted from CE pointer scan
+        GetPlayerInvetory();
+    }
+    void GetPlayerInvetory() { 
+    
     }
     internal override void Tick(IntPtr ptr, string from) {
         Debug.Assert(ptr == default || from.EndsWith(".CleanUpData") ||from== "debug_gui");

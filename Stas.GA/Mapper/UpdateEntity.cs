@@ -61,11 +61,10 @@ public partial class AreaInstance  {
             if (e != null) {
                 if (e.eType == eTypes.Useless && !ui.b_contrl)
                     return;
-                e.Tick(e.Address, "Upd from area");
-
                 if (frame_di != null)
                     return;
                 sw_etm.Restart();
+                Debug.Assert(e.eType != eTypes.Unidentified);
                 var nmi = AddMapItem(e);//new map item
                 sw_etm_elapsed.Add(sw_etm.Elapsed.TotalMilliseconds);
                 if (nmi != null) {

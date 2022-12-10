@@ -11,7 +11,7 @@ public class Positioned : EntComp {
     }
    
     internal override void Tick(IntPtr ptr, string from=null) {
-        Address = ptr;
+        this.Address = ptr;
         if (Address == IntPtr.Zero)
             return;
         var data = ui.m.Read<PositionedOffsets>(this.Address);
@@ -20,7 +20,8 @@ public class Positioned : EntComp {
         Reaction = data.Reaction;
         IsFriendly = EntityHelper.IsFriendly(data.Reaction);
         Rotation = data.Rotation;
-        Size = data.Size;        Scale = data.SizeScale;
+        Size = data.Size;        
+        Scale = data.SizeScale;
         past_pos = data.past_pos;
         curr_pos = data.curr_pos;
         next_pos = data.next_pos;

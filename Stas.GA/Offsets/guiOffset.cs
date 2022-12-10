@@ -25,36 +25,29 @@ namespace Stas.GA
         [FieldOffset(0x458)] public IntPtr ui_passive_point_available;
         [FieldOffset(0x2C8)] public IntPtr ui_flask_root;
         [FieldOffset(0x2D0)] public IntPtr ui_xp_bar;
-        [FieldOffset(0x9A8)] public IntPtr ui_lake_map; // 3.19.1
-        [FieldOffset(0x9C0)] public IntPtr ui_ritual_rewards; //3.19.1
-        [FieldOffset(0xAC8)] public IntPtr incomin_user_request; //3.19.10x9F8
-        [FieldOffset(0x710)] public IntPtr NpcDialog;               //3.19.2b
-        [FieldOffset(0x718)] public IntPtr LeagueNpcDialog;         //3.19.1
-        [FieldOffset(0x8C0)] public IntPtr MirroredTablet; //3.19.1
-        [FieldOffset(0x650)] public IntPtr WorldMap;                        //3.19.2b
-        [FieldOffset(0x680)] public IntPtr itemsOnGroundLabelRoot; //3.19.1
-        [FieldOffset(0x628)] public IntPtr CharacterPanel;                  //3.19.2b
+        [FieldOffset(0x9A8)] public IntPtr ui_lake_map; 
+        [FieldOffset(0x9C0)] public IntPtr ui_ritual_rewards;
+        [FieldOffset(0xAC8)] public IntPtr incomin_user_request; 
+        [FieldOffset(0x710)] public IntPtr NpcDialog;              
+        [FieldOffset(0x718)] public IntPtr LeagueNpcDialog;        
+        [FieldOffset(0x8C0)] public IntPtr MirroredTablet; 
+        [FieldOffset(0x650)] public IntPtr WorldMap;                       
+        [FieldOffset(0x680)] public IntPtr itemsOnGroundLabelRoot; 
+        [FieldOffset(0x628)] public IntPtr CharacterPanel;                 
         [FieldOffset(0x630)] public IntPtr OptionPanel;    
-        
-        [FieldOffset(0x568)] public IntPtr InventoryPanel;  //3.19.2b
-        [FieldOffset(0x660)] public IntPtr Decoration;//3.19.2b
+        [FieldOffset(0x568)] public IntPtr InventoryPanel; 
+        [FieldOffset(0x660)] public IntPtr Decoration;
         [FieldOffset(0x548)] public IntPtr open_left_panel; 
         [FieldOffset(0x550)] public IntPtr open_right_panel;
-        [FieldOffset(0x570)] public IntPtr StashElement;                     //3.19.2b
-        [FieldOffset(0x578)] public IntPtr GuildStashElement;                //3.19.2b
-        [FieldOffset(0x618)] public IntPtr AtlasPanel;                      //3.19.2
-        [FieldOffset(0x620)] public IntPtr AtlasSkillPanel;                 //3.19.2
-        [FieldOffset(0x480)] public IntPtr ChatPanel;                       //3.19.1
-        /// <summary>
-        /// HiddenSkillBar inExileAPI
-        /// </summary>
-        [FieldOffset(0x3E0)] public IntPtr ui_skills;//3.19.1
-        [FieldOffset(0x808)] public IntPtr BetrayalWindow;//3.19.1
-        [FieldOffset(0x678)] public IntPtr maps_root_ptr; //3.19.1
-        //GetUiElemUnderCursor stash/guild stash  /character
-      
-        [FieldOffset(0x6B8)] public IntPtr no_ui_here; //3.19.1
-
+        [FieldOffset(0x570)] public IntPtr StashElement;                     
+        [FieldOffset(0x578)] public IntPtr GuildStashElement;                
+        [FieldOffset(0x618)] public IntPtr AtlasPanel;                     
+        [FieldOffset(0x620)] public IntPtr AtlasSkillPanel;                
+        [FieldOffset(0x480)] public IntPtr ChatPanel;                       
+        [FieldOffset(0x3E0)] public IntPtr ui_skills;
+        [FieldOffset(0x808)] public IntPtr BetrayalWindow;
+        [FieldOffset(0x678)] public IntPtr maps_root_ptr; 
+        [FieldOffset(0x6B8)] public IntPtr no_ui_here; 
         [FieldOffset(0x748)] public IntPtr QuestRewardWindow;
         [FieldOffset(0x750)] public IntPtr PurchaseWindow;
         [FieldOffset(0x758)] public IntPtr ExpeditionPurchaseWindow;

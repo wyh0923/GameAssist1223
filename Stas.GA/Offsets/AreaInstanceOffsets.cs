@@ -17,7 +17,7 @@ namespace Stas.GA {
         [FieldOffset(0x830)] public StdMap AwakeEntities;
         //[FieldOffset(0x830 + 0x10)] public StdMap SleepingEntities; // always after awake entities.
 
-        [FieldOffset(0x9C8)] public TerrainStruct TerrainMetadata;
+        [FieldOffset(0x9C0)] public TerrainStruct TerrainMetadata;
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -117,9 +117,9 @@ namespace Stas.GA {
         [FieldOffset(0x80)] public long TileHeightMultiplier;
 
         //[FieldOffset(0x8C)] public StdTuple2D<int> TotalTilesAgain;
-        [FieldOffset(0xD8)] public StdVector GridWalkableData;
-        [FieldOffset(0xF0)] public StdVector GridLandscapeData;
-        [FieldOffset(0x108)] public int BytesPerRow; // for walkable/landscape data.
+        [FieldOffset(0xD0)] public StdVector GridWalkableData;
+        [FieldOffset(0xE8)] public StdVector GridLandscapeData;
+        [FieldOffset(0x100)] public int BytesPerRow; // for walkable/landscape data.
         public static float TileHeightFinalMultiplier = 7.8125f;
     }
 
