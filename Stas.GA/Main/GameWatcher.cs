@@ -6,6 +6,7 @@ namespace Stas.GA;
 
 public partial class ui {
     static bool closeForcefully = false;
+  
     static Thread choise_thread, watcher_thread;
     /// <summary>
     ///     Initializes a new instance of the <see cref="PrecessWatcher" /> class.
@@ -43,28 +44,15 @@ public partial class ui {
                 else {
                     ui.AddToLog("we have 2+ POE process", MessType.Critical);
                 }
-                #region CPU & Memory usage
-                var memStatus = new MEMORYSTATUSEX();
-                if (GlobalMemoryStatusEx(memStatus)) {
-                    mem = 100 - (float)memStatus.ullAvailPhys / memStatus.ullTotalPhys * 100;
-                }
-
-                var cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total", true);
-                var value = 0f;
-                while ((value = cpuCounter.NextValue()) == 0f) {
-                    Thread.Sleep(1000 / 60);
-                }
-                cpus.Add(value);
-                if (cpus.Count > 10)
-                    cpus.RemoveAt(0);
-                cpu = cpus.Sum() / cpus.Count;
-                #endregion
+                GetMemPerf();
+                GetCpuPerf();
                 Thread.Sleep(10); //cpu 
             };
         });
         choise_thread.IsBackground = true;
         choise_thread.Start();
 
+       
         watcher_thread = new Thread(() => {
             while (b_running) {
                 // Have to check MainWindowHandle because sometime HasExited returns false even when game isn't running..
@@ -87,7 +75,41 @@ public partial class ui {
         watcher_thread.IsBackground = true;
         watcher_thread.Start();
     }
+    static bool no_cpu, no_mem;
+    static void GetMemPerf() {
+        if (no_mem)
+            return;
+        try {
+            var memStatus = new MEMORYSTATUSEX();
+            if (GlobalMemoryStatusEx(memStatus)) {
+                mem = 100 - (float)memStatus.ullAvailPhys / memStatus.ullTotalPhys * 100;
+            }
 
+        }
+        catch (Exception ex) {
+            no_mem = true;
+            ui.AddToLog("ui.memStatus err: " + ex.Message, MessType.Error);
+        }
+    }
+    static void GetCpuPerf() {
+        if (no_cpu)
+            return;
+        try {
+            var cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total", true);
+            var value = 0f;
+            while ((value = cpuCounter.NextValue()) == 0f) {
+                Thread.Sleep(1000 / 60);
+            }
+            cpus.Add(value);
+            if (cpus.Count > 10)
+                cpus.RemoveAt(0);
+            cpu = cpus.Sum() / cpus.Count;
+        }
+        catch (Exception ex) {
+            no_cpu = true;
+            ui.AddToLog("ui.cpuCounter err: " + ex.Message, MessType.Error);
+        }
+    }
     /// <summary>
     ///     Gets the static addresses (along with their names) found in the GameProcess
     ///     based on the GameOffsets.StaticOffsets file.
