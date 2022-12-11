@@ -29,17 +29,13 @@ public partial class DrawMain {
     SW sw = new SW("asd");
     int fi = 0;
     public void Draw() {
-        ui.AddToLog("offs=[" + ui.map_offset.ToString() + "]");
-        //ui.AddToLog("ui.b_busy=[" + ui.b_busy + "]");
-        //ui.AddToLog("me.pos=["+ui.me.Pos.ToIntString()+"]");
-        //ui.AddToLog("local=[" + ui.gui.chat_box_elem.GetTextElem_by_Str("Local") + "]");
         var b_top = ui.b_game_top || ui.b_imgui_top;
         if (ui.b_w8_top && ui.b_game_top)
             ui.b_w8_top = false;
         var w8_top = ui.b_w8_top && !ui.b_game_top;
-        var b_only_alt = ui.b_alt && !ui.b_contrl;
+        var b_only_alt = ui.b_alt && !ui.b_shift;
         var test_ui_elem = ui.test_elem != null && ui.sett.b_gui_debug_on_top && !ui.b_alt;
-        if (test_ui_elem || (b_top && !w8_top && ui.b_contr_alt && !b_only_alt)) { //  &&
+        if (test_ui_elem || (b_top && ui.b_alt_shift && !b_only_alt)) { //  &&
             scene.sdl_window.SetOverlayClickable(true);
         }
         else {

@@ -7,6 +7,7 @@ namespace Stas.GA {
     ///     Enum for entity Categorization system.
     /// </summary>
     public enum eTypes {
+
         /// <summary>
         ///     Unknown entity type i.e. entity isn't categorized yet.
         /// </summary>
@@ -22,128 +23,16 @@ namespace Stas.GA {
         ///              unless current area/zone changes.
         /// </summary>
         Useless,
-
-        /// <summary>
-        ///     Contains the Player component and player ID is the same as user player id.
-        /// </summary>
         SelfPlayer,
-
-        /// <summary>
-        ///     Contains the Player component and player ID isn't the same as user player id..
-        /// </summary>
         OtherPlayer,
+        Blockage,//Contains the TriggerableBlockage component.
 
-        /// <summary>
-        ///     Contains the TriggerableBlockage component.
-        /// </summary>
-        Blockage,
+        Chest,  LargeChest,   Barrel,   DelveChest,  HeistChest,   ExpeditionChest,
+        ImportantStrongboxChest, StrongboxChest,  BreachChest,
 
-        /// <summary>
-        ///     Contains the Chest component.
-        /// </summary>
-        Chest,
-
-        /// <summary>
-        ///     Contains the Chest component and display some label on the chest.
-        /// </summary>
-        LargeChest,
-
-        Barrel,
-
-        /// <summary>
-        ///     Contains the Chest component and found in the delve area.
-        /// </summary>
-        DelveChest,
-
-        /// <summary>
-        ///     Contains the Chest component and found in the heist area.
-        /// </summary>
-        HeistChest,
-
-        /// <summary>
-        ///      Contains the Chest component and found in Expedition area.
-        /// </summary>
-        ExpeditionChest,
-
-        /// <summary>
-        ///     Contains the Chest component and is a strongbox.
-        /// </summary>
-        ImportantStrongboxChest,
-
-        /// <summary>
-        ///     Contains the Chest component and is a strongbox.
-        /// </summary>
-        StrongboxChest,
-
-        /// <summary>
-        ///     Contains the Chest component and found in a breach.
-        /// </summary>
-        BreachChest,
-
-        /// <summary>
-        ///     Contains the Shrine component.
-        /// </summary>
         Shrine,
-
-        /// <summary>
-        ///     Contains life and position component and is friendly.
-        /// </summary>
         Friendly,
-
-        /// <summary>
-        ///     Contains life and ObjectMagicProperties component.
-        /// </summary>
         Monster,
-
-        /// <summary>
-        ///     Important legion monster or chest when legion isn't opened.
-        /// </summary>
-        Stage0RewardFIT,
-
-        /// <summary>
-        ///     Legion epic chest when legion isn't opened.
-        /// </summary>
-        Stage0EChestFIT,
-
-        /// <summary>
-        ///     Regular legion monster when legion isn't opened.
-        /// </summary>
-        Stage0FIT,
-
-        /// <summary>
-        ///     Important legion monster or chest when legion is opened.
-        /// </summary>
-        Stage1RewardFIT,
-
-        /// <summary>
-        ///     Legion epic chest when legion is opened.
-        /// </summary>
-        Stage1EChestFIT,
-
-        /// <summary>
-        ///     Regular legion monster after legion is opened.
-        /// </summary>
-        Stage1FIT,
-
-        /// <summary>
-        ///     Legion monster after legion is opened and killed by user.
-        /// </summary>
-        Stage1DeadFIT,
-
-        /// <summary>
-        ///     Delirium monster that explode when player steps on it.
-        /// </summary>
-        DeliriumBomb,
-
-        /// <summary>
-        ///     Delirium monster that creates new monster when player steps on it.
-        /// </summary>
-        DeliriumSpawner,
-
-        /// <summary>
-        ///     Entity of type <see cref="RemoteObjects.States.InGameStateObjects.Item"/> class.
-        /// </summary>
-        InventoryItem,
         NPC,
         Misc,
         WorldItem,
@@ -157,6 +46,45 @@ namespace Stas.GA {
         NeedCheck,
         Exped,
         Portal,
-        Pet, Quest, AreaTransition
+        Pet, Quest, AreaTransition,
+        /// <summary>
+        ///     Important legion monster or chest when legion isn't opened.
+        /// </summary>
+        Stage0RewardFIT,
+        /// <summary>
+        ///     Legion epic chest when legion isn't opened.
+        /// </summary>
+        Stage0EChestFIT,
+        /// <summary>
+        ///     Regular legion monster when legion isn't opened.
+        /// </summary>
+        Stage0FIT,
+        /// <summary>
+        ///     Important legion monster or chest when legion is opened.
+        /// </summary>
+        Stage1RewardFIT,
+        /// <summary>
+        ///     Legion epic chest when legion is opened.
+        /// </summary>
+        Stage1EChestFIT,
+        /// <summary>
+        ///     Regular legion monster after legion is opened.
+        /// </summary>
+        Stage1FIT,
+        /// <summary>
+        ///     Legion monster after legion is opened and killed by user.
+        /// </summary>
+        Stage1DeadFIT,
+
+        /// <summary>
+        ///     Delirium monster that explode when player steps on it.
+        /// </summary>
+        DeliriumBomb,
+        /// <summary>
+        ///     Delirium monster that creates new monster when player steps on it.
+        /// </summary>
+        DeliriumSpawner,
+        InventoryItem,
+      
     }
 }

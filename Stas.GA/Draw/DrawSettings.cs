@@ -83,10 +83,12 @@ namespace Stas.GA {
             ImGuiExt.ToolTip("smooth out map panning");
 
             //================>new line
-            if (ImGui.Checkbox("MouseZoom", ref ui.sett.b_use_keybord_for_zoom)) {
+            if (ImGui.Checkbox("KbrdZoom", ref ui.sett.b_use_keybord_for_zoom)) {
                 ui.sett.Save();
             }
-            ImGuiExt.ToolTip("Use the side mouse buttons to zoom in on the map. \nOtherwise will be used buttons on the keyboard - set them in the configuration file");
+            ImGuiExt.ToolTip("use the keyboard to zoom the map " +
+                "\ninstead of the side mouse buttons (by default)\n" +
+                "Buttons edit in the confg");
            
             ImGui.SameLine();
             if (ImGui.Checkbox("IngameMep", ref ui.sett.b_use_ingame_map)) {

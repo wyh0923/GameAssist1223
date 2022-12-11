@@ -31,6 +31,14 @@ namespace Stas.GA {
                 ui.sett.Save();
             }
             ImGuiExt.ToolTip("show map drawing fps - optimal value (for drawing without jerks) above 2500 fps");
+
+
+            ImGui.SameLine();
+            if (ImGui.Checkbox("Develop", ref ui.sett.b_develop)) {
+                ui.sett.Save();
+            }
+            ImGuiExt.ToolTip("puts the editor into developer mode\r\nShows a lot of garbage for debugging\r\nNot necessary for ordinary users");
+            
             ///===================== new line ====================
             if (ImGui.Checkbox("MouseMoving", ref ui.sett.b_draw_mouse_moving)) {
                 ui.sett.Save();

@@ -45,7 +45,7 @@ namespace Stas.GA {
                 }
             }
           
-            if (ui.b_contrl) {
+            if (ui.b_contrl && ui.sett.b_develop) {
                 if (ami is MapItem && ami != null && ami.ent?.danger_rt > 0) {
                     var lt = pos.Increase(-his, -0.7f * his);
                     var rt = pos.Increase(20, -0.7f * his);
@@ -69,7 +69,7 @@ namespace Stas.GA {
                 map_ptr.AddText(pos.Increase(his / 2, -8), Color.DarkGray.ToImgui(), info) ;
             }
 
-            if (ui.b_alt) {// 
+            if (ui.b_alt && ui.sett.b_develop) {// 
                 var info = ami.info; 
                 if(string.IsNullOrEmpty(info))
                     info= "id=" + ami.ent?.id;

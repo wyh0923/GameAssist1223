@@ -8,9 +8,10 @@ partial class DrawMain {
 
     bool on_top => ui.b_game_top || ui.b_imgui_top;
     bool b_map => ui.curr_map != null && ui.curr_map.b_ready;
-
+    V2 my_display_res;
     void DrawMap() {
-        ImGui.SetNextWindowContentSize(ImGui.GetIO().DisplaySize);
+        my_display_res = ImGui.GetIO().DisplaySize;
+        ImGui.SetNextWindowContentSize(my_display_res);
         ImGui.SetNextWindowPos(new V2(ui.w_offs.X, ui.w_offs.Y));
         ImGui.Begin(
             "Background Screen",
@@ -60,28 +61,18 @@ partial class DrawMain {
             map_ptr.AddImageQuad(ui.curr_map.map_ptr, lt, rt, rb, lb);
 
         var di = ui.curr_map.mi_debug;//local snap this thred. mb need use lock(){}
-        if (di != null) {
+        if (di != null && ui.sett.b_develop) {
             DrawDebugMapItem(map_ptr, di);
             return;
         }
         DrawNavVisited();
-        if (!ui.b_contrl || ui.sett.b_draw_static) {
-            var sorted = ui.curr_map.static_items.Values.OrderBy(i => i.priority).ThenBy(i=>i.gdist_to_me).ToArray();
-            foreach (var mi in sorted) {
-                var exped = mi.m_type == miType.ExpedArtifact
-                       || mi.m_type == miType.ExpedMarker
-                       || mi.m_type == miType.ExpedRemnant;
-                if (exped && ui.curr_map.danger > 0)
-                    continue;
-                if (!mi.WasDeleted())
-                    DrawMapItem(mi);
-            }
-        }
 
         var mia = ui.curr_map.map_items.OrderBy(e => e.priority);
         foreach (var mi in mia) {
             DrawMapItem(mi);
         }
+
+        DtawStaticItems();
 
         if (!ui.sett.b_show_iTask)
             return;
@@ -94,6 +85,19 @@ partial class DrawMain {
             map_ptr.AddCircleFilled(to, 5, Color.Gray.ToImgui());
 
             map_ptr.AddText(to.Increase(his, -his / 2), Color.LightGreen.ToImgui(), it.info);
+        }
+    }
+    void DtawStaticItems() {
+        var sorted = ui.curr_map.static_items.Values.OrderBy(i => i.priority)
+            .ThenBy(i => i.gdist_to_me).ToArray();
+        foreach (var mi in sorted) {
+            var exped = mi.m_type == miType.ExpedArtifact
+                    || mi.m_type == miType.ExpedMarker
+                    || mi.m_type == miType.ExpedRemnant;
+            if (exped && ui.curr_map.danger > 0)
+                continue;
+            if (!mi.WasDeleted())
+                DrawMapItem(mi);
         }
     }
 }

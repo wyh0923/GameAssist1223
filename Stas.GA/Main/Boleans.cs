@@ -21,7 +21,9 @@ namespace Stas.GA {
             b_vs, b_edit_sett, b_show_cell,  b_in_mine, b_only_unknow, b_draw_bad_centr, b_draw_save_screen;
         public static bool b_trade_top { get; private set; }
         //public bool b_modal => gui == null ? false : gui.Ultimatum.IsVisible || gui.modal_dialog.IsVisible || gui.esc_dialog.IsVisible;
-        public static bool b_shift => Keyboard.IsKeyDown(Keys.LShiftKey);
+        public static bool b_shift => Keyboard.IsKeyDown(Keys.ShiftKey);
+        public static bool b_contr_shift => b_contrl && b_shift;
+        public static bool b_alt_shift => b_alt && b_shift;
         public static bool b_contr_alt => b_contrl && b_alt;
         public static bool b_ingame { get { 
                 return curr_state == GameStateTypes.InGameState; 

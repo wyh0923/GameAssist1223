@@ -2,7 +2,7 @@
 namespace Stas.GA;
 
 public partial class Settings : iSett {
-   [JsonInclude] 
+   [JsonInclude]
     public Role role = Role.None;
     public string pp_name = "PathOfExile"; //PathOfExile_KG PathOfExileSteam PathOfExile_x64 if we support it
     public string poe_w_name = "Path of Exile";
@@ -14,6 +14,9 @@ public partial class Settings : iSett {
     public string sounds_dir { get; set; } = @"Sounds\";
     public string log_fname { get; set; } = @"bot.log";
     public string master_IP { get; set; } = "192.168.1.2";
+
+    [JsonInclude]
+    public bool b_develop = false;
     [JsonInclude]
     public float info_font_size = 1f;
     [JsonInclude]
@@ -38,8 +41,6 @@ public partial class Settings : iSett {
     public bool b_draw_map_fps = true;
     [JsonInclude]
     public bool b_draw_log_first = true;
-    [JsonInclude]
-    public bool b_draw_static = false;
     [JsonInclude]
     public bool b_log_info = false;
     [JsonInclude]

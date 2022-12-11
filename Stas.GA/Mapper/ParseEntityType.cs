@@ -263,7 +263,7 @@ public partial class Entity : RemoteObjectBase {
             eType = eTypes.Waypoint;
         }
         else if (Path.Contains("AreaTransitionToggleable")) {
-            eType = eTypes.Misc;
+            eType = eTypes.Portal;
         }
         else if (Path.Contains("Terrain")) { //WorldDescription component mb
             eType = eTypes.Terrain;

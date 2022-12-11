@@ -14,7 +14,7 @@ public partial class AreaInstance  {
         sw_ue.Restart();
 
         var entities = ui.m.ReadStdMapAsList<EntityNodeKey, EntityNodeValue>(ePtr, EntityFilter.IgnoreVisualsAndDecorations);
-        if (ui.b_contrl && ui.sett.b_draw_misk)
+        if (ui.b_contrl && ui.sett.b_draw_misk && ui.sett.b_develop)
             entities = ui.m.ReadStdMapAsList<EntityNodeKey, EntityNodeValue>(ePtr, null);
         //entities = entities.OrderBy(s => s.Key.id).ToList();
         //sw_cash.Print("ReadStdMapAsList");

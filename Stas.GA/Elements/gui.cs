@@ -57,7 +57,7 @@ public partial class GameUiElements : Element {
         else {
             ui.AddToLog(tName + ".GetPassiveTree err=bad ptr", MessType.Error);
         }
-        //NpcDialog.Tick(data.NpcDialog, tName);
+        //NpcDialog.Tick(data.NpcDialog, tName); //wromg insade not upd now
         LeagueNpcDialog.Tick(data.LeagueNpcDialog, tName);
         BetrayalWindow.Tick(data.BetrayalWindow, tName);
         maps_root.Tick(data.maps_root_ptr, tName);
@@ -86,7 +86,7 @@ public partial class GameUiElements : Element {
         ui_menu_btn.Tick(data.ui_menu_btn, tName);
         ui_xp_bar.Tick(data.ui_xp_bar, tName);
         MyBuffPanel.Tick(data.ui_buff_panel, tName);
-        party_panel.Tick(data.party_panel, tName);
+        //party_panel.Tick(data.party_panel, tName); //not ready
         GetPlayerInvetory();
     }
     void GetPlayerInvetory() { 
