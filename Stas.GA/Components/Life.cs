@@ -46,7 +46,7 @@ public class Life : RemoteObjectBase {
     public VitalStruct Mana { get; private set; }
 
     /// <inheritdoc />
-    protected override void CleanUpData() {
+    protected override void Clear() {
         ui.AddToLog(tName + ".CleanUpData need implement", MessType.Critical);
     }
 

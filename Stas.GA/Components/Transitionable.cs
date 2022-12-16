@@ -12,7 +12,7 @@ internal class Transitionable : EntComp {
     public byte Flag1 { get; private set; }
     public byte Flag2 { get; private set; }
 
-    protected override void CleanUpData() {
+    protected override void Clear() {
 
     }
 }

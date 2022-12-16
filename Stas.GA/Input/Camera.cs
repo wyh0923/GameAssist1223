@@ -82,7 +82,7 @@ public partial class Camera : RemoteObjectBase {
     public int Height { get; private set; }
 
 
-    protected override void CleanUpData() {
+    protected override void Clear() {
     }
 
 

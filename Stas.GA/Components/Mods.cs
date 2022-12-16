@@ -13,7 +13,7 @@ internal class Mods : EntComp {
         Identified = mods_base.Identified;
     }
   
-    protected override void CleanUpData() {
+    protected override void Clear() {
         ui.AddToLog(tName + ".CleanUpData need implement", MessType.Critical);
     }
 }

@@ -46,24 +46,26 @@ public class Memory : SafeHandleZeroOrMinusOneIsInvalid {
         T result = default;
       
         if (IsInvalid || address.ToInt64() <= 0) {
-            ui.AddToLog("Mem.Read adres wrong: [" + (aw_count += 1) + "]"+ add, MessType.Critical);
+            if(ui.sett.b_develop)
+                ui.AddToLog("Mem.Read adres wrong: [" + (aw_count += 1) + "]"+ add, MessType.Critical);
             if (aw_count > 50) { 
-            }
+            }//<=debug here
             return result;
         }
         //Thread.Sleep(5); //=>try here like cpu laags. each thred must be have self reader
         try {
             if (!NativeWrapper.ReadProcessMemory(handle, address, ref result)) {
                 var err = (NtStatus)NativeWrapper.LastError;
-
-                ui.AddToLog("Mem.Read err..."+  add + err, MessType.Critical);
+                if (ui.sett.b_develop)
+                    ui.AddToLog("Mem.Read err..."+  add + err, MessType.Critical);
                 if (rpm_count > 50) { 
                 }//<==set BP here for see who is
             }
             return result;
         }
         catch (Exception e) {
-            ui.AddToLog("Mem.Read exept: " + e.Message + add, MessType.Critical);
+            if (ui.sett.b_develop)
+                ui.AddToLog("Mem.Read exept: " + e.Message + add, MessType.Critical);
             return default;
         }
     }
@@ -123,17 +125,21 @@ public class Memory : SafeHandleZeroOrMinusOneIsInvalid {
         var buffer = new T[nsize];
         try {
             if (!NativeWrapper.ReadProcessMemoryArray(handle, address, buffer, out var numBytesRead)) {
-                ui.AddToLog("Mem.ReadArray err...", MessType.Critical);
-                ui.AddToLog("Mem err last info: addr=[" + address.ToInt64() + "] size=[" + nsize + "]", MessType.Critical);
+                if (ui.sett.b_develop) {
+                    ui.AddToLog("Mem.ReadArray err...", MessType.Critical);
+                    ui.AddToLog("Mem err last info: addr=[" + address.ToInt64() + "] size=[" + nsize + "]", MessType.Critical);
+                }
             }
 
             if (numBytesRead.ToInt32() < nsize) {
-                ui.AddToLog($"Mem.ReadArray: wrong num Bytes Read", MessType.Critical);
+                if (ui.sett.b_develop)
+                    ui.AddToLog($"Mem.ReadArray: wrong num Bytes Read", MessType.Critical);
             }
             return buffer;
         }
         catch (Exception e) {
-            ui.AddToLog($"Mem.ReadArray err: {e.Message}", MessType.Critical);
+            if (ui.sett.b_develop)
+                ui.AddToLog($"Mem.ReadArray err: {e.Message}", MessType.Critical);
             return Array.Empty<T>();
         }
     }
@@ -196,7 +202,8 @@ public class Memory : SafeHandleZeroOrMinusOneIsInvalid {
         while (currNodeAddress != nativeContainer.Head) {
             var currNode = Read<StdListNode<TValue>>(currNodeAddress);
             if (currNodeAddress == IntPtr.Zero) {
-                ui.AddToLog("Terminating reading of list next nodes because of" +
+                if (ui.sett.b_develop)
+                    ui.AddToLog("Terminating reading of list next nodes because of" +
                                   "unexpected 0x00 found. This is normal if it happens " +
                                   "after closing the game, otherwise report it.", MessType.Critical);
                 break;
@@ -316,12 +323,14 @@ public class Memory : SafeHandleZeroOrMinusOneIsInvalid {
     }
     internal string ReadStringU(long addr, int length = 256, bool replaceNull = true) {
         if (addr <= 0 || length > 5120 || length <= 0) {
-            ui.AddToLog("ReadStringU... err addr", MessType.Critical);
+            if (ui.sett.b_develop)
+                ui.AddToLog("ReadStringU... err addr", MessType.Critical);
             return string.Empty;
         }
         var mem = ReadMemoryArray<byte>(new IntPtr(addr), length);
         if (mem[0] == 0 && mem[1] == 0) {
-            ui.AddToLog("ReadStringU... err array", MessType.Warning);
+            if (ui.sett.b_develop)
+                ui.AddToLog("ReadStringU... err array", MessType.Warning);
             return string.Empty;
         }
         var _str = Encoding.Unicode.GetString(mem);

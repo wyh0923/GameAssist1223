@@ -23,7 +23,7 @@ internal class Animated : EntComp {
         }
     }
 
-    protected override void CleanUpData() {
+    protected override void Clear() {
         BaseAnimatedObjectEntity.Tick(IntPtr.Zero);
     }
 }

@@ -10,7 +10,7 @@ partial class DrawMain {
     bool b_map => ui.curr_map != null && ui.curr_map.b_ready;
     V2 my_display_res;
     void DrawMap() {
-        my_display_res = ImGui.GetIO().DisplaySize;
+        my_display_res = new V2(ui.game_window_rect.Width, ui.game_window_rect.Height);
         ImGui.SetNextWindowContentSize(my_display_res);
         ImGui.SetNextWindowPos(new V2(ui.w_offs.X, ui.w_offs.Y));
         ImGui.Begin(
@@ -42,7 +42,19 @@ partial class DrawMain {
         }
         ImGui.End();
     }
-
+    void DrawMePos() {
+        if (!ui.sett.b_draw_me_pos)
+            return;
+        var cpa = ui.curr_map.me_pos.ToArray();//thread safe copy of
+        if (cpa.Length < 4)
+            return;
+        var rm = ui.MTransform();
+        for (int i = 0; i < cpa.Length - 1; i++) {
+            var p1 = V2.Transform(cpa[i], rm);
+            var p2 = V2.Transform(cpa[i + 1], rm);
+            map_ptr.AddLine(p1, p2, Color.Red.ToImgui(), 2f);
+        }
+    }
     SW sw_map = new SW("Map");
     void DrawMapContent() {
         if (ui.me.Address==default) {

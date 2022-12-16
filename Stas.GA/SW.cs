@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
@@ -12,7 +13,7 @@ internal class SW : Stopwatch {
     /// <summary>
     /// for reset max_ft after use cleare the log
     /// </summary>
-    public static Dictionary<string, SW> registred = new();
+    public static ConcurrentDictionary<string, SW> registred = new();
     string name { get; }
     List<double> elapsed = new List<double>();
     /// <summary>

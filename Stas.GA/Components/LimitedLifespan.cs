@@ -34,7 +34,7 @@ namespace Stas.GA {
             //e328.Address = M.Read<IntPtr>(Address + 328);
         }
         
-        protected override void CleanUpData() {
+        protected override void Clear() {
             ui.AddToLog(tName + ".CleanUpData need implement", MessType.Critical);
         }
     }

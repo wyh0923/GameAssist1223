@@ -69,7 +69,7 @@ namespace Stas.GA {
                 map_ptr.AddText(pos.Increase(his / 2, -8), Color.DarkGray.ToImgui(), info) ;
             }
 
-            if (ui.b_alt && ui.sett.b_develop) {// 
+            if (ui.b_alt) {// 
                 var info = ami.info; 
                 if(string.IsNullOrEmpty(info))
                     info= "id=" + ami.ent?.id;

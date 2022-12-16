@@ -14,7 +14,7 @@ namespace Stas.GA {
             ActiveSkill.Tick(ui.m.Read<IntPtr>(Address + 0x6D0));
         }
 
-        protected override void CleanUpData() {
+        protected override void Clear() {
             ui.AddToLog(tName + "CleanUpData err: debug me", MessType.Error);
         }
         public string Name { get; private set; }

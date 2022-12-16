@@ -11,35 +11,36 @@ namespace Stas.GA;
 public partial class AreaInstance : RemoteObjectBase {
     #region init
     internal AreaInstance(IntPtr address) : base(address) {
-       environments = new();
-       EntityCaches = new() {
+        environments = new();
+        EntityCaches = new() {
             new("Breach", 1104, 1108, this.AwakeEntities),
             new("LeagueAffliction", 1114, 1114, this.AwakeEntities),
             new("Hellscape", 1244, 1255, this.AwakeEntities)
         };
     }
     #endregion
-   
-    internal override void Tick(IntPtr ptr, string from=null) {
+    public object my_pos_locker = new object();
+    public List<V2> me_pos = new();
+    internal override void Tick(IntPtr ptr, string from = null) {
         Address = ptr;
-        if (Address == IntPtr.Zero)
+        if (Address == IntPtr.Zero) {
             return;
+        }
+     
         var data = ui.m.Read<AreaInstanceOffsets>(Address);
+        //FindeTerraine();
         //AwakeEntities.Clear();
         //EntityCaches.ForEach((e) => e.Clear());
         //need_check.Clear();
 
         MonsterLevel = data.MonsterLevel;
         AreaHash = data.CurrentAreaHash;
-
-        player.Tick(data.LocalPlayerPtr);
-        Debug.Assert(player.GetComp<Render>(out var rend) && rend != null);
-        if (player.gpos != V2.Zero) {
-            lock (me_pos) {
-                if (ui.sett.max_player_debug_pos > 0) {
-                    me_pos.Add(player.gpos);
-                }
-                if (me_pos.Count > ui.sett.max_player_debug_pos) {
+        player.Tick(data.LocalPlayerPtr, tName + ".Tick");
+        Debug.Assert(player.gpos != default && player.pos != default);
+        if (player.gpos_f != default) {
+            lock (my_pos_locker) {
+                me_pos.Add(player.gpos_f);
+                if (me_pos.Count > 256) {
                     me_pos.RemoveAt(0);
                 }
             }
@@ -48,27 +49,26 @@ public partial class AreaInstance : RemoteObjectBase {
         server_data.Tick(data.ServerDataPtr);
         UpdateEntities(data.AwakeEntities);
     }
-    public void UpdateMapDate() {
-        var sw = new Stopwatch();
-        sw.Restart();
-        var data = ui.m.Read<AreaInstanceOffsets>(Address);
-        TerrainMetadata = data.TerrainMetadata;
-        GridWalkableData = ui.m.ReadStdVector<byte>(TerrainMetadata.GridWalkableData);
-        GridHeightData = GetTerrainHeight();
-       // ui.AddToLog("GetTerrainHeight =[" + sw.Elapsed.TotalMilliseconds.ToRoundStr(0) + "]", MessType.Warning);//230
+    void FindeTerraine() {
+        for (int i = 0; i < 8000; i += 8) {
+            var terr = ui.m.Read<TerrainStruct>(Address + i);
 
-        sw.Restart();
-        TgtTilesLocations = GetTgtFileData();
-       // ui.AddToLog("GetTgtFileData =[" + sw.Elapsed.TotalMilliseconds.ToRoundStr(0) + "]", MessType.Warning);//24
+            if (terr.TotalTiles.X > 10 && terr.TotalTiles.X < 200 //31
+                && terr.TotalTiles.Y > 10 && terr.TotalTiles.Y < 200) { //19
+                var terr_adress = i.ToString("X");
+                var terr_che = (Address + i).ToString("X");
+            }
+        }
     }
-    protected override void CleanUpData() {
-      
+
+    protected override void Clear() {
+
     }
-   
+
     string entityIdFilter = string.Empty;
     string entityPathFilter = string.Empty;
     bool filterByPath = false;
-    StdVector environmentPtr  = default;
+    StdVector environmentPtr = default;
     readonly List<int> environments;
 
 
@@ -92,7 +92,7 @@ public partial class AreaInstance : RemoteObjectBase {
     /// <summary>
     ///     Gets the player Entity.
     /// </summary>
-    public Entity player { get; }  = new ();
+    public Entity player { get; } = new();
 
     /// <summary>
     ///     Gets the Awake Entities of the current Area/Zone.
@@ -111,17 +111,17 @@ public partial class AreaInstance : RemoteObjectBase {
     /// <summary>
     ///     Gets the terrain metadata data of the current Area/Zone instance.
     /// </summary>
-    public TerrainStruct TerrainMetadata { get; private set; } = default;
+    public TerrainStruct terr_meta_data { get; private set; } = default;
 
     /// <summary>
     ///     Gets the terrain height data.
     /// </summary>
-    public float[][] GridHeightData { get; private set; }
+    public float[][] height_data { get; private set; } = Array.Empty<float[]>();
 
     /// <summary>
     ///     Gets the terrain data of the current Area/Zone instance.
     /// </summary>
-    public byte[] GridWalkableData { get; private set; } = Array.Empty<byte>();
+    public byte[] walkable_data { get; private set; } = Array.Empty<byte>();
 
     /// <summary>
     ///     Gets the Disctionary of Lists containing only the named tgt tiles locations.
@@ -144,7 +144,7 @@ public partial class AreaInstance : RemoteObjectBase {
             return 0;
         }
     }
-   
+
     private void UpdateEnvironmentAndCaches(StdVector environments) {
         this.environments.Clear();
         this.environmentPtr = environments;
@@ -154,7 +154,7 @@ public partial class AreaInstance : RemoteObjectBase {
         }
         this.EntityCaches.ForEach((eCache) => eCache.UpdateState(this.environments));
     }
-   
+
     void AddToCacheParallel(EntityNodeKey key, string path) {
         for (var i = 0; i < this.EntityCaches.Count; i++) {
             if (this.EntityCaches[i].TryAddParallel(key, path)) {
@@ -166,14 +166,14 @@ public partial class AreaInstance : RemoteObjectBase {
         var bad_ptr = 0;
         var rotationHelper = ui.RotationSelector.Values;
         var rotatorMetrixHelper = ui.RotatorHelper.Values;
-        var tileData = ui.m.ReadStdVector<TileStructure>(this.TerrainMetadata.TileDetailsPtr);
+        var tileData = ui.m.ReadStdVector<TileStructure>(this.terr_meta_data.TileDetailsPtr);
         var tileHeightCache = new ConcurrentDictionary<IntPtr, sbyte[]>();
         if (tileData.Length == 0) { //may occur when changing locations during debugging
             ui.AddToLog(tName + "GetTerrainHeight err: tileData Length==0", MessType.Error);
             return default;
         }
         //for (int i = 0; i < tileData.Length; i++) {//for debug only
-          
+
         //}
         Parallel.For(0, tileData.Length, i => {
             var val = tileData[i];
@@ -191,15 +191,15 @@ public partial class AreaInstance : RemoteObjectBase {
                 }, (addr, data) => data);
         });
 
-        var gridSizeX = (int)this.TerrainMetadata.TotalTiles.X * TileStructure.TileToGridConversion;
-        var gridSizeY = (int)this.TerrainMetadata.TotalTiles.Y * TileStructure.TileToGridConversion;
+        var gridSizeX = (int)this.terr_meta_data.TotalTiles.X * TileStructure.TileToGridConversion;
+        var gridSizeY = (int)this.terr_meta_data.TotalTiles.Y * TileStructure.TileToGridConversion;
         Debug.Assert(gridSizeX > 0 && gridSizeY > 0 && gridSizeX < 10000 && gridSizeY < 10000);
         var result = new float[gridSizeY][];
         Parallel.For(0, gridSizeY, y => {
             result[y] = new float[gridSizeX];
             for (var x = 0; x < gridSizeX; x++) {
                 var tileDataIndex = y / TileStructure.TileToGridConversion *
-                    (int)this.TerrainMetadata.TotalTiles.X + x / TileStructure.TileToGridConversion;
+                    (int)this.terr_meta_data.TotalTiles.X + x / TileStructure.TileToGridConversion;
                 var mytiledata = tileData[tileDataIndex];
                 var mytileHeight = tileHeightCache[mytiledata.SubTileDetailsPtr];
                 var exactHeight = 0;
@@ -230,7 +230,7 @@ public partial class AreaInstance : RemoteObjectBase {
                     exactHeight = mytileHeight[mytileHeightIndex];
                 }
 
-                result[y][x] = mytiledata.TileHeight * (float)this.TerrainMetadata.TileHeightMultiplier + exactHeight;
+                result[y][x] = mytiledata.TileHeight * (float)this.terr_meta_data.TileHeightMultiplier + exactHeight;
                 result[y][x] = result[y][x] * TerrainStruct.TileHeightFinalMultiplier * -1;
             }
         });
@@ -292,7 +292,7 @@ public partial class AreaInstance : RemoteObjectBase {
             ImGui.TreePop();
         }
     }
-  
+
     internal override void ToImGui() {
         base.ToImGui();
         if (ImGui.TreeNode("Environment Info")) {
@@ -318,22 +318,22 @@ public partial class AreaInstance : RemoteObjectBase {
         ImGui.Text($"Monster Level: {this.MonsterLevel}");
         ImGui.Text($"World Zoom: {this.Zoom}");
         if (ImGui.TreeNode("Terrain Metadata")) {
-            ImGui.Text($"Total Tiles: {this.TerrainMetadata.TotalTiles}");
-            ImGui.Text($"Tiles Data Pointer: {this.TerrainMetadata.TileDetailsPtr}");
-            ImGui.Text($"Tiles Height Multiplier: {this.TerrainMetadata.TileHeightMultiplier}");
-            ImGui.Text($"Grid Walkable Data: {this.TerrainMetadata.GridWalkableData}");
-            ImGui.Text($"Grid Landscape Data: {this.TerrainMetadata.GridLandscapeData}");
-            ImGui.Text($"Data Bytes Per Row (for Walkable/Landscape Data): {this.TerrainMetadata.BytesPerRow}");
+            ImGui.Text($"Total Tiles: {this.terr_meta_data.TotalTiles}");
+            ImGui.Text($"Tiles Data Pointer: {this.terr_meta_data.TileDetailsPtr}");
+            ImGui.Text($"Tiles Height Multiplier: {this.terr_meta_data.TileHeightMultiplier}");
+            ImGui.Text($"Grid Walkable Data: {this.terr_meta_data.GridWalkableData}");
+            ImGui.Text($"Grid Landscape Data: {this.terr_meta_data.GridLandscapeData}");
+            ImGui.Text($"Data Bytes Per Row (for Walkable/Landscape Data): {this.terr_meta_data.BytesPerRow}");
             ImGui.TreePop();
         }
 
         if (this.player.GetComp<Render>(out var pPos)) {
-            var y = (int)pPos.GridPosition.Y;
-            var x = (int)pPos.GridPosition.X;
-            if (y < this.GridHeightData.Length) {
-                if (x < this.GridHeightData[0].Length) {
+            var y = (int)pPos.gpos_f.Y;
+            var x = (int)pPos.gpos_f.X;
+            if (y < this.height_data.Length) {
+                if (x < this.height_data[0].Length) {
                     ImGui.Text("Player Pos to Terrain Height: " +
-                               $"{this.GridHeightData[y][x]}");
+                               $"{this.height_data[y][x]}");
                 }
             }
         }

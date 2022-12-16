@@ -29,7 +29,10 @@ partial class DrawMain {
                 _draw_alert();
                 _draw_log();
             }
-
+            if (ImGui.BeginTabItem("Flasks")) {
+                DrawFlasks();
+                ImGui.EndTabItem();
+            }
             if (ImGui.BeginTabItem("Sett")) {
                 DrawSettings();
                 ImGui.EndTabItem();

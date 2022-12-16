@@ -73,7 +73,7 @@ public class Buffs : EntComp{
     }
 
     /// <inheritdoc />
-    protected override void CleanUpData()
+    protected override void Clear()
     {
         ui.AddToLog("Component Address should never be Zero.", MessType.Warning);
     }

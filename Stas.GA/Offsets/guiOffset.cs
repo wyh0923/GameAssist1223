@@ -25,7 +25,7 @@ namespace Stas.GA
         [FieldOffset(0x458)] public IntPtr ui_passive_point_available;
         [FieldOffset(0x2C8)] public IntPtr ui_flask_root;
         [FieldOffset(0x2D0)] public IntPtr ui_xp_bar;
-        [FieldOffset(0x9A8)] public IntPtr ui_lake_map; 
+        //[FieldOffset(0x9A8)] public IntPtr ui_lake_map; 
         [FieldOffset(0x9C0)] public IntPtr ui_ritual_rewards;
         [FieldOffset(0xAC8)] public IntPtr incomin_user_request; 
         [FieldOffset(0x710)] public IntPtr NpcDialog;              
@@ -46,7 +46,7 @@ namespace Stas.GA
         [FieldOffset(0x480)] public IntPtr ChatPanel;                       
         [FieldOffset(0x3E0)] public IntPtr ui_skills;
         [FieldOffset(0x808)] public IntPtr BetrayalWindow;
-        [FieldOffset(0x678)] public IntPtr maps_root_ptr; 
+        [FieldOffset(0x678)] public MapParentStruct maps_root_ptr; 
         [FieldOffset(0x6B8)] public IntPtr no_ui_here; 
         [FieldOffset(0x748)] public IntPtr QuestRewardWindow;
         [FieldOffset(0x750)] public IntPtr PurchaseWindow;
@@ -82,6 +82,7 @@ namespace Stas.GA
     [StructLayout(LayoutKind.Explicit, Pack = 1)]
     public struct MapParentStruct
     {
+        [FieldOffset(0)] public IntPtr self;
         [FieldOffset(0x280)] public IntPtr LargeMapPtr;
         [FieldOffset(0x288)] public IntPtr MiniMapPtr;
     }

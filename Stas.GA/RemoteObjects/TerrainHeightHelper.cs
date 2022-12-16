@@ -20,7 +20,7 @@ namespace Stas.GA {
                 return;
             this.Values = ui.m.ReadMemoryArray<byte>(this.Address, this.Values.Length);
         }
-        protected override void CleanUpData() {
+        protected override void Clear() {
             for (var i = 0; i < this.Values.Length; i++) {
                 this.Values[i] = 0;
             }

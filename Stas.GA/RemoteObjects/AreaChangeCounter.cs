@@ -15,7 +15,7 @@ public class AreaChangeCounter : RemoteObjectBase {//core.
         Value = ui.m.Read<AreaChangeOffset>(Address).counter;
     }
 
-    protected override void CleanUpData() {
+    protected override void Clear() {
         Value = int.MaxValue;
     }
     /// <summary>

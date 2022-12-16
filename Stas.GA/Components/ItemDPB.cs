@@ -36,7 +36,7 @@ public class ItemDPB : RemoteObjectBase {
         ui.AddToLog(tName + ".Tick need implement", MessType.Critical);
 
     }
-    protected override void CleanUpData() {
+    protected override void Clear() {
         ui.AddToLog(tName + ".CleanUpData need implement", MessType.Critical);
 
     }

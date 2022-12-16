@@ -17,7 +17,7 @@ public class Charges : EntComp {
         var data = ui.m.Read<ChargesOffsets>(this.Address);
         this.Current = data.current;
     }
-    protected override void CleanUpData() {
+    protected override void Clear() {
         ui.AddToLog("Component Address should never be Zero.", MessType.Warning);
     }
     /// <summary>

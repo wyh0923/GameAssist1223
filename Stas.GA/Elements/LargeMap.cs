@@ -4,7 +4,7 @@
 ///     It is exactly like any other element, except its in-memory position is its center
 /// </summary>
 internal class LargeMap : aMapElemet {
-    internal LargeMap(IntPtr address) : base(address) {
+    internal LargeMap() : base("LargeMap") {
     }
     internal override void Tick(IntPtr ptr, string from = null) {
         base.Tick(ptr, from);

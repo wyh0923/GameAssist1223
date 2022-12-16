@@ -12,44 +12,43 @@ public class LoadedFiles : RemoteObjectBase {
     string searchText = string.Empty;
     string[] searchTextSplit = Array.Empty<string>();
 
-    internal LoadedFiles(IntPtr address) : base(address) {
+    internal LoadedFiles(IntPtr ptr) : base(ptr) {
+        Debug.Assert(Address != default);
+
     }
     uint last_map_hash = 0;
     public bool b_ready { get; private set; }
-    internal override void Tick(IntPtr ptr, string from=null) {
+    internal override void Tick(IntPtr ptr, string from) {
         Address = ptr;
-        if (Address == IntPtr.Zero)
+        if (Address == IntPtr.Zero) {
             return;
-        var sw = new SW("LF upd+PA parce");
-        b_ready = false;
-        var upd_thread = new Thread(() => {
-            sw.Restart();
-            var bad_states = ui.states.Address == IntPtr.Zero;
-            var bad_counter = ui.area_change_counter.Value == int.MaxValue; //not loaded jet
-                                                                            //Debug.Assert(!bad_states && !bad_counter);
-            if (ui.b_home || ui.curr_map_hash == last_map_hash) {
-                return;
-            }
+        }
 
-            CleanUpData();
-            last_map_hash = ui.curr_map_hash;
-            var filesRootObjs = this.GetAllPointers();
-            for (var i = 0; i < filesRootObjs.Length; i++) {
-                this.ScanForFilesParallel(ui.m, filesRootObjs[i]);
-            }
-            ui.alert.AreaChange();
-            sw.Print();
-            b_ready = true;
-        });
-        upd_thread.IsBackground = true;
-        upd_thread.Start();
     }
-    
+    public PreloadAlert alert { get; private set; }
+
+    /// <summary>
+    /// must be run in separate thread only
+    /// </summary>
+    public void Load(string from) {
+        var sw = new SW("LF upd+PA parce");
+        sw.Restart();
+        Clear();
+        last_map_hash = ui.curr_map_hash;
+        var filesRootObjs = this.GetAllPointers();
+        for (var i = 0; i < filesRootObjs.Length; i++) {
+            this.ScanForFilesParallel(ui.m, filesRootObjs[i]);
+        }
+        alert ??= new PreloadAlert();
+        alert.AreaChange();
+        sw.Print();
+        b_ready = true;
+    }
     /// <summary>
     ///     Gets the pathname of the files.
     /// </summary>
     public ConcurrentDictionary<string, int> PathNames { get; } = new();
-    protected override void CleanUpData() {
+    protected override void Clear() {
         PathNames.Clear();
         last_map_hash = 0;
         b_ready = false;
@@ -90,16 +89,16 @@ public class LoadedFiles : RemoteObjectBase {
                           "entered the same Map again.");
         if (!b_ready) {
             var fname = ui.curr_map_name + "[" + ui.curr_map_hash.ToString("X") + "].txt";
-            ImGui.Text("File:"+ fname);
+            ImGui.Text("File:" + fname);
             ImGui.SameLine();
             var dir_name = "preload_dumps";
             if (ImGui.Button("Save")) {
                 Directory.CreateDirectory(dir_name);
                 var dataToWrite = this.PathNames.Keys.ToList();
                 dataToWrite.Sort();
-                File.WriteAllText(  Path.Join(dir_name, fname), string.Join("\n", dataToWrite));
+                File.WriteAllText(Path.Join(dir_name, fname), string.Join("\n", dataToWrite));
             }
-            ImGuiExt.ToolTip("Chek file out in dir=["+ dir_name + "]");
+            ImGuiExt.ToolTip("Chek file out in dir=[" + dir_name + "]");
         }
         else {//only 600 ms here possible
             ImGuiExt.DrawDisabledButton("Save");

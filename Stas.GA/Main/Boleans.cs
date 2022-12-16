@@ -17,21 +17,21 @@ namespace Stas.GA {
             var can_hit = nav.b_can_hit(ent);
             return isee && can_hit;
         }
-        public static bool b_running = true, b_draw_bots = true, b_pause, b_tile, b_appl_started, b_minimize, b_show_info_over,
+        public static bool b_running = true, b_draw_bots = true, b_pause, b_tile, b_ga_menu_top,  b_appl_started, b_minimize, b_show_info_over,
             b_vs, b_edit_sett, b_show_cell,  b_in_mine, b_only_unknow, b_draw_bad_centr, b_draw_save_screen;
         public static bool b_trade_top { get; private set; }
         //public bool b_modal => gui == null ? false : gui.Ultimatum.IsVisible || gui.modal_dialog.IsVisible || gui.esc_dialog.IsVisible;
+       
+        public static bool b_ingame { get { 
+                return curr_state == gState.InGameState; 
+            } } 
+        public static bool b_m_centered;
+        public static bool b_trader_top { get; private set; }
+
         public static bool b_shift => Keyboard.IsKeyDown(Keys.ShiftKey);
         public static bool b_contr_shift => b_contrl && b_shift;
         public static bool b_alt_shift => b_alt && b_shift;
         public static bool b_contr_alt => b_contrl && b_alt;
-        public static bool b_ingame { get { 
-                return curr_state == GameStateTypes.InGameState; 
-            } } 
-        public static bool b_m_centered;
-        public static bool b_trader_top { get; private set; }
-       
-        //static int alt_pressed = 0;
         public static bool b_alt {
             get {
                 var alt = Keyboard.IsKeyDown(Keys.Menu);
@@ -62,15 +62,13 @@ namespace Stas.GA {
                 if (DrawMain.scene == null)
                     return false;
                 var sdl_ptr = DrawMain.scene.sdl_window.GetHWnd();
-                if (curr_top_ptr == sdl_ptr) {
-                }
                 return curr_top_ptr == sdl_ptr;
             }
         }
         public static bool b_busy {
             get {
-                if (gui ==null || curr_state != GameStateTypes.InGameState)
-                    return false;
+                if (gui ==null || curr_state != gState.InGameState)
+                    return true;
                 var res = b_chat_box_inp || gui.b_busy;
                 //var info = gui.b_busy_info;
                 //ui.warning = "open_right_panel=" + ui.gui.open_right_panel.IsVisible;
@@ -87,7 +85,7 @@ namespace Stas.GA {
         static bool last_mine_val;
         public static bool b_mine_town {
             get {
-                if (curr_world.world_data.Name == "Azurite Mine") {
+                if (curr_world.world_area.Name == "Azurite Mine") {
                     if (last_mine_check_time.AddSeconds(1) < DateTime.Now) {
                         last_mine_check_time = DateTime.Now;
                         var stash = curr_map.static_items.Values.FirstOrDefault(i=>i.m_type == miType.Stash);
@@ -105,15 +103,15 @@ namespace Stas.GA {
         /// not enemy here and can't use any skills here at all
         /// </summary>
         public static bool b_town { get {
-                var is_town = curr_world.world_data.IsTown;
-                var roug = curr_world.world_data.Name == "The Rogue Harbour";
+                var is_town = curr_world.world_area.IsTown;
+                var roug = curr_world.world_area.Name == "The Rogue Harbour";
                 return is_town || roug;
             } }  
         /// <summary>
         /// No enemy here but we can cast same buff mb
         /// </summary>
         public static bool b_home { get {
-                var ho = curr_world.world_data.IsHideout;
+                var ho = curr_world.world_area.IsHideout;
                 return ho || b_mine_town;   } }  
     }
 }

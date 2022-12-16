@@ -22,12 +22,12 @@ namespace Stas.GA {
 
            
             //================> new line
-
             ImGui.SetNextItemWidth(60);
-            if (ImGui.SliderInt("PlPos", ref ui.sett.max_player_debug_pos, 0, 256)) {
+            if (ImGui.Checkbox("PlPos", ref ui.sett.b_draw_me_pos)) {
                 ui.sett.Save();
             }
-            ImGuiExt.ToolTip("the red line behind the hero - visual fps and dwell time at one point");
+            ImGuiExt.ToolTip("Draw red line behind the hero \n" +
+                "to visualize FPS and latency in one place ");
 
             ImGui.SetNextItemWidth(60);
             ImGui.SameLine();
@@ -35,6 +35,17 @@ namespace Stas.GA {
                 ui.sett.Save();
             }
             ImGuiExt.ToolTip("Font size for this UI.info panel. default=1");
+
+            if (ImGui.Button("+Tile")) {
+                ui.curr_map.AddImportantTile(ui.me.gpos);
+            }
+            ImGuiExt.ToolTip("adds the tile we are standing on " +
+                "\nto the list of important tiles for the current map");
+
+            ImGui.SameLine();
+            ImGui.Checkbox("Tile", ref ui.b_tile);
+            ImGuiExt.ToolTip("When you press Alt, it shows the title under your feet.\nIf it is unique, you can add it \nto the important tiles on this type of map)");
+
         }
     }
 }

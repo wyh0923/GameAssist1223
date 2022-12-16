@@ -10,7 +10,6 @@ public partial class AreaInstance {
     ConcurrentBag<MapItem> frame_items = new();
     public ConcurrentBag<iTask> frame_i_tasks = new ConcurrentBag<iTask>();
     HashSet<string> quest_ent = new HashSet<string>();
-    string quest_ent_fname = @"C:\Log\quest_ent.txt";
 
     MapItem AddMapItem(Entity e) {
         if (e.pos == V3.Zero) {
@@ -42,10 +41,6 @@ public partial class AreaInstance {
             case eTypes.Door:
                 return GetDoor(e);
             case eTypes.Quest: {
-                    if (!quest_ent.Contains(e.Path)) {
-                        quest_ent.Add(e.Path);
-                        File.AppendAllLines(quest_ent_fname, new string[] { e.Path });
-                    }
                     if (e.GetComp<MinimapIcon>(out _))
                         return asStaticMapItem(e, miType.Quest, MapIconsIndex.QuestItem);
                     else
@@ -109,6 +104,11 @@ public partial class AreaInstance {
                     var ce = e.tName + " type=" + e.eType;
                     mi.uv = sh.GetUV(MapIconsIndex.Amulet);
                     return mi;
+                }
+            case eTypes.LimitedLife: {
+                    if (e.Path.EndsWith("GroundBlade"))
+                        return null;
+                    break;
                 }
             case eTypes.Effects: {
                     mi.uv = sh.GetUV(MapIconsIndex.Effect);

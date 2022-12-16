@@ -3,7 +3,7 @@ using System.Diagnostics;
 using V2 = System.Numerics.Vector2;
 namespace Stas.GA;
 
-public abstract partial class aTasker:IDisposable {
+public abstract partial class aTasker {
     #region bool flags
     /// <summary>
     ///dont do quest/looting/etc if no danger, but fight and protect the Leader
@@ -134,7 +134,5 @@ public abstract partial class aTasker:IDisposable {
             ui.warning = "Use Life potion was OK";
         }
     }
-    public void Dispose() {
-        tasker_thread.Abort();
-    }
+  
 }

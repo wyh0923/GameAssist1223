@@ -108,7 +108,7 @@ public class Inventory : Element {
     }
 
     /// <inheritdoc />
-    protected override void CleanUpData() {
+    protected override void Clear() {
         TotalBoxes = default;
         ServerRequestCounter = default;
         itemsToInventorySlotMapping = null;

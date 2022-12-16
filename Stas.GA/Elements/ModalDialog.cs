@@ -16,4 +16,11 @@ namespace Stas.GA {
         public Element no => GetTextElem_by_Str("no");
         public Element ok => GetTextElem_by_Str("ok");
     }
+    public class EscDialog : Element { // modal, poping after logion
+        internal EscDialog() : base("EscDialog") {
+        }
+        public Element options => GetTextElem_by_Str("options");
+        public Element resume => GetTextElem_by_Str("resume game");
+        public Element exit_to_character => GetTextElem_by_Str("exit to character selection");
+    }
 }

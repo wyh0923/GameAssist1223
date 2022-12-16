@@ -20,8 +20,8 @@ public class MinimapIcon : EntComp {
         }
     }
 
-    protected override void CleanUpData() {
-        base.CleanUpData();
+    protected override void Clear() {
+        base.Clear();
     }
     public bool IsVisible { get; private set; }
     public bool IsHide { get; private set; }

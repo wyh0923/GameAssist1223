@@ -12,10 +12,6 @@ public partial class Settings : iSett {
     /// </summary>
     public Dictionary<string, string> my_worker_names { get; set; } = new();
     public Settings() {
-        my_worker_names.Add("MyCurseBot", "CurseBot");
-        my_worker_names.Add("MyManaGuard", "ManaGuard");
-        my_worker_names.Add("MyAuraBot", "AuraBot");
-        my_worker_names.Add("MyDamageDealer", "Balista");
     }
 }
 public partial class ui {

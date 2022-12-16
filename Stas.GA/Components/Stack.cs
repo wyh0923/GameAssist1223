@@ -14,7 +14,7 @@ public class Stack : EntComp {
         Info.Tick(ui.m.Read<IntPtr>(Address + 0x10));
     }
    
-    protected override void CleanUpData() {
+    protected override void Clear() {
         Info.Tick(IntPtr.Zero);
         Size = 0;
     }
@@ -29,7 +29,7 @@ public class CurrencyInfo : RemoteObjectBase {
             return;
         MaxStackSize = ui.m.Read<int>(Address + 0x28);
     }
-    protected override void CleanUpData() {
+    protected override void Clear() {
         MaxStackSize = 0;
     }
 }

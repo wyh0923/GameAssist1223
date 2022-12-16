@@ -21,22 +21,18 @@ namespace Stas.GA {
             Debug.Assert(di != null);
             var rm = ui.MTransform();
             var info = di.info;
-            if (!string.IsNullOrEmpty(di.info))
+            if (string.IsNullOrEmpty(di.info))
                 info = "Error info";
             if (di is StaticMapItem)
-                info += " [Static]";
-            var s = ImGui.CalcTextSize(info) / 2;
-            //fgDraw.AddRectFilled(mapCenter + fpos - s, mapCenter + fpos + s,   ImGuiHelper.Color(0, 0, 0, 255));
-            //fgDraw.AddText(mapCenter + fpos - s, ImGuiHelper.Color(255, 128, 128, 255),   fitName);
+                info += " [St]";
+            var ts = ImGui.CalcTextSize(info);
             var mi_gpos = di.pos * ui.worldToGridScale;
-            var his = di.size / 2;
-            his *= ui.sett.map_scale;
-            var w = info.Length * his;
+            var his = ts.Y;
             var pos = V2.Transform(new V2(mi_gpos.X, mi_gpos.Y), rm);
-            var lt = pos.Increase(-his, -his - 5);
-            var rt = pos.Increase(his + w, -his - 5);
-            var lb = pos.Increase(-his, his + 5);
-            var rb = pos.Increase(his + w, his + 5);
+            var lt = pos.Increase(0, -his);
+            var rt = pos.Increase(ts.X + 2 * his, -his);
+            var lb = pos.Increase(0, 1.7f * his);
+            var rb = pos.Increase(ts.X + 2 * his, 1.7f * his);
 
             map_ptr.AddQuadFilled(lt, rt, rb, lb, Color.Green.ToImgui());
             map_ptr.AddQuad(lt, rt, rb, lb, Color.LightGreen.ToImgui(), 2f);
@@ -57,7 +53,7 @@ namespace Stas.GA {
                     bptr.AddText(pos.Increase(15, 0), tcolor, ninfo);
                 }
             }
-            if(_draw)
+            if (_draw)
                 bptr.AddText(pos.Increase(15, 0), tcolor, info);
 
         }

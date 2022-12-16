@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using V2 = System.Numerics.Vector2;
 namespace Stas.GA;
 
@@ -13,55 +14,43 @@ namespace Stas.GA;
 public partial class GameUiElements : Element {
     Thread worker;
     public SafeScreen safe_screen;
-    [DllImport("Stas.GA.Native.dll", SetLastError = true, EntryPoint = "GetPassiveTreePtr")]
-    static extern IntPtr GetPassiveTreePtr();
-    internal GameUiElements(IntPtr ptr) 
-        : base(ptr, "gui") {
-        MakeNeedCheckVisList();
+    internal GameUiElements()   : base("gui") {
         worker = new Thread(() => {
             while (ui.b_running) {
-                if (ui.curr_state != GameStateTypes.InGameState) {
+                if (Address == default || ui.curr_state != gState.InGameState) {
                     Thread.Sleep(ui.w8*10);
                     continue;
                 }
-                Init(tName+"worker");
-                base.Tick(Address, tName + "worker");
+                base.Tick(Address, tName + ".worker_thred");
+                Update();
                 Thread.Sleep(100);
             }
         });
         worker.IsBackground= true;
         worker.Start(); 
     }
-    internal void MakeNeedCheckVisList() {
-        need_check_vis = new List<Element>() { KiracMission, open_left_panel, open_right_panel,
-            passives_tree, NpcDialog, LeagueNpcDialog, BetrayalWindow, 
-            AtlasPanel, AtlasSkillPanel,DelveWindow,TempleOfAtzoatl };
-        if (!ui.sett.b_use_ingame_map)
-            need_check_vis.Add(large_map);
-
-    }
+  
     [DllImport("Stas.GA.Native.dll", SetLastError = true, EntryPoint = "GetGuiOffsets")]
     public static extern int GetGuiOffsets(IntPtr gui_ptr, ref guiOffset offs);
-    override protected void Init(string from) {
-        base.Init(from);
+   
+    void Update() {
         Debug.Assert(Address != default);
         var data = new guiOffset();
         GetGuiOffsets(Address, ref data);
+        map_root.Tick(data.maps_root_ptr.self, tName);
+        if (map_root.children_pointers.Length == 4) {
+            large_map.Tick(map_root[0].Address, tName);
+        }
+        map_devise.Tick(data.MapDeviceWindow, tName);
         ui_flask_root.Tick(data.ui_flask_root, tName);
         KiracMission.Tick(data.KiracMission, tName);
         open_right_panel.Tick(data.open_right_panel, tName);
         open_left_panel.Tick(data.open_left_panel, tName);
-        var pt_ptr = GetPassiveTreePtr();
-        if (pt_ptr != default)
-            passives_tree.Tick(pt_ptr, tName + ".GetPassiveTree");
-        else {
-            ui.AddToLog(tName + ".GetPassiveTree err=bad ptr", MessType.Error);
-        }
-        //NpcDialog.Tick(data.NpcDialog, tName); //wromg insade not upd now
+        if (children_pointers.Length > 25)
+            passives_tree.Tick(children_pointers[23], tName);
+        NpcDialog.Tick(data.NpcDialog, tName); //wromg insade not upd now
         LeagueNpcDialog.Tick(data.LeagueNpcDialog, tName);
         BetrayalWindow.Tick(data.BetrayalWindow, tName);
-        maps_root.Tick(data.maps_root_ptr, tName);
-        large_map.Tick(maps_root.children_pointers[0], tName);
         AtlasPanel.Tick(data.AtlasPanel, tName);
         AtlasSkillPanel.Tick(data.AtlasSkillPanel, tName);
         DelveWindow.Tick(data.DelveWindow, tName);
@@ -70,7 +59,6 @@ public partial class GameUiElements : Element {
         world_map.Tick(data.WorldMap, tName);
         stash_element.Tick(data.StashElement, tName);
         QuestRewardWindow.Tick(data.QuestRewardWindow, tName);
-        //var data2 = reader.ReadMemory<MapParentStruct>(data1.MapParentPtr);
         labels_on_ground_elem.Tick(data.itemsOnGroundLabelRoot);
         ultimatum.Tick(data.UltimatumProgressPanel, tName);
         incomin_user_request.Tick(data.incomin_user_request, tName);
@@ -79,24 +67,78 @@ public partial class GameUiElements : Element {
         chat_box_elem.Tick(data.ChatPanel, tName);
         debuffs_pannel.Tick(data.ui_debuf_panell, tName);
         ui_ritual_rewards.Tick(data.ui_ritual_rewards, tName);
-        ui_lake_map.Tick(data.ui_lake_map, tName);
         SkillBar.Tick(data.ui_skills, tName);
         ui_ppa.Tick(data.ui_passive_point_available, tName);
         ChatHelpPop.Tick(data.chat_help_pop, tName);
         ui_menu_btn.Tick(data.ui_menu_btn, tName);
         ui_xp_bar.Tick(data.ui_xp_bar, tName);
         MyBuffPanel.Tick(data.ui_buff_panel, tName);
-        //party_panel.Tick(data.party_panel, tName); //not ready
-        GetPlayerInvetory();
-    }
-    void GetPlayerInvetory() { 
-    
+        party_panel.Tick(data.party_panel, tName);
+        GetEsc();
+        //GetPlayerInvetory();
+
     }
     internal override void Tick(IntPtr ptr, string from) {
-        Debug.Assert(ptr == default || from.EndsWith(".CleanUpData") ||from== "debug_gui");
         Address = ptr;
-        Init(from);
+        if (ptr == default) {//game state was cahnged to login/hero select?
+            var cgs = ui.curr_state;
+            Clear();
+        }
     }
+    protected override void Clear() {
+        base.Clear();
+        ui.elements.Clear();
+        esc_ptr = default;
+        pi_ptr = default;
+        map_root.Tick(default, "Clear");
+    }
+    Element map_root = new Element("map_root");
+    void GetLargeMap(guiOffset data) {
+        map_root.Tick(data.maps_root_ptr.self, tName);
+        if (map_root.children_pointers.Length == 4) {
+            large_map.Tick(map_root.GetChildFromIndices(2, 0).Address, tName);
+        }
+        else {
+            ui.AddToLog(tName + "map_root vrong children count", MessType.Error);
+        }
+    }
+    [DllImport("Stas.GA.Native.dll", SetLastError = true, EntryPoint = "GetEscPtr")]
+    static extern IntPtr GetEscPtr();
+    IntPtr esc_ptr = default;
+    void GetEsc() {
+        if(esc_ptr==default)
+            esc_ptr = GetEscPtr();
+        if (esc_ptr != default)
+            esc_dialog.Tick(esc_ptr, tName + ".GetEsc");
+        else {
+            ui.AddToLog(tName + ".GetEsc err=bad ptr", MessType.Error);
+        }
+    }
+    [DllImport("Stas.GA.Native.dll", SetLastError = true, EntryPoint = "GetPassiveTreePtr")]
+    static extern IntPtr GetPassiveTreePtr();
+    void GetPassiveTree() {
+        var ptr = GetPassiveTreePtr();
+        if (ptr != default)
+            passives_tree.Tick(ptr, tName + ".GetPassiveTree");
+        else {
+            ui.AddToLog(tName + ".GetPassiveTree err=bad ptr", MessType.Error);
+        }
+    }
+    [DllImport("Stas.GA.Native.dll", SetLastError = true, EntryPoint = "GetPlInvPtr")]
+    static extern IntPtr GetPlInvPtr();
+    IntPtr pi_ptr = default;
+    void GetPlayerInvetory() {
+        if(pi_ptr ==default)
+            pi_ptr = GetPlInvPtr();
+        if (pi_ptr != default)
+            player_inventory.Tick(pi_ptr, tName + ".GetPlayerInvetory");
+        else {
+            ui.AddToLog(tName + ".GetPlayerInvetory err=bad ptr", MessType.Error);
+        }
+    }
+    internal Element map_devise { get; } = new Element("map_devise");
+    internal EscDialog esc_dialog { get; } = new EscDialog();
+    internal Element skip_element { get; } = new Element("skip_element");
     internal UltimatumElem ultimatum { get; } = new UltimatumElem();
     internal DelveDarknessElem delve_darkness_elem { get; } = new DelveDarknessElem();
     internal ModalDialog modal_dialog { get; } = new ModalDialog() ;
@@ -108,8 +150,7 @@ public partial class GameUiElements : Element {
     internal SkillBarElement SkillBar { get; } = new SkillBarElement();
     internal PartyPanel party_panel { get; } = new PartyPanel();
     internal Inventory player_inventory { get; } = new Inventory(IntPtr.Zero, "player");
-    internal LargeMap large_map { get; } = new(IntPtr.Zero);
-    aMapElemet maps_root { get; } = new(IntPtr.Zero);
+    internal LargeMap large_map { get; } = new LargeMap();
     internal StashElement stash_element { get; } = new StashElement();
     internal QuestRewardWindow QuestRewardWindow { get; } = new QuestRewardWindow();
     internal WorldMapElement world_map { get; } = new WorldMapElement();
@@ -123,7 +164,5 @@ public partial class GameUiElements : Element {
     internal Element ui_flask_root { get; } = new Element("ui_flask_root") ;
     internal Element ui_xp_bar { get; } = new Element("ui_xp_bar") ;
     internal Element MyBuffPanel { get; } = new Element("MyBuffPanel") ;
-    public void Dispose() {
-        worker.Abort();
-    }
+   
 }

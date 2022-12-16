@@ -90,12 +90,12 @@ namespace Stas.GA {
                 "\ninstead of the side mouse buttons (by default)\n" +
                 "Buttons edit in the confg");
            
-            ImGui.SameLine();
-            if (ImGui.Checkbox("IngameMep", ref ui.sett.b_use_ingame_map)) {
-                ui.gui.MakeNeedCheckVisList();
-                ui.sett.Save();
-            }
-            ImGuiExt.ToolTip("Display enemies on the in-game map(old style)");
+            //ImGui.SameLine();
+            //if (ImGui.Checkbox("IngameMep", ref ui.sett.b_use_ingame_map)) {
+            //    ui.gui.MakeNeedCheckVisList();
+            //    ui.sett.Save();
+            //}
+            //ImGuiExt.ToolTip("Display enemies on the in-game map(old style)");
 
             ImGui.SameLine();
             if (ImGui.Checkbox("Log first", ref ui.sett.b_draw_log_first)) {

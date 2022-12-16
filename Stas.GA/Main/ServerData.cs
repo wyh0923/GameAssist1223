@@ -105,7 +105,7 @@ public class ServerData : RemoteObjectBase {
         SelectedInv.Tick(IntPtr.Zero);
     }
     /// <inheritdoc />
-    protected override void CleanUpData() {
+    protected override void Clear() {
         ClearCurrentlySelectedInventory();
         PlayerInventories.Clear();
         FlaskInventory.Tick(IntPtr.Zero);

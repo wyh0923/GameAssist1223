@@ -45,9 +45,7 @@ namespace Stas.GA {
             }
             ImGuiExt.ToolTip("draw mouse moving traces");
 
-            ImGui.SameLine();
-            ImGui.Checkbox("Tile", ref ui.b_tile);
-            ImGuiExt.ToolTip("Show tiles with Get_Tile_Name_by_my_gpos()");
+          
 
             ImGui.SameLine();
             ImGui.Checkbox("Cells", ref ui.b_show_cell);

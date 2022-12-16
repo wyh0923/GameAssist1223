@@ -44,7 +44,7 @@ public class Render : EntComp {
     /// <summary>
     ///     Gets the position where entity is located on the grid (map).
     /// </summary>
-    public V2 GridPosition {
+    public V2 gpos_f {
         get => this.gridPos2D;
         private set => this.gridPos2D = value;
     }

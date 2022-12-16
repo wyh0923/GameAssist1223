@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Net;
-using static SharpDX.Utilities;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Stas.GA;
@@ -10,39 +9,30 @@ namespace Stas.GA;
 /// </summary>
 public class InGameState : RemoteObjectBase {
     internal InGameState(IntPtr address) : base(address) {
-
+     
     }
-    public bool b_init = false;
-    internal override void Tick(IntPtr ptr, string from=null) {
+    internal override void Tick(IntPtr ptr, string from = null) {
         Address = ptr;
-        if (Address == IntPtr.Zero)
+        if (Address == IntPtr.Zero) {
+            Clear();
             return;
+        }
         var data = ui.m.Read<InGameStateOffset>(Address);
-        var gst = (GameStateTypes)ui.m.Read<byte>(Address + 0x0B);
+        //for debug info only
+        var gst = (gState)ui.m.Read<byte>(Address + 0x0B);
         world_data.Tick(data.WorldData);
         area_instance.Tick(data.AreaInstanceData);
         UIHover.Tick(data.UIHover, tName);
-
-        if (!b_init) {
-            UiRoot = new Element(data.UiRootPtr, "UiRoot");//
-            UiRoot.Tick(data.UiRootPtr, "test");
-            gui = new GameUiElements(data.IngameUi);
-            b_init = true;
-        }
-        else {//ones per game copy in memory and not checnge after map loading?
-            //UiRootPtr can be null after map change - need test
-            //Debug.Assert(UiRoot.Address == data.UiRootPtr 
-            //            && gui.Address == data.IngameUi);
-        }
+        UiRoot.Tick(data.UiRootPtr, tName);
+        gui ??= new GameUiElements();
+        gui.Tick(data.IngameUi, tName);
     }
-   
-    protected override void CleanUpData() {
+    protected override void Clear() {
         //TODO debug where and when it is called from!
-        b_init = false;
-        area_instance.Tick(IntPtr.Zero);
-        UiRoot.Tick(IntPtr.Zero, tName+ ".CleanUpData");
-        gui.Tick(IntPtr.Zero, tName + ".CleanUpData");
         world_data.Tick(IntPtr.Zero);
+        area_instance.Tick(IntPtr.Zero);
+        UiRoot.Tick(IntPtr.Zero, tName + ".CleanUpData");
+        gui?.Tick(IntPtr.Zero, tName + ".CleanUpData");
     }
     /// <summary>
     /// element which is currently hovered
@@ -55,15 +45,15 @@ public class InGameState : RemoteObjectBase {
     /// <summary>
     ///     core.states.ingame_state.curr_area_instance[3] =>mapper
     /// </summary>
-    public AreaInstance area_instance { get; } = new(IntPtr.Zero);
+    public AreaInstance area_instance { get; } = new(default);
     /// <summary>
     ///     Gets the data related to the root ui element.
     ///     Not working for login/choise hero states
     /// </summary>
-    internal Element UiRoot { get; private set; }
+    internal Element UiRoot { get; private set; } = new Element("UiRoot");
     /// <summary>
     ///     Gets the UiRoot main child which contains all the UiElements of the game.
     /// </summary>
-    public GameUiElements gui { get; private set; }
+    public GameUiElements gui { get; private set; } = new GameUiElements();
 
 }

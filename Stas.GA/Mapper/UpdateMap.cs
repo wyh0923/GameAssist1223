@@ -1,8 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-
 namespace Stas.GA;
 public partial class AreaInstance {
     Stopwatch sw = new Stopwatch();
@@ -10,7 +7,6 @@ public partial class AreaInstance {
     public float progress = 0f;
     public int rows;
     public int cols;
-    byte[] terrainBytes;
     public int[,] bit_data { get; private set; }
     public bool b_added_col { get; private set; }
     int make_ticks = 0; //for debug time creating
@@ -18,22 +14,51 @@ public partial class AreaInstance {
     /// after map creating only
     /// </summary>
     public bool b_ready { get; private set; }
-
-    public void UpdateMap() {
+    /// <summary>
+    /// must be run in separate thread only
+    /// </summary>
+    public void UpdateMap(object state) {
         ClearOldData();
-        ui.curr_map.UpdateMapDate();
-        var inst_ok = this.Address != default;
-        var state_ok = ui.curr_state == GameStateTypes.InGameState;
-        while (!state_ok || !inst_ok) {
-            ui.AddToLog("UpdateMap w8.. right state", MessType.Warning);
-            Thread.Sleep(30);
-        }
-        Debug.Assert(state_ok && inst_ok);
+        UpdMapImage();
 
+        ui.nav.MakeGridSells();//here first coz ve need cell to dtae quest area
+        ui.nav.LoadVisited();
+        ui.curr_map.GetTileTgtName();
+        ui.LoadQuest();
+        ui.area_change_counter.Tick(ui.area_change_counter.Address, "UpdateMap");
+        if (!ui.b_town && !ui.b_home)
+            ui.curr_loaded_files.Load(tName);
+        //ui.looter.LoadOldLoot();
+    }
+    void UpdMapImage() {
+        int curr_w8 = 0;
+        int w8 = 3;
+        AreaInstanceOffsets data = default;
+        while (data.TerrainMetadata.BytesPerRow <= 0
+            || data.TerrainMetadata.GridWalkableData.Size <= 200 * 200
+            || data.TerrainMetadata.GridWalkableData.Size > 4000 * 4000) {
+            Thread.Sleep(w8);
+            b_ready = false;
+            ui.AddToLog(tName + ".UpdMapImage w8=[" + (curr_w8 += w8) + "]", MessType.Warning);
+            ui.AddToLog(tName + ".UpdMapImage w8 right data...", MessType.Warning);
+            if (Address != default)
+                data = ui.m.Read<AreaInstanceOffsets>(Address);
+        }
+        terr_meta_data = data.TerrainMetadata;
+        walkable_data = ui.m.ReadStdVector<byte>(terr_meta_data.GridWalkableData);
+        height_data = GetTerrainHeight();
+        List<byte> valid = new List<byte>();
+        for (byte f = 0; f <= 5; f++) {
+            for (byte s = 0; s <= 5; s++) {
+                byte res = (byte)((f << 4) | s);
+                //var res_h = res.ToString("X");
+                //var res_b = Convert.ToString(res, 2);
+                //Console.WriteLine(res_h + "=" + res_b);
+                valid.Add(res);
+            }
+        }
         sw.Restart();
-        var gridHeightData = GridHeightData;
-        var walkable_data = GridWalkableData;
-        var td = TerrainMetadata;
+        var td = terr_meta_data;
         cols = (int)td.TotalTiles.X * 23;
         rows = (int)td.TotalTiles.Y * 23;
         var bytesPerRow = td.BytesPerRow;
@@ -44,63 +69,42 @@ public partial class AreaInstance {
         }
         else
             b_added_col = false;
-        while (td.TileDetailsPtr.First == IntPtr.Zero) {
-            Thread.Sleep(50);
-            ui.AddToLog("UpdateMap... w8 TileDetailsPtr...", MessType.Warning);
-        }
-        tileData = ui.m.ReadStdVector<TileStructure>(td.TileDetailsPtr);
-        var mapEdgeDetector = new MapEdgeDetector(walkable_data, bytesPerRow);
-
         bit_data = new int[cols, rows];
         var bmp = new Bitmap(bytesPerRow * 2, walkable_data.Length / bytesPerRow);
-        //for (int y = 0; y < gridHeightData.Length; y++) {
-          
-        //}
-        Parallel.For(0, gridHeightData.Length, y => {
-            for (var x = 1; x < gridHeightData[y].Length - 1; x++) {
+#if DEBUG
+        for (int y = 0; y < height_data.Length; y++) {
+            Run(y);
+        }
+#else
+        Parallel.For(0, height_data.Length, y => {
+            Run(y);
+        });
+#endif
+        void Run(int y) {
+            for (var x = 1; x < height_data[y].Length - 1; x++) {
                 var index = (y * bytesPerRow) + (x / 2); // (x / 2) => since there are 2 data points in 1 byte.
                 var shift = x % 2 == 0 ? 0 : 4;
                 var both = walkable_data[index];
+                Debug.Assert(valid.Contains(both));
                 var bit = both >> shift & 0xF;
-
-                if (bit == 0 || (ui.sett.b_use_ingame_map
-                                && ui.sett.b_use_Edge_only
-                                && !mapEdgeDetector.IsBorder(x, y)))
+                bit_data[x, y] = bit;
+                if (bit == 0)
                     continue;
-
                 //TODO temporary - mb need filling array[color, color] or mb array[byte[4], byte[4]]
                 //https://swharden.com/csdv/system.drawing/array-to-image/
-                if (ui.sett.b_use_ingame_map) {
-                    var h = (int)(gridHeightData[y][x] / 21.91f);
-                    var nx = x - h;
-                    var ny = y - h;
-                    if (mapEdgeDetector.IsInsideMapBoundary(nx, ny))
-                        bit_data[nx, ny] = bit;
-                    lock (bmp) { //we need it coz using Parallel
-                        bmp.SetPixel(nx, ny, GetColor(bit));
-                    }
-                }
-                else {
-                    bit_data[x, y] = bit;
-                    lock (bmp) { //we need it coz using Parallel
-                        bmp.SetPixel(x, y, GetColor(bit));
-                    }
+                lock (bmp) { //we need it coz using Parallel
+                    bmp.SetPixel(x, y, GetColor(bit));
                 }
             }
-        });
+        }
         map_ptr = ui.GetPtrFromImageData(bmp);
-        //bmp.Save(@"c:\log\debug_map.bmp", ImageFormat.Bmp);
         bmp.Dispose();
         b_ready = true;
-        ui.AddToLog("Map create time=[" + sw.ElapsedTostring() + "]", MessType.Warning); //853
-        ui.nav.MakeGridSells();
+        ui.AddToLog("Map create time=[" + sw.ElapsedTostring() + "]", MessType.Warning);
     }
-   
-
-    public List<Entity> need_check = new();
     void ClearOldData() {
-        //todo: debag this list befor map change
-        need_check.Clear();
+        ui.sett.map_scale = ui.sett.map_scale_def;
+        //quest_ent.Clear(); //mb don't
         b_ready = false;
         ui.elements.Clear();
         ui.w8ting_click_until.Clear();
@@ -109,12 +113,11 @@ public partial class AreaInstance {
         MonsterLevel = 0;
         AreaHash = 0;
         server_data.Tick(IntPtr.Zero);
-        player.Tick(IntPtr.Zero);
-        TerrainMetadata = default;
-        GridHeightData = Array.Empty<float[]>();
-        GridWalkableData = Array.Empty<byte>();
+        //player.Tick(IntPtr.Zero, tName+ ".ClearOldData");
+        terr_meta_data = default;
+        height_data = Array.Empty<float[]>();
+        walkable_data = Array.Empty<byte>();
         TgtTilesLocations.Clear();
-
         blight_pamp = null;
         blight_beams.Clear();
         bad_etypes.Clear();
@@ -129,6 +132,7 @@ public partial class AreaInstance {
         ui.nav.debug_res = null;//same oldes debug must be deleted
         ui.test?.spa?.Clear(); //debug data need only actuale
     }
+
     internal static Color GetColor(int i) {
         Color res;
         switch (i) {
@@ -150,11 +154,8 @@ public partial class AreaInstance {
             case 5:
                 res = Color.FromArgb(15, 255, 255, 255);
                 break;
-            default: {
-                    res = Color.FromArgb(0, 0, 0, 0);
-                    ui.AddToLog("UpdateMap.GetColor err" + i, MessType.Error);
-                    break;
-                }
+            default:
+                throw new Exception(i.ToString());
         }
         return res;
     }

@@ -4,20 +4,13 @@ using V2 = System.Numerics.Vector2;
 namespace Stas.GA {
     public partial class NavMesh {
         /// <summary>
-        /// runnung in new thread
+        /// MUst be call from new thread
         /// </summary>
         public void MakeGridSells() {
-            var loader = new Thread(() => {
-                MakeRouts();
-                if(!ui.sett.b_use_ingame_map)
-                    LoadVisited();
-                start_gpos = ui.my_last_gpos = ui.me.gpos;
-                ui.curr_map.GetTileTgtName();
-                ui.LoadQuest();
-
-            });
-            loader.IsBackground= true;
-            loader.Start();
+            MakeRouts();
+            if(!ui.sett.b_use_ingame_map)
+                LoadVisited();
+            start_gpos = ui.my_last_gpos = ui.me.gpos;
         }
 
         void MakeRouts() {

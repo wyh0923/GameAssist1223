@@ -9,7 +9,9 @@ using V2 = System.Numerics.Vector2;
 namespace Stas.GA;
 public partial class ui {
     public static ServerData server_data => curr_map.server_data;
-     //public static ExpedSett exped_sett;
+    static string tName = "ui";
+
+    //public static ExpedSett exped_sett;
     public static V2 my_last_gpos;
     static uint next_task_id = 0;
     public static uint GetNextTaskId => next_task_id += 1;
@@ -114,6 +116,9 @@ public partial class ui {
 
     #region Quest(Importand map zone loading here)
     static public Quest quest;
+    /// <summary>
+    /// Must be running in new thred mb
+    /// </summary>
     static public void LoadQuest() {
         quest = new Quest().Load<Quest>(); ;
     }
@@ -127,36 +132,35 @@ public partial class ui {
     public static WorldData curr_world => states.ingame_state.world_data;
     public static string curr_map_id {
         get {
-            if (curr_world == null) {
-                AddToLog("UI=>Can't get curr map Name...");
-                return "Errorname";
+            if (curr_world.world_area.Address == default) {
+                AddToLog(tName + ".curr_map_id can't read=> worng ptr");
+                return "Err id";
             }
-            return curr_world.world_data.Id; //name
+            return curr_world.world_area.Id; //name
         }
     }
-   
+    /// <summary>
+    /// we need it for save visited nav rout/lot/etc on map if we planning TP to HO and than Back to map
+    /// </summary>
     public static uint curr_map_hash {
         get {
-            if(curr_map.b_ready)
-                return curr_map.AreaHash;
-            return 0;
+            return curr_map.AreaHash;
         }
     }
     
     public static string curr_map_name {
         get {
-            if (curr_world.Address == default) {
-                AddToLog("UI=>Can't get curr map Name...");
-                return "Errorname";
+            if (curr_world.world_area.Address == default) {
+                AddToLog(tName + ".curr_map_name can't read=> worng ptr");
+                return "Err name";
             }
-            return curr_world.world_data.Name; //name
+            return curr_world.world_area.Name; //name
         }
     }
     public static aWorker worker { get; private set; }
-    public static GameStateTypes curr_state => states.curr_game_state;
+    public static gState curr_state => states.curr_gState;
     public static Role curr_role { get; }
     public static int max_pp { get; private set; }
-    public static PreloadAlert alert { get; private set; } 
     public static Looter looter { get; } 
     public static GameUiElements gui => states.ingame_state.gui;
     static InputChecker input_check = new InputChecker();
@@ -178,8 +182,7 @@ public partial class ui {
         return DrawMain.scene.LoadImageToPtr(bmp).Item1;
     }
     public static void ReloadGameState() {
-        curr_map.UpdateMap();
-        alert.AreaChange();
+        ThreadPool.QueueUserWorkItem(new WaitCallback(curr_map.UpdateMap));
     }
     #region Bots
     public static BotInfo bi;
@@ -231,12 +234,13 @@ public partial class ui {
     /// <summary>
     ///     Gets the files loaded for the current area.
     /// </summary>
-    public static LoadedFiles curr_loaded_files { get; } = new(IntPtr.Zero);
+    public static LoadedFiles curr_loaded_files { get; private set; } 
+    public static PreloadAlert alert => curr_loaded_files.alert;
 
     /// <summary>
     ///     Gets the AreaChangeCounter instance. For details read class description.
     /// </summary>
-    internal static AreaChangeCounter area_change_counter { get; } = new(IntPtr.Zero);
+    internal static AreaChangeCounter area_change_counter { get; private set; } 
 
     /// <summary>
     ///     Gets the values associated with the Game Window Scale.

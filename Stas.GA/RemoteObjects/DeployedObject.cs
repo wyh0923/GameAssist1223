@@ -25,7 +25,7 @@ public class DeployedObject : RemoteObjectBase {
     public ushort Padding { get; private set; }
     public Entity Entity { get; private set; } = new Entity();
     public Skill Skill { get; private set; }
-    protected override void CleanUpData() {
+    protected override void Clear() {
         ui.AddToLog(tName + ".CleanUpData need implement", MessType.Critical);
     }
 }

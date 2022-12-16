@@ -23,7 +23,7 @@ public class GameWindowScale : RemoteObjectBase {
         }
     }
 
-    protected override void CleanUpData() {
+    protected override void Clear() {
         for (var i = 0; i < this.Values.Length; i++) {
             this.Values[i] = 1f;
         }

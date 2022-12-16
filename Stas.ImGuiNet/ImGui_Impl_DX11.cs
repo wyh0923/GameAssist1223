@@ -228,29 +228,34 @@ namespace Stas.ImGuiNet {
         }
 
         public void SetupRenderState(ImDrawDataPtr drawData) {
-            // Setup viewport
-            _deviceContext.Rasterizer.SetViewport(0, 0, drawData.DisplaySize.X, drawData.DisplaySize.Y);
 
-            // Setup shader and vertex buffers
-            _deviceContext.InputAssembler.InputLayout = _inputLayout;
-            _vertexBinding.Buffer = _vertexBuffer;
-            _deviceContext.InputAssembler.SetVertexBuffers(0, _vertexBinding);
-            _deviceContext.InputAssembler.SetIndexBuffer(_indexBuffer, Format.R16_UInt, 0);
-            _deviceContext.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
-            _deviceContext.VertexShader.Set(_vertexShader);
-            _deviceContext.VertexShader.SetConstantBuffer(0, _vertexConstantBuffer);
-            _deviceContext.PixelShader.Set(_pixelShader);
-            _deviceContext.PixelShader.SetSampler(0, _fontSampler);
-            _deviceContext.GeometryShader.Set(null);
-            _deviceContext.HullShader.Set(null);
-            _deviceContext.DomainShader.Set(null);
-            _deviceContext.ComputeShader.Set(null);
+            try {
+                _deviceContext.Rasterizer.SetViewport(0, 0, drawData.DisplaySize.X, drawData.DisplaySize.Y);
 
-            // Setup blend state
-            _deviceContext.OutputMerger.BlendState = _blendState;
-            _deviceContext.OutputMerger.BlendFactor = _blendColor;
-            _deviceContext.OutputMerger.DepthStencilState = _depthStencilState;
-            _deviceContext.Rasterizer.State = _rasterizerState;
+                // Setup shader and vertex buffers
+                _deviceContext.InputAssembler.InputLayout = _inputLayout;
+                _vertexBinding.Buffer = _vertexBuffer;
+                _deviceContext.InputAssembler.SetVertexBuffers(0, _vertexBinding);
+                _deviceContext.InputAssembler.SetIndexBuffer(_indexBuffer, Format.R16_UInt, 0);
+                _deviceContext.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
+                _deviceContext.VertexShader.Set(_vertexShader);
+                _deviceContext.VertexShader.SetConstantBuffer(0, _vertexConstantBuffer);
+                _deviceContext.PixelShader.Set(_pixelShader);
+                _deviceContext.PixelShader.SetSampler(0, _fontSampler);
+                _deviceContext.GeometryShader.Set(null);
+                _deviceContext.HullShader.Set(null);
+                _deviceContext.DomainShader.Set(null);
+                _deviceContext.ComputeShader.Set(null);
+
+                // Setup blend state
+                _deviceContext.OutputMerger.BlendState = _blendState;
+                _deviceContext.OutputMerger.BlendFactor = _blendColor;
+                _deviceContext.OutputMerger.DepthStencilState = _depthStencilState;
+                _deviceContext.Rasterizer.State = _rasterizerState;
+            }
+            catch (Exception ex) {
+                Console.WriteLine(ex.StackTrace);
+            }
         }
 
         public void RenderDrawData(ImDrawDataPtr drawData) {
@@ -481,12 +486,9 @@ namespace Stas.ImGuiNet {
                 shaderData = new byte[stream.Length];
                 stream.Read(shaderData, 0, shaderData.Length);
             }
-            try {
-                _vertexShader = new VertexShader(_device, shaderData);
-            }
-            catch (Exception ex) {
-                Console.WriteLine(tname+ "CreateDeviceObjects err:"+ex.Message);
-            }
+           
+            _vertexShader = new VertexShader(_device, shaderData);
+           
             // Create the input layout
             _inputLayout = new InputLayout(_device, shaderData, new[]
             {

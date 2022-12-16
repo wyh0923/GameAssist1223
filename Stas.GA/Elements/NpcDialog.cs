@@ -47,7 +47,5 @@ namespace Stas.GA {
         public Element Continue { get; private set; } = new Element("Continue");
         public Element Sell { get; private set; } = new Element("Sell");
         public Element Purchase { get; private set; } = new Element("Purchase");
-       
-       
     }
 }

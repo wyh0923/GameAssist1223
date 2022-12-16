@@ -13,6 +13,9 @@ public partial class DrawMain {
     Color _green = Color.FromArgb(100, Color.Green);
 
     void DrawDebug() {
+        //draw here not ingame debug info
+        if (ui.curr_state != gState.InGameState)
+            return;
         if (!ui.b_show_cell)
             DEbugTriggers();
 

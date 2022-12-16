@@ -10,7 +10,7 @@ namespace Stas.GA {
                 return;
 
         }
-        protected override void CleanUpData() { }
+        protected override void Clear() { }
            
         public Element LabelOnHover {
             get {

@@ -11,20 +11,18 @@ public partial class AreaInstance {        //
     public ConcurrentBag<Entity> exped_beams = new();
     Dictionary<uint, string> id_ifos = new(); //map loading cleare
     public Dictionary<string, MapItem> bad_map_items = new();
-    /// <summary>
-    /// not processed yet ent (map chashing)
-    /// </summary>
+    public List<Entity> need_check = new();//not processed yet ent 
 
     #endregion
     #region debug stuff
-    public aMapItem mi_debug;
-    public Entity marked { get; private set; }
-    public List<V2> me_pos = new();
-    public string debug_info = "Mapper info";
     /// <summary>
     /// Debug frame item
     /// </summary>
+    public aMapItem mi_debug;
     aMapItem frame_di;
+    public string debug_info = "Mapper info";
+
+    public Entity marked { get; private set; }
     /// <summary>
     /// debug ent ID(for editor)
     /// </summary>
@@ -75,18 +73,31 @@ public partial class AreaInstance {        //
     public ConcurrentBag<MapItem> map_items = new();
     public ConcurrentBag<Cell> triggers = new ConcurrentBag<Cell>();
     TileStructure[] tileData;
+    /// <summary>
+    /// we need nav.grid_sells ready for link tgp name to it
+    /// </summary>
     public void GetTileTgtName() {
-        sw.Restart();
-        Debug.Assert(ui.nav.b_ready);
+        var sw = new SW("GetTileByFname");
+        var td = ui.curr_map.terr_meta_data;
+        Debug.Assert(ui.nav.b_ready && td.TileDetailsPtr.First != default);//
+
         var skip = 0;
         var ok = 0;
         sw.Restart();
-        var td = ui.curr_map.TerrainMetadata;
-        var err_ptr = 0;
-        //for (int i = 0; i < tileData.Length; i++) {//for step-by-step debugging use here
+        //TgtTilesLocations = GetTgtFileData();
+        tileData = ui.m.ReadStdVector<TileStructure>(td.TileDetailsPtr);
 
-        //}
+        var err_ptr = 0;
+#if DEBUG
+        for (int i = 0; i < tileData.Length; i++) {//for step-by-step debugging use here
+            Run(i);
+        }
+#else
         Parallel.For(0, tileData.Length, i => {
+            Run(i);
+        });
+#endif
+        void Run(int i) {
             if (td.BytesPerRow == 0) { //it hapened if poe was closed and memory wrong
                 return;
             }
@@ -107,16 +118,16 @@ public partial class AreaInstance {        //
                     #region Dont use jet
                     //var tgt = ui.m.Read<TgtDetailStruct>(file.TgtDetailPtr).name;
                     //var key = ui.m.ReadStdWString(tgt);
-                    //gc.tile_key = key; 
+                    //gc.tile_key = key;
                     #endregion
                     ok += 1;
                 }
             }
             else
                 skip += 1;
-        });
+        }
         ui.AddToLog("Title create time=[" + sw.ElapsedTostring() + "] ok/err/skipp/totale=[" +
-           err_ptr+"/"+ ok + "/" + skip + "/" + ui.nav.grid_cells.Count + "]", MessType.Warning);
+           err_ptr + "/" + ok + "/" + skip + "/" + ui.nav.grid_cells.Count + "]", MessType.Warning);
         //sw.Print();
     }
 }

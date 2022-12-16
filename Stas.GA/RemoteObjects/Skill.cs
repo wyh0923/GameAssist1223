@@ -160,7 +160,7 @@ public partial class Skill : RemoteObjectBase {
         return "n=" + Name + " id=" + Id + " in=" + InternalName + " CanUsed=" + CanBeUsed;
     }
 
-    protected override void CleanUpData() {
+    protected override void Clear() {
         ui.AddToLog(tName + "CleanUpData err: debug me", MessType.Error);
     }
 }

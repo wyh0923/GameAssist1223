@@ -16,13 +16,19 @@ public partial class Entity : RemoteObjectBase {
             case eTypes.Shrine:
                 return;
         }
-
+        if (id == 2) { 
+        }
         if (!GetComp<Render>(out var _)) {
             this.eType = eTypes.Useless;
         }
-        else if (Path.StartsWith("Metadata/MiscellaneousObjects/Expedition/", StringComparison.Ordinal)
-                    || Path.Contains("Leagues/Expedition")) {
-            eType = eTypes.Exped;
+        else if (GetComp<MinimapIcon>(out var MinimapIcon)) {
+            eType = eTypes.MinimapIcon;
+            if (this.Path.StartsWith("Metadata/Chests/LeaguesExpedition")) {
+                this.eType = eTypes.ExpeditionChest;
+            }
+            else if (this.Path.StartsWith("Metadata/Chests/LeagueHeist")) {
+                this.eType = eTypes.HeistChest;
+            }
         }
         else if (Path.StartsWith("Metadata/MiscellaneousObjects/Expedition/", StringComparison.Ordinal)
                     || Path.Contains("Leagues/Expedition")) {
@@ -47,18 +53,7 @@ public partial class Entity : RemoteObjectBase {
                     ui.curr_map.static_items.TryRemove(old.Value.key, out _);
             }
             else if (this.eType == eTypes.Unidentified) { // so it only happen once.
-                if (this.GetComp<MinimapIcon>(out var _)) {
-                    if (this.Path.StartsWith("Metadata/Chests/LeaguesExpedition")) {
-                        this.eType = eTypes.ExpeditionChest;
-                    }
-                    else if (this.Path.StartsWith("Metadata/Chests/LeagueHeist")) {
-                        this.eType = eTypes.HeistChest;
-                    }
-                    else {
-                        this.eType = eTypes.Useless;
-                    }
-                }
-                else if (this.Path.StartsWith("Metadata/Chests/LegionChests")) {
+                if (this.Path.StartsWith("Metadata/Chests/LegionChests")) {
                     this.eType = eTypes.Useless;
                 }
                 else if (this.Path.StartsWith("Metadata/Chests/DelveChests/")) {
@@ -238,9 +233,6 @@ public partial class Entity : RemoteObjectBase {
         else if (GetComp<NPC>(out var npc)) {
             eType = eTypes.NPC;
         }
-        else if (GetComp<MinimapIcon>(out var MinimapIcon)) {
-            eType = eTypes.MinimapIcon;
-        }
         else if (Path.Contains("MiscellaneousObjects/Door")) {
             eType = eTypes.Door;
         }
@@ -254,10 +246,16 @@ public partial class Entity : RemoteObjectBase {
             eType = eTypes.Projectile;
         }
         else if (GetComp<LimitedLifespan>(out var effect)) {//explosion with time
-            this.eType = eTypes.Effects;
+            if(ui.sett.b_develop)
+                this.eType = eTypes.LimitedLife;
+            else
+                this.eType = eTypes.Useless;
         }
         else if (Path.Contains("Effects")) {
-            eType = eTypes.Effects;
+            if (ui.sett.b_develop)
+                this.eType = eTypes.Effects;
+            else
+                this.eType = eTypes.Useless;
         }
         else if (Path.Contains("Waypoint")) {
             eType = eTypes.Waypoint;
@@ -276,7 +274,6 @@ public partial class Entity : RemoteObjectBase {
                 this.eType = eTypes.Useless;
             else {
                 this.eType = eTypes.NeedCheck;
-                ui.curr_map.need_check.Add(this);
             }
         }
     }

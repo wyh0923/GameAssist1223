@@ -6,9 +6,8 @@ namespace Stas.GA;
 ///     Points to the Map UiElement.
 /// </summary>
 internal class aMapElemet : Element {
-    internal aMapElemet(IntPtr address)  : base(address, "aMapElemet") { 
+    internal aMapElemet(string name) : base(name) {
     }
-
     internal override void Tick(IntPtr ptr, string from=null) {
         base.Tick(ptr, from);
         if (Address == IntPtr.Zero)
@@ -23,8 +22,8 @@ internal class aMapElemet : Element {
         this.Zoom = data.Zoom;
     }
     
-    protected override void CleanUpData() {
-        base.CleanUpData();
+    protected override void Clear() {
+        base.Clear();
         this.shift = default;
         this.defaultShift = default;
         this.Zoom = 0.5f;

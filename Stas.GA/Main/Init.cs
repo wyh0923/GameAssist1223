@@ -6,6 +6,9 @@ namespace Stas.GA;
 public partial class ui {
     [DllImport("Stas.GA.Native.dll", SetLastError = true, EntryPoint = "Start")]
     public static extern int Start(int pid, bool debug);
+    public static IntPtr first_children_offset = 0x30;
+    public static int elem_text_offs = 0x3F8;
+    public static int IsVisibleLocalOffs = 0x161;
     static readonly Dictionary<string, MapIconsIndex> Icons;
     public static ConcurrentDictionary<IntPtr, Element> elements = new();
     public static ConcurrentDictionary<IntPtr, string> texts = new();
@@ -18,26 +21,34 @@ public partial class ui {
     }
 
     static Thread frame_thread;
-    public static Dictionary<string, string> gui_offs_nams = new();
     internal static Memory m { get; private set; }
     public static int w8 { get; } = 16;////1000 / 60 = 16(60 frame sec)
+    public static List<Keys> flask_keys = new();
     static ui() {
         Icons = new Dictionary<string, MapIconsIndex>(200);
         foreach (var icon in Enum.GetValues(typeof(MapIconsIndex))) {
             Icons[icon.ToString()] = (MapIconsIndex)icon;
         }
-        var t = typeof(guiOffset);
-        foreach (var m in t.GetFields()) {
-            if (!m.IsPublic)
-                continue;
-            var name = m.Name;
-            var offset = Marshal.OffsetOf(t, name);
-            gui_offs_nams["0x" + offset.ToString("X")] = name;
-        }
+       
         int w8_err = 300;
         sett = new Settings().Load<Settings>();
+        sett.b_use_ingame_map = false;
+        sett.b_develop = true; //<<==change if you're a developer
+        if (sett.my_worker_names.Count == 0) {
+            sett.my_worker_names["MyCurseBot"] = "CurseBot";
+            sett.my_worker_names["MyManaGuard"] = "ManaGuard";
+            sett.my_worker_names["MyAuraBot"] = "AuraBot";
+            sett.my_worker_names["MyDamageDealer"] = "Balista";
+        }
+        flask_keys.AddRange(new List<Keys>(){sett.flask_0_key, sett.flask_1_key,
+            sett.flask_2_key, sett.flask_3_key, sett.flask_4_key});
+        var need_ea = new List<Element>() {gui.map_devise, gui.KiracMission, gui.open_left_panel, gui.open_right_panel,
+                        gui.passives_tree, gui.NpcDialog, gui.LeagueNpcDialog, gui.BetrayalWindow, gui.large_map,
+                        gui.AtlasPanel, gui.AtlasSkillPanel,gui.DelveWindow,gui.TempleOfAtzoatl };
+        if (!sett.b_use_ingame_map)
+            need_ea.Add(gui.large_map);
+        gui.AddToNeedCheck(need_ea);
         udp_sound = new UdpSound();
-        alert = new PreloadAlert();
         StartGameWatcher();
         SetRole();
         looter = new Looter();
@@ -45,29 +56,26 @@ public partial class ui {
         var game_not_loadin = 0;
 
         frame_thread = new Thread(() => {
-            while (ui.b_running) {
+            while (b_running) {
                 frame_count += 1;
                 if (game_ptr == IntPtr.Zero) {
                     game_not_loadin += 1;
-                    if (game_not_loadin > 1000) {
+                    if (game_not_loadin > 100) {
                         AddToLog("w8 game not loading... ", MessType.Critical);
-                        AddToLog("I recommend that you click on \"Quit\",", MessType.Critical);
-                        AddToLog("enter into the game and then start GA again", MessType.Critical);
-                        AddToLog("Use [Control]+[Alt] to activate this window", MessType.Critical);
+                        AddToLog("Use [Alt]+[Shift] to activate this window", MessType.Critical);
                     }
                     Thread.Sleep(200);
                     continue;
                 }
-               
-                if (states.b_ready)
+                if(states.b_ready)
                     states.Tick(states.Address, "frame thread");
 
-                if (curr_state == GameStateTypes.InGameState) {
+                if (curr_state == gState.InGameState) {
                     foreach (var n in need_upd_per_frame)
                         n?.Tick(n.Address, "frame thread");
                     CheckWorker();
                     if (worker == null) {
-                        ui.AddToLog("Frame err: worker need be setup", MessType.Critical);
+                        ui.AddToLog("Frame err: worker need be setup", MessType.Warning);
                         Thread.Sleep(w8);
                         continue;
                     }
@@ -86,7 +94,7 @@ public partial class ui {
                 }
                 else {
                     Thread.Sleep(1);
-                    AddToLog("Main: Big Tick Time", MessType.Error);
+                    AddToLog("Input: Big Tick Time", MessType.Error);
                 }
                 #endregion
             }
@@ -98,16 +106,9 @@ public partial class ui {
     public static void Dispose() {
         CloseGame();
         try {
-            b_running= false;
-            Thread.Sleep(w8 * 5);
-            frame_thread.Abort();
-            watcher_thread.Abort();
-            choise_thread.Abort();
-            tasker.Dispose();
-            nav.Dispose();
-            looter.Dispose();
-            gui.Dispose();
-            worker = null;
+            b_running = false;
+            Thread.Sleep(w8 * 10);
+          
         }
         catch (Exception ex) {
         }

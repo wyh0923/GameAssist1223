@@ -11,24 +11,23 @@ public class WorldData : RemoteObjectBase {
     //OnPerFrame(), "[AreaInstance] Update World Data", int.MaxValue - 3
     internal override void Tick(IntPtr ptr, string from = null) {
         Address = ptr;
-        if (Address == IntPtr.Zero)
+        if (Address == IntPtr.Zero) {
+            Clear();
             return;
+        }
         var data = ui.m.Read<WorldDataOffset>(Address);
         camera.Tick(Address + 0xA8);
         var areaInfo = ui.m.Read<WorldAreaDetailsStruct>(data.WorldAreaDetailsPtr);
-        world_data.Tick(areaInfo.WorldAreaDetailsRowPtr);
+        world_area.Tick(areaInfo.WorldAreaDetailsRowPtr);
     }
-   
 
     /// <summary>
     ///     Gets the Area Details.
     /// </summary>
-    public WorldAreaDat world_data { get; } = new(IntPtr.Zero);
+    public WorldAreaDat world_area { get; } = new(IntPtr.Zero);
     public Camera camera { get; } = new Camera();
-  protected override void CleanUpData() {
-        world_data.Tick(IntPtr.Zero);
+    protected override void Clear() {
+        world_area.Tick(default);
+        camera.Tick(default);
     }
-
-
-  
 }

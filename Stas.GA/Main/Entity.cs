@@ -275,7 +275,15 @@ public partial class Entity : RemoteObjectBase {
             return _pos;
         }
     }
-
+    public V2 gpos_f {
+        get {
+            if (IsValid && GetComp<Render>(out var render)
+                && render != null && render.owner_ptr == Address) {
+                    return render.gpos_f;
+            }
+            return V2.Zero;
+        }
+    }
     public V2 gpos {
         get {
             if (IsValid && GetComp<Positioned>(out var positioned)
@@ -419,7 +427,7 @@ public partial class Entity : RemoteObjectBase {
         }
     }
 
-    protected override void CleanUpData() {
+    protected override void Clear() {
         this.componentAddresses?.Clear();
         this.componentCache?.Clear();
     }

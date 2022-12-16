@@ -59,7 +59,7 @@ namespace Stas.GA {
             }
         }
 
-        protected override void CleanUpData() {
+        protected override void Clear() {
            
         }
 

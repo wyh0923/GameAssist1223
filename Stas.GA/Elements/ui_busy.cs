@@ -18,7 +18,7 @@ public partial class GameUiElements : Element {
 
     bool _bbi;
     public string b_busy_info { get; private set; }
-    List<Element> need_check_vis;
+    List<Element> need_check_vis = new();
     StringBuilder sb = new StringBuilder();
     object locker = new object();
     /// <summary>
@@ -31,13 +31,8 @@ public partial class GameUiElements : Element {
                 _bbi = false;
                 foreach (var e in need_check_vis) {
                     if (e.IsValid) {
-                        if ((e.tName == "open_left_panel" || e.tName == "open_right_pane")  && e.IsVisibleLocal)
+                        if (e.IsVisible)
                             _bbi = true;
-                        else {
-                            if (e.IsVisible)
-                                _bbi = true;
-                        }
-                      
                         sb.AppendLine(e.tName + "=[" + e.IsVisible + "]");
                     }
                     else
@@ -47,5 +42,8 @@ public partial class GameUiElements : Element {
             }
             return _bbi;
         }
+    }
+    public void AddToNeedCheck(List<Element> curr) {
+        need_check_vis = curr;
     }
 }

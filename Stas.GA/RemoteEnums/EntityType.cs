@@ -39,6 +39,7 @@ namespace Stas.GA {
         Door,
         Projectile,
         Waypoint,
+        LimitedLife,
         Effects,
         MinimapIcon,
         Terrain,

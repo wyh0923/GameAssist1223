@@ -32,10 +32,9 @@ public partial class DrawMain {
         var b_top = ui.b_game_top || ui.b_imgui_top;
         if (ui.b_w8_top && ui.b_game_top)
             ui.b_w8_top = false;
-        var w8_top = ui.b_w8_top && !ui.b_game_top;
         var b_only_alt = ui.b_alt && !ui.b_shift;
         var test_ui_elem = ui.test_elem != null && ui.sett.b_gui_debug_on_top && !ui.b_alt;
-        if (test_ui_elem || (b_top && ui.b_alt_shift && !b_only_alt)) { //  &&
+        if (test_ui_elem || (b_top && ui.b_alt_shift && !b_only_alt) || (ui.b_ga_menu_top && !b_only_alt)) { //  &&
             scene.sdl_window.SetOverlayClickable(true);
         }
         else {
@@ -44,7 +43,7 @@ public partial class DrawMain {
         if (ui.b_vs) {
             return;
         }
-        if (ui.test_elem != null) { // && ui.tasker.ui_root.IsValid
+        if (ui.test_elem != null && ui.sett.b_develop) { // && ui.tasker.ui_root.IsValid
             ui.test_elem.Tick(ui.test_elem.Address, "debug_gui");
             GetUiFrames();
             DrawUiFrames();

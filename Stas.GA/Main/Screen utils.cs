@@ -9,22 +9,21 @@ using System.Drawing;
 
 namespace Stas.GA {
     public partial class ui {
-        static object locker = new object();
         public static V2 map_offset;
         public static Rectangle game_window_rect => EXT.GetWindowRectangle(game_ptr);
         static V2[] pa;
         static V2 GetInterpPos() {
-            lock (locker) {
+            lock (curr_map.my_pos_locker) {
                 pa = curr_map.me_pos.ToArray();//this thread safe copy of
             }
             if (pa.Length < 4)
                 return new V2(me.gpos.X, -me.gpos.Y);
             float t = 0.4f;
             var l = pa.Length;
-            var p = pa[l-4];//oldest
-            var p1 = pa[l-3];//oldest
-            var p2 = pa[l-2];//oldest
-            var p3 = pa[l-1];
+            var p = pa[l - 4];//oldest
+            var p1 = pa[l - 3];//oldest
+            var p2 = pa[l - 2];//oldest
+            var p3 = pa[l - 1];
 
             var m1 = V2.Lerp(p, p1, t);
             var m2 = V2.Lerp(p1, p2, t);
@@ -33,7 +32,7 @@ namespace Stas.GA {
             var l1 = V2.Lerp(m1, m2, t);
             var l2 = V2.Lerp(m2, m3, t);
 
-            var res= V2.Lerp(l1, l2, t);
+            var res = V2.Lerp(l1, l2, t);
             var same = true;
             foreach (var _cp in pa) {
                 if (_cp != res) { same = false; break; }
@@ -47,9 +46,10 @@ namespace Stas.GA {
                 (float)rect.Height  / 2 + rect.Y); //screen center
             if (me == null)
                 return Matrix3x2.Identity;// * Matrix3x2.CreateScale(ui.sett.map_scale, scp);
-            var cp = new V2(me.gpos.X, -me.gpos.Y);
+            var cp = new V2(me.gpos_f.X, -me.gpos_f.Y);
             if (ui.sett.b_map_interpolate)
-                cp = GetInterpPos(); 
+                cp = GetInterpPos();
+
             if (map_offset != V2.Zero)
                 cp = cp + map_offset;
             var dir = scp - cp;
@@ -91,7 +91,7 @@ namespace Stas.GA {
         }
         public static float Get_H_from_gp(V2 gp) {
             var h = (me != null) ? me.pos.Z : 0;//TODO: this old not correct method
-            var ghd = curr_map.GridHeightData;
+            var ghd = curr_map.height_data;
             if (ghd == null)
                 return h;
             if (gp.X > curr_map.cols || gp.Y > curr_map.rows || gp.X < 0 || gp.Y < 0) {

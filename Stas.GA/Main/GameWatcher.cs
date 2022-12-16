@@ -40,13 +40,15 @@ public partial class ui {
                 }
                 else if (_pa.Length == 2) {
                     //TODO trader integration here
+                    game_process = _pa[0];
+                    OpenGame();
                 }
                 else {
                     ui.AddToLog("we have 2+ POE process", MessType.Critical);
                 }
                 GetMemPerf();
                 GetCpuPerf();
-                Thread.Sleep(10); //cpu 
+                Thread.Sleep(10); //cpu free
             };
         });
         choise_thread.IsBackground = true;
@@ -69,7 +71,7 @@ public partial class ui {
                 }
                    
                 curr_top_ptr = EXT.GetForegroundWindow();
-                Thread.Sleep(100); //200ms
+                Thread.Sleep(60);
             }
         });
         watcher_thread.IsBackground = true;
@@ -170,7 +172,8 @@ public partial class ui {
     static bool b_bad_process {
         get {
             try {
-                return game_process == null || game_process.HasExited || game_process.MainWindowHandle.ToInt64() <= 0x00;
+                return game_process == null || game_process.HasExited 
+                    || game_process.MainWindowHandle.ToInt64() <= 0x00;
             }
             catch (Exception ex) {
                 ui.AddToLog("b_bad_process err: game closed?", MessType.Critical);
@@ -208,7 +211,8 @@ public partial class ui {
 
         sw.Restart();
         const int patt_need= 7;
-        while (base_offsets.Count!= patt_need) {
+        int w8_count = 0;
+        while (base_offsets.Count!= patt_need && w8_count <5) {
             Patt_wrapp pw = default;
             if (GetPatt(ref pw) != 0) {
                 AddToLog("LoadPatterns error", MessType.Critical);
@@ -229,14 +233,17 @@ public partial class ui {
             }
             if (base_offsets.Count != patt_need) {
                 AddToLog("w8 correct patterns", MessType.Critical);
-                Thread.Sleep(100);
+                Thread.Sleep(500); 
+                w8_count += 1;
             }
-        }//debug here - its 
-       
+        }
+        if (base_offsets.Count != patt_need) {
+            //debug here - its 
+            ui.AddToLog("LoadPatterns error after " + w8_count + " attempt..", MessType.Critical);
+        }
+        area_change_counter = new(base_offsets[PattNams.AreaChangeCounter]);
+        curr_loaded_files = new(base_offsets[PattNams.FileRoot]);
         states.Tick( base_offsets[ PattNams.GameStates]); 
-        area_change_counter.Tick( base_offsets[PattNams.AreaChangeCounter]);
-        //must be after area counter for correct "cold start" alerts on same map
-        curr_loaded_files.Tick(base_offsets[PattNams.FileRoot]);
         GameScale.Tick(base_offsets[PattNams.GameWindowScaleValues]);
         RotationSelector.Tick(base_offsets[PattNams.TerrainRotationSelector]);
         RotatorHelper.Tick(base_offsets[PattNams.TerrainRotatorHelper]);
@@ -247,12 +254,12 @@ public partial class ui {
    /// this not dispose - just close old one
    /// </summary>
     static void CloseGame() {
-        states.Tick(IntPtr.Zero);
-        curr_loaded_files.Tick(IntPtr.Zero);
-        area_change_counter.Tick(IntPtr.Zero);
-        GameScale.Tick(IntPtr.Zero);
-        RotationSelector.Tick(IntPtr.Zero);
-        RotatorHelper.Tick(IntPtr.Zero);
+        states.Tick(default);//set state to not ready
+        curr_loaded_files.Tick(default,  tName + ".CloseGame");
+        area_change_counter.Tick(default,  tName + ".CloseGame");
+        GameScale.Tick(default);
+        RotationSelector.Tick(default);
+        RotatorHelper.Tick(default);
         m?.Dispose();
         game_process?.Close();
         tasker?.Stop("CloseGame");

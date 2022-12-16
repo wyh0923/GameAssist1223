@@ -5,7 +5,7 @@ using V2 = System.Numerics.Vector2;
 using V3 = System.Numerics.Vector3;
 
 namespace Stas.GA;
-public class SafeScreen : iSett ,IDisposable{
+public class SafeScreen : iSett {
 
     [JsonInclude]
     public int Width { get; protected private set; }
@@ -147,7 +147,7 @@ public class SafeScreen : iSett ,IDisposable{
                     Thread.Sleep(1000);
                     continue;
                 }
-                if (ui.curr_state != GameStateTypes.InGameState) { 
+                if (ui.curr_state != gState.InGameState) { 
                     Thread.Sleep(ui.w8*10);
                     continue;
                 }
@@ -171,7 +171,7 @@ public class SafeScreen : iSett ,IDisposable{
                     Thread.Sleep(1000);
                     continue;
                 }
-                if (ui.curr_state != GameStateTypes.InGameState) {
+                if (ui.curr_state != gState.InGameState) {
                     Thread.Sleep(ui.w8 * 10);
                     continue;
                 }
@@ -327,9 +327,5 @@ public class SafeScreen : iSett ,IDisposable{
         //ui.tasker.Hold("SetMouseBestCentrSP"); //prevent server disconnect
         //ui.sound_player.PlaySound(@"I hit a wall, my God.mp3"); //@"C:\Sounds\Help me.mp3"
         return false;
-    }
-    public void Dispose() {
-        worker.Abort();
-        center_updater.Abort();
     }
 }

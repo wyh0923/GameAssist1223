@@ -31,13 +31,12 @@ public abstract class RemoteObjectBase {
         var here = this.GetType().FullName;
         ui.AddToLog(tName + "() err: debug me", MessType.Error);
     }
-    virtual protected void Init(string from) { }
     public IntPtr Address { get; protected private set; }
 
     /// <summary>
     ///     Knows how to clean up the object.
     /// </summary>
-    protected abstract void CleanUpData();
+    protected abstract void Clear();
     internal abstract void Tick(IntPtr ptr, string from=null);
        
     #region ImGui old trash
@@ -145,7 +144,7 @@ public abstract class EntComp : RemoteObjectBase {
             return _md;
         }
     }
-    protected override void CleanUpData() {
+    protected override void Clear() {
         _md = null;
         last_meta = DateTime.MinValue;
         _optr = IntPtr.Zero;

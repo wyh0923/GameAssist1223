@@ -76,7 +76,7 @@ namespace Stas.GA {
             }
         }
         
-        protected override void CleanUpData() {
+        protected override void Clear() {
             ui.AddToLog(tName + ".CleanUpData need implement", MessType.Critical);
         }
 

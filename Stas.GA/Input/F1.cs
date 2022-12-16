@@ -8,8 +8,6 @@ using V2 = System.Numerics.Vector2;
 namespace Stas.GA;
 public partial class InputChecker {
 
-   
-
     void F1() {
         if (Keyboard.b_Try_press_key(Keys.F1, "Input checker", 500, true)) {
             //ui.sett.b_debug = true;
@@ -21,14 +19,13 @@ public partial class InputChecker {
                
             }
             else {
-              
+
                 //var cam = ui.m.Read<CameraOffsets>( ui.camera.Address);
 
                 //ui.test.FindUiElemNotUnick("Nessa");
-                ui.test_elem = ui.gui;
                 //ui.test_elem =FindSameUIElement("Decorations", 1)[0].Item1; //660
                 //ui.test_elem =FindSameUIElement("Inventory",1)[0].Item1; //0x568
-                //ui.test_elem = ui.gui;
+                ui.test_elem = ui.gui.large_map;
                 #region OLD
                 //var elem = new Element("test");
                 //ui.texts.Clear();

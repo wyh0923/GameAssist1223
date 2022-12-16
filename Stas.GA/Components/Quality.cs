@@ -15,8 +15,8 @@ internal class Quality : EntComp {
     
     public int ItemQuality { get; private set; }
     public int MaxQuality { get; private set; }
-    protected override void CleanUpData() {
-        base.CleanUpData();
+    protected override void Clear() {
+        base.Clear();
     }
 
 }

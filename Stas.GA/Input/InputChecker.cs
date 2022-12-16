@@ -5,9 +5,8 @@ using V2 = System.Numerics.Vector2;
 using V3 = System.Numerics.Vector3;
 namespace Stas.GA;
 
-public partial class InputChecker : aMouseChecker , IDisposable{
+public partial class InputChecker : aMouseChecker {
     Stopwatch sw = new Stopwatch();
-    public int w8 { get; } = 16;////1000 / 60 = 16
     StringBuilder sb = new StringBuilder();
     Random R = new Random();
     Thread inp_thread ;
@@ -43,18 +42,20 @@ public partial class InputChecker : aMouseChecker , IDisposable{
                     //Debug.Assert(trg.X > 0 && trg.Y > 0);
                     //ui.SendToBots(Opcode.Jump, trg.ToByte());
                 }
-                if (Keyboard.b_Try_press_key(Keys.Q, "Left flask", 900)) {
-                    //Keyboard.KeyPress(Keys.F5);
-                    //ui.SendToBots(Opcode.KeyPress, Keys.F5.ToByteArr());
-                    //Thread.Sleep(60 + R.Next(0, 60));
-                    //Keyboard.KeyPress(Keys.F6);
-                    //ui.SendToBots(Opcode.KeyPress, Keys.F6.ToByteArr());
+                if (ui.sett.b_use_left_flasks 
+                        && Keyboard.b_Try_press_key(ui.sett.two_left_flask_key, "Left flasks", 900)) {
+                    Keyboard.KeyPress(ui.sett.flask_0_key);
+                    //ui.SendToBots(Opcode.KeyPress, ui.sett.flask_0_key.ToByteArr());
+                    Thread.Sleep(60 + R.Next(0, 60));
+                    Keyboard.KeyPress(ui.sett.flask_1_key);
+                    //ui.SendToBots(Opcode.KeyPress, ui.sett.flask_1_key.ToByteArr());
                 }
-                if (Keyboard.b_Try_press_key(Keys.W, "Right flask", 900)) {
-                    //Keyboard.KeyPress(Keys.F7);
+                if (ui.sett.b_use_right_flasks
+                        &&  Keyboard.b_Try_press_key(ui.sett.two_right_flask_key, "Right flask", 900)) {
+                    Keyboard.KeyPress(ui.sett.flask_3_key);
                     //ui.SendToBots(Opcode.KeyPress, Keys.F7.ToByteArr());
-                    //Thread.Sleep(60 + R.Next(0, 60));
-                    //Keyboard.KeyPress(Keys.F8);
+                    Thread.Sleep(60 + R.Next(0, 60));
+                    Keyboard.KeyPress(ui.sett.flask_4_key);
                     //ui.SendToBots(Opcode.KeyPress, Keys.F8.ToByteArr());
                 }
                 if (Keyboard.b_Try_press_key(Keys.F3, "InputChecker")) {
@@ -123,16 +124,17 @@ public partial class InputChecker : aMouseChecker , IDisposable{
                     //ui.mapper.AddNPC();
                 }
 
-              
+
                 #region w8ting
                 var t_elaps = (int)sw.Elapsed.TotalMilliseconds; //totale elaps
-                if (t_elaps < w8) {
-                    Thread.Sleep(w8 - t_elaps);
+                if (t_elaps < ui.w8 /2) {
+                    Thread.Sleep(ui.w8 / 2 - t_elaps);
                 }
-                if (t_elaps > w8)
-                    ui.AddToLog("ui warning! Big tick time=[" + t_elaps + "]");
+                else {
+                    ui.AddToLog("InputChecker Big tick time...", MessType.Warning);
+                    Thread.Sleep(1);
+                }
                 #endregion
-                Thread.Sleep(1000 / 120);
             }
         });
         inp_thread.IsBackground = true;
@@ -163,8 +165,5 @@ public partial class InputChecker : aMouseChecker , IDisposable{
                 ui.map_offset = new V2(raw_gp.X, -raw_gp.Y);
             }
         }
-    }
-    void IDisposable.Dispose() {
-        inp_thread.Abort();
     }
 }

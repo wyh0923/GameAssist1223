@@ -11,10 +11,10 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using V2 = System.Numerics.Vector2;
 
-namespace Stas.GA; 
+namespace Stas.GA;
 
 public enum PattNams : byte {
-    PlayerInventory, GameStates, FileRoot, AreaChangeCounter, 
+    PlayerInventory, GameStates, FileRoot, AreaChangeCounter,
     GameWindowScaleValues, TerrainRotatorHelper, TerrainRotationSelector
 }
 
@@ -65,7 +65,8 @@ public abstract class iSave {
         }
         catch (Exception) {
             if (if_err == null) {
-                File.Delete(fname);
+                if (File.Exists(fname))
+                    File.Delete(fname);
                 FILE.SaveAsJson(this, fname);
                 return new T();
             }
@@ -198,28 +199,32 @@ public class FILE {
     static JsonReaderOptions comment_opt = new JsonReaderOptions {
         CommentHandling = JsonCommentHandling.Allow
     };
-   
-  
+
+
     public static void SaveAsJson<T>(T t, string fname) {
         var opt = new JsonSerializerOptions {
-            WriteIndented = true,  ReadCommentHandling = JsonCommentHandling.Skip,
-            IgnoreReadOnlyProperties = false, IncludeFields = false
+            WriteIndented = true,
+            ReadCommentHandling = JsonCommentHandling.Skip,
+            IgnoreReadOnlyProperties = false,
+            IncludeFields = false
         };
         opt.Converters.Add(new V2Converter());
         var str = JsonSerializer.Serialize<object>(t, opt);
         str.SafelyWriteToFile(fname);
     }
 
-    public static T LoadJson<T>(string fname, Action if_err=null) {
+    public static T LoadJson<T>(string fname, Action if_err = null) {
         var str = File.ReadAllText(fname);
-        if(str.Length==0) {
+        if (str.Length == 0) {
             if_err?.Invoke();
             return default(T);
         }
         try {
             var opt = new JsonSerializerOptions {
-                WriteIndented = true, ReadCommentHandling = JsonCommentHandling.Skip,
-                IgnoreReadOnlyProperties = false, IncludeFields = false
+                WriteIndented = true,
+                ReadCommentHandling = JsonCommentHandling.Skip,
+                IgnoreReadOnlyProperties = false,
+                IncludeFields = false
             };
             opt.Converters.Add(new V2Converter());
             return JsonSerializer.Deserialize<T>(str, opt);
@@ -231,7 +236,7 @@ public class FILE {
     }
 }
 public class JSON {
-    public class ValueTupleFactory :JsonConverterFactory {
+    public class ValueTupleFactory : JsonConverterFactory {
         public override bool CanConvert(Type typeToConvert) {
             Type iTuple = typeToConvert.GetInterface("System.Runtime.CompilerServices.ITuple");
             return iTuple != null;
@@ -251,16 +256,16 @@ public class JSON {
         }
     }
 
-    public class ValueTupleConverter<T1> :JsonConverter<ValueTuple<T1>> {
+    public class ValueTupleConverter<T1> : JsonConverter<ValueTuple<T1>> {
         public override ValueTuple<T1> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
             ValueTuple<T1> result = default;
 
-            if(!reader.Read()) {
+            if (!reader.Read()) {
                 throw new JsonException();
             }
 
-            while(reader.TokenType != JsonTokenType.EndObject) {
-                if(reader.ValueTextEquals("Item1") && reader.Read()) {
+            while (reader.TokenType != JsonTokenType.EndObject) {
+                if (reader.ValueTextEquals("Item1") && reader.Read()) {
                     result.Item1 = JsonSerializer.Deserialize<T1>(ref reader, options);
                 }
                 else {
@@ -280,19 +285,19 @@ public class JSON {
         }
     }
 
-    public class ValueTupleConverter<T1, T2> :JsonConverter<ValueTuple<T1, T2>> {
+    public class ValueTupleConverter<T1, T2> : JsonConverter<ValueTuple<T1, T2>> {
         public override (T1, T2) Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
             (T1, T2) result = default;
 
-            if(!reader.Read()) {
+            if (!reader.Read()) {
                 throw new JsonException();
             }
 
-            while(reader.TokenType != JsonTokenType.EndObject) {
-                if(reader.ValueTextEquals("Item1") && reader.Read()) {
+            while (reader.TokenType != JsonTokenType.EndObject) {
+                if (reader.ValueTextEquals("Item1") && reader.Read()) {
                     result.Item1 = JsonSerializer.Deserialize<T1>(ref reader, options);
                 }
-                else if(reader.ValueTextEquals("Item2") && reader.Read()) {
+                else if (reader.ValueTextEquals("Item2") && reader.Read()) {
                     result.Item2 = JsonSerializer.Deserialize<T2>(ref reader, options);
                 }
                 else {
@@ -314,22 +319,22 @@ public class JSON {
         }
     }
 
-    public class ValueTupleConverter<T1, T2, T3> :JsonConverter<ValueTuple<T1, T2, T3>> {
+    public class ValueTupleConverter<T1, T2, T3> : JsonConverter<ValueTuple<T1, T2, T3>> {
         public override (T1, T2, T3) Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
             (T1, T2, T3) result = default;
 
-            if(!reader.Read()) {
+            if (!reader.Read()) {
                 throw new JsonException();
             }
 
-            while(reader.TokenType != JsonTokenType.EndObject) {
-                if(reader.ValueTextEquals("Item1") && reader.Read()) {
+            while (reader.TokenType != JsonTokenType.EndObject) {
+                if (reader.ValueTextEquals("Item1") && reader.Read()) {
                     result.Item1 = JsonSerializer.Deserialize<T1>(ref reader, options);
                 }
-                else if(reader.ValueTextEquals("Item2") && reader.Read()) {
+                else if (reader.ValueTextEquals("Item2") && reader.Read()) {
                     result.Item2 = JsonSerializer.Deserialize<T2>(ref reader, options);
                 }
-                else if(reader.ValueTextEquals("Item3") && reader.Read()) {
+                else if (reader.ValueTextEquals("Item3") && reader.Read()) {
                     result.Item3 = JsonSerializer.Deserialize<T3>(ref reader, options);
                 }
                 else {
@@ -360,16 +365,20 @@ public class JSON {
 
     public static byte[] ToUT8Byte<T>(T t) {
         var opt = new JsonSerializerOptions {
-            WriteIndented = true, IgnoreReadOnlyProperties = true, IncludeFields = false
+            WriteIndented = true,
+            IgnoreReadOnlyProperties = true,
+            IncludeFields = false
         };
         // DateTime .ToString("yyyy-MM-dd HH:mm:ss");
         return JsonSerializer.SerializeToUtf8Bytes<object>(t, opt);
     }
     public static T FromZipByte<T>(byte[] zba) {
         var opt = new JsonSerializerOptions {
-            WriteIndented = true, IgnoreReadOnlyProperties = false, IncludeFields = false
+            WriteIndented = true,
+            IgnoreReadOnlyProperties = false,
+            IncludeFields = false
         };
-        if(zba == null) {
+        if (zba == null) {
             ui.AddToLog("JSON.FromZipByte err: ba == null", MessType.Error);
             return default(T);
         }
@@ -378,8 +387,8 @@ public class JSON {
             try {
                 return JsonSerializer.Deserialize<T>(ba, opt);
             }
-            catch(Exception ex) {
-                ui.AddToLog("JSON.FromZipByte err:"+ ex.Message, MessType.Error);
+            catch (Exception ex) {
+                ui.AddToLog("JSON.FromZipByte err:" + ex.Message, MessType.Error);
                 return default(T);
             }
         }
@@ -390,7 +399,7 @@ public class JSON {
             var zip = ZIP.ToZip(ba);
             return zip;
         }
-        catch(Exception ex) {
+        catch (Exception ex) {
             ui.AddToLog("JSON.ToZipByte ERR:" + ex.Message, MessType.Error);
             return null;
         }
@@ -398,18 +407,18 @@ public class JSON {
 }
 public class ZIP {
     public static string UnZipToString(byte[] ba) {
-        if(ba == null)
+        if (ba == null)
             return null;
         var sb = new StringBuilder();
         var raw = UnZip(ba);
-        if(raw == null) {
+        if (raw == null) {
             ui.AddToLog("UnZipToString error: UnZip(ba)==null", MessType.Error);
             return null;
         }
-        using(var ms = new MemoryStream(raw)) {
+        using (var ms = new MemoryStream(raw)) {
             var buffer = new byte[1024 * 1024];
             int done;
-            while((done = ms.Read(buffer, 0, buffer.Length)) > 0) {
+            while ((done = ms.Read(buffer, 0, buffer.Length)) > 0) {
                 var temp = new byte[done];
                 Array.Copy(buffer, 0, temp, 0, done);
                 sb.Append(Encoding.UTF8.GetString(temp));
@@ -418,19 +427,19 @@ public class ZIP {
         return sb.ToString();
     }
     public static byte[] UnZip(byte[] bytes) {
-        using(var msi = new MemoryStream(bytes))
-        using(var mso = new MemoryStream()) {
+        using (var msi = new MemoryStream(bytes))
+        using (var mso = new MemoryStream()) {
             try {
-                using(var gs = new GZipStream(msi, CompressionMode.Decompress)) {
+                using (var gs = new GZipStream(msi, CompressionMode.Decompress)) {
                     CopyTo(gs, mso);
                     return mso.ToArray();
                 }
             }
-            catch(Exception ex) {
-                if(ex.Message.Contains("The magic number in GZip header is not correct.")) {
+            catch (Exception ex) {
+                if (ex.Message.Contains("The magic number in GZip header is not correct.")) {
                     return bytes;
                 }
-                else { ui.AddToLog("UnZip err: "+ex.Message, MessType.Error); }
+                else { ui.AddToLog("UnZip err: " + ex.Message, MessType.Error); }
                 return default;
             }
         }
@@ -440,9 +449,9 @@ public class ZIP {
         return ToZip(ba);
     }
     public static byte[] ToZip(byte[] ba) {
-        using(var msi = new MemoryStream(ba))
-        using(var mso = new MemoryStream()) {
-            using(var gs = new GZipStream(mso, CompressionMode.Compress)) {
+        using (var msi = new MemoryStream(ba))
+        using (var mso = new MemoryStream()) {
+            using (var gs = new GZipStream(mso, CompressionMode.Compress)) {
                 CopyTo(msi, gs);
             }
             return mso.ToArray();
@@ -452,11 +461,11 @@ public class ZIP {
         try {
             byte[] bytes = new byte[4096];
             int cnt;
-            while((cnt = src.Read(bytes, 0, bytes.Length)) != 0) {
+            while ((cnt = src.Read(bytes, 0, bytes.Length)) != 0) {
                 dest.Write(bytes, 0, cnt);
             }
         }
-        catch(Exception ex) {
+        catch (Exception ex) {
             ui.AddToLog("ZIP.CopyTo [Err]: " + ex.Message, MessType.Error);
         }
     }
@@ -474,24 +483,24 @@ public class BYTE {
     }
     public static string ToHexString(byte[] ba) {
         var sb = new StringBuilder(ba.Length * 2);
-        foreach(byte b in ba) {
+        foreach (byte b in ba) {
             // can be "x2" if you want lowercase & X2 for upper
             sb.Append(b.ToString("x2"));
         }
         return sb.ToString();
     }
     public static IEnumerable Combine(byte[] first, byte[] second) {
-        foreach(byte b in first)
+        foreach (byte b in first)
             yield return b;
 
-        foreach(byte b in second)
+        foreach (byte b in second)
             yield return b;
     }
     private static byte[] Combine(byte[][] arrays) {
         byte[] bytes = new byte[arrays.Sum(a => a.Length)];
         int offset = 0;
 
-        foreach(byte[] array in arrays) {
+        foreach (byte[] array in arrays) {
             Buffer.BlockCopy(array, 0, bytes, offset, array.Length);
             offset += array.Length;
         }

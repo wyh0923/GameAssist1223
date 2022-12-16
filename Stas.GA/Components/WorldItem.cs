@@ -15,7 +15,7 @@ namespace Stas.GA {
             Address = ptr;
             ItemEntity.Tick(ui.m.Read<IntPtr>(Address + 0x28));
         }
-        protected override void CleanUpData() {
+        protected override void Clear() {
             ItemEntity.Tick(IntPtr.Zero);
         }
 

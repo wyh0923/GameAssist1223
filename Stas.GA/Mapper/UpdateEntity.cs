@@ -40,6 +40,10 @@ public partial class AreaInstance  {
 #endif
         void calc(int i) {
             var (key, value) = entities[i];
+            if (key.id == ui.me.id) {
+                frame_items.Add(AddMapItem(ui.me));
+                return;
+            }
             if (data.TryGetValue(key, out var e)) {
                 e.Tick( value.EntityPtr);
             }

@@ -42,7 +42,7 @@ public class GrantedEffectsPerLevel : RemoteObjectBase {
         return Address.ToString("X");
     }
 
-    protected override void CleanUpData() {
+    protected override void Clear() {
         ui.AddToLog(tName + "CleanUpData err: debug me", MessType.Error);
     }
 }

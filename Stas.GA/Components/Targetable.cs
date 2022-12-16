@@ -16,7 +16,7 @@ public class Targetable : EntComp {
     public bool isHighlightable { get; private set; }
     public bool isTargeted { get; private set; }
 
-    protected override void CleanUpData() {
+    protected override void Clear() {
         
     }
 }

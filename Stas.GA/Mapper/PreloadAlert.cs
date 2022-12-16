@@ -85,24 +85,6 @@ public class PreloadAlert {
         b_ready = true;
         sw.Print();
     }
-    void DebugSame() {
-        var fname = @"C:\log\Cameria.txt";
-        File.WriteAllText(fname, "");
-        var sw = File.AppendText(fname);
-        var allFiles = ui.curr_loaded_files.PathNames;
-        foreach (var kv in allFiles) {
-            Debug.Assert(kv.Value == ui.area_change_counter.Value);
-            var key = kv.Key;
-            if (key.Contains('@')) key = key.Split('@')[0];
-            if (key.Contains("Cameria")) {
-                sw.WriteLine(key);
-            }
-            //if (text.Contains("Dannig") || text.Contains("Rog")
-            //|| text.Contains("Tujen") || text.Contains("Gwennen")) {
-            //    sw.WriteLine(text);
-            //}
-        }
-        sw.Dispose();
-    }
+   
 }
    

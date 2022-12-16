@@ -11,7 +11,8 @@ using System.ComponentModel;
 using System.Threading;
 
 namespace Stas.GA {
-    public partial class NavMesh :IDisposable{
+    public partial class NavMesh{
+        string tName => GetType().Name;
         public bool b_ready = false;
         //int GreedCellSizeI = 23; // map coords tiles are 23 x 23
         //float WorldCellSizeF = 250.0f; // world coords tiles are 250 x 250
@@ -50,15 +51,15 @@ namespace Stas.GA {
                         Thread.Sleep(100);
                         continue;
                     }
-                    if (ui.me == null || ui.me.gpos.X <= 0 || ui.me.gpos.Y <= 0) {
-                        ui.AddToLog("NavMesh: me gpos error=[" + ui.me.gpos.ToIntString() + "]", MessType.Error);
+                    var me_pos = ui.me.gpos_f;
+                    if (me_pos.X <= 0 || me_pos.Y <= 0) {
+                        ui.AddToLog(tName + ".worker_thread me.gpos==def", MessType.Error);
                         Thread.Sleep(200);
                         continue;
                     }
                     sw.Restart();
 
                     var mgc = Get_gc_by_gp(ui.me.gpos);
-                    
                     my_curr_cell = mgc;
 
                     if (!ui.sett.b_use_ingame_map) {
@@ -149,11 +150,6 @@ namespace Stas.GA {
             else
                 return data[(int)gpos.X, (int)gpos.Y];
         }
-       
-
-        public void Dispose() {
-            nav_thread.Abort();
-            nav_thread = null;
-        }
+      
     }
 }

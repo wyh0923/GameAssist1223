@@ -26,7 +26,7 @@ public class ActionWrapper : EntComp {
         tgp = new V2(data.target_gp_x, data.target_gp_y);
     }   
 
-    protected override void CleanUpData() {
+    protected override void Clear() {
         Target_ent.Tick( IntPtr.Zero);
     }
 }

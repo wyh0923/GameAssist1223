@@ -99,9 +99,6 @@ partial class DrawMain {
         var adress = $"{el.Address:X}";
         if (gui_offs.Length > 0 && b_relative) {
             adress = "0x" + gui_offs;
-            if (ui.gui_offs_nams.ContainsKey(adress)) {
-                adress +="=>" +ui.gui_offs_nams[adress];
-            }
         }
            
         if (ImGui.TreeNode($"{adress} {text}")) {

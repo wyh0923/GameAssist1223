@@ -9,7 +9,7 @@ internal class Projectile : EntComp {
             return;
     }
   
-    protected override void CleanUpData() {
-        base.CleanUpData();
+    protected override void Clear() {
+        base.Clear();
     }
 }
