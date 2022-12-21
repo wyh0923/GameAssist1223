@@ -95,7 +95,7 @@ public partial class AreaInstance {
                 lock (bmp) { //we need it coz using Parallel
                     bmp.SetPixel(x, y, GetColor(bit));
                 }
-            }
+             }
         }
         map_ptr = ui.GetPtrFromImageData(bmp);
         bmp.Dispose();

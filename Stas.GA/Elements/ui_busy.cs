@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Primitives;
-using System.Text;
-
+﻿using System.Text;
 namespace Stas.GA;
 
 public partial class GameUiElements : Element {
