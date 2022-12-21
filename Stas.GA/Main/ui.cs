@@ -172,11 +172,7 @@ public partial class ui {
     public static float gridToWorldScale => 10.869565f;
     public static float worldToGridScale => 0.092f; //250f /23 
     public static float aura_gdist => 55f;
-    public static Dictionary<Keys, aButtonDebug> buttons = new();
-    public static void DebugButton(Keys key, string info, MessType mt = MessType.Ok) {
-        if (buttons.ContainsKey(key))
-            buttons[key].log.Add(info);
-    }
+  
     public static Camera camera => curr_world.camera;
     public static unsafe IntPtr GetPtrFromImageData(Bitmap bmp) {
         return DrawMain.scene.LoadImageToPtr(bmp).Item1;

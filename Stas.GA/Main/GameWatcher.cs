@@ -48,19 +48,17 @@ public partial class ui {
                 }
                 GetMemPerf();
                 GetCpuPerf();
-                Thread.Sleep(10); //cpu free
+                Thread.Sleep(60); //cpu free
             };
         });
         choise_thread.IsBackground = true;
         choise_thread.Start();
 
-       
         watcher_thread = new Thread(() => {
             while (b_running) {
                 // Have to check MainWindowHandle because sometime HasExited returns false even when game isn't running..
                 try {
-                    if (game_process != null && (game_process.HasExited || closeForcefully
-                                || game_process.MainWindowHandle.ToInt64() <= 0x00)) {
+                    if (b_bad_process) {
                         closeForcefully = false;
                         CloseGame();
                     }
@@ -71,7 +69,7 @@ public partial class ui {
                 }
                    
                 curr_top_ptr = EXT.GetForegroundWindow();
-                Thread.Sleep(60);
+                Thread.Sleep(100);
             }
         });
         watcher_thread.IsBackground = true;
@@ -117,7 +115,7 @@ public partial class ui {
     ///     based on the GameOffsets.StaticOffsets file.
     /// </summary>
     internal static Dictionary<PattNams, IntPtr> base_offsets { get; } = new();
-    public static IntPtr game_ptr => b_bad_process ? IntPtr.Zero : game_process.MainWindowHandle;
+    public static IntPtr game_ptr => b_bad_process ? default : game_process.MainWindowHandle;
     /// <summary>
     /// need for draw/set role to a process
     /// </summary>
@@ -127,8 +125,6 @@ public partial class ui {
     static List<float> cpus = new List<float>();
     public static Process game_process { get; private set; }
     public static IntPtr curr_top_ptr { get; private set; }
-
-
     public static long memory_using => game_process.PrivateMemorySize64 / (1024 * 1024);
     public static void SetCurrentGame(int pid) {
         var _pa = Process.GetProcessesByName(ui.sett.pp_name);
@@ -255,8 +251,8 @@ public partial class ui {
    /// </summary>
     static void CloseGame() {
         states.Tick(default);//set state to not ready
-        curr_loaded_files.Tick(default,  tName + ".CloseGame");
-        area_change_counter.Tick(default,  tName + ".CloseGame");
+        curr_loaded_files?.Tick(default,  tName + ".CloseGame");
+        area_change_counter?.Tick(default,  tName + ".CloseGame");
         GameScale.Tick(default);
         RotationSelector.Tick(default);
         RotatorHelper.Tick(default);

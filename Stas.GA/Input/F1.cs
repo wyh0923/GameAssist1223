@@ -14,18 +14,16 @@ public partial class InputChecker {
             if (ui.b_alt) {
                 //ui.test.uiElementFinder();
                 //ui.test.GetTopElemUnderCursor();
-                ui.test.GetRootElemUnderCursor();
+                //ui.test.GetRootElemUnderCursor();
                 //ui.test.WorlToSPCheck();
                
             }
             else {
-
                 //var cam = ui.m.Read<CameraOffsets>( ui.camera.Address);
-
                 //ui.test.FindUiElemNotUnick("Nessa");
                 //ui.test_elem =FindSameUIElement("Decorations", 1)[0].Item1; //660
                 //ui.test_elem =FindSameUIElement("Inventory",1)[0].Item1; //0x568
-                ui.test_elem = ui.gui.large_map;
+                //ui.test_elem = ui.gui.large_map;
                 #region OLD
                 //var elem = new Element("test");
                 //ui.texts.Clear();

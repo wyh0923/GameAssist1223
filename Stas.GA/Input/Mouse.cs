@@ -76,15 +76,15 @@ namespace Stas.GA {
         static extern short GetKeyState(int nVirtKey);
         public static bool HotKeyPressed(Keys key, int interv = 400, bool debug = true) {
             if((GetKeyState((int)key) & KEY_PRESSED) != 0 ) {
-                if(!down_time.ContainsKey(key) || (down_time.ContainsKey(key) && down_time[key].AddMilliseconds(interv) < DateTime.Now)) {
+                if(!down_time.ContainsKey(key) ||  down_time[key].AddMilliseconds(interv) < DateTime.Now) {
                     down_time[key] = DateTime.Now;
                     if(debug)
                         ui.AddToLog("HotKey " + key.ToString() + " used OK");
                     return true;
                 }
                 else {
-                    //if(debug && AddToLog != null)
-                    //    AddToLog("HotKey " + key.ToString() + " was already pressed recently");
+                    if(debug )
+                        ui.AddToLog("HotKey " + key.ToString() + " was already pressed recently");
                     return false;
                 }
             }
